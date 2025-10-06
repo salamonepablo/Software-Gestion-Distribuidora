@@ -25,3 +25,9 @@ Cálculo de comisiones, y reportes varios.
 
 <img width="1103" height="659" alt="image" src="https://github.com/user-attachments/assets/3559c408-9bf8-4a7c-a2ad-1b5f4299e39b" />
 
+Impresión de comprobantes electrónicos (pdf), Facturas, Notas de Crédito, Notas de Débito, Remitos (albaranes), Recibos.
+
+[FA004-8948 ok.pdf](https://github.com/user-attachments/files/22713392/FA004-8948.ok.pdf)
+
+
+
