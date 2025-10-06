@@ -6,7 +6,7 @@
 
 ## 📖 Acerca del Proyecto
 
-Este proyecto es un software de gestión integral (ERP) que desarrollé para una empresa distribuidora con el objetivo de automatizar y digitalizar sus procesos de venta, control de stock y seguimiento de deudas de clientes.
+Este proyecto es un software de gestión integral (ERP) que desarrollé para una empresa distribuidora de baterías con el objetivo de automatizar y digitalizar sus procesos de venta, control de stock y seguimiento de deudas de clientes.
 
 El sistema se enfoca en la eficiencia operativa y el cumplimiento de las normativas fiscales de Argentina, permitiendo la emisión de comprobantes electrónicos y la generación de informes para la gestión contable.
 
@@ -48,5 +48,5 @@ El sistema incluye herramientas para el cálculo automático de comisiones para 
 ## 🛠️ Tecnologías Utilizadas
 
 * **Lenguaje de Programación:** Visual Basic 6
-* **Base de Datos:** [Aquí puedes poner si usabas Microsoft SQL Server o Access]
-* **Reportes:** [Aquí puedes poner si usabas Crystal Reports u otra herramienta]
+* **Base de Datos:** Access
+* **Reportes:** Exportación a PDF, EXCEL, Archivos de Texto Plano.
