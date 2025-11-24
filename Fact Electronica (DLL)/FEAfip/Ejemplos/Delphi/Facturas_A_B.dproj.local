@@ -1,9 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<BorlandProject>
-	<Transactions>
-    <Transaction>2011/06/11 11:47:14.341.pas,C:\Users\amiranda\Documents\RAD Studio\Projects\Unit2.pas=C:\Users\amiranda\Documents\RAD Studio\Projects\FEAFIPLib\Bin\Release\Ejemplos\Delphi\uMain.pas</Transaction>
-    <Transaction>2011/06/11 11:47:14.341.dfm,C:\Users\amiranda\Documents\RAD Studio\Projects\Unit2.dfm=C:\Users\amiranda\Documents\RAD Studio\Projects\FEAFIPLib\Bin\Release\Ejemplos\Delphi\uMain.dfm</Transaction>
-    <Transaction>2011/06/11 11:47:26.182.dproj,C:\Users\amiranda\Documents\RAD Studio\Projects\Project2.dproj=C:\Users\amiranda\Documents\RAD Studio\Projects\FEAFIPLib\Bin\Release\Ejemplos\Delphi\FEAFIP.dproj</Transaction>
-    <Transaction>2015/05/17 11:36:31.164.dproj,C:\Website\FEAFIP\Ejemplos\Delphi\FEAFIP.dproj=C:\Website\FEAFIP\Ejemplos\Delphi\Facturas_A_B.dproj</Transaction>
-  </Transactions>
-</BorlandProject>

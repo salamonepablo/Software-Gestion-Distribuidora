@@ -1,2 +1,0 @@
-  MODULE('FEAFI011.CLW')
-  END

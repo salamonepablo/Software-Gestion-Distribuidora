@@ -10,6 +10,13 @@
 *.pdb
 *.log
 *.bak
+*.exe
+
+# Claves / certificados (normalmente NO deberían subirse)
+*.pfx
+*.crt
+*.key
+
 
 # Intermediate / cache
 *.obj
