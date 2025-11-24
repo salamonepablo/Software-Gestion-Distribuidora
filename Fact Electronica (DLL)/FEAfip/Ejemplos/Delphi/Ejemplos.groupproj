@@ -1,0 +1,72 @@
+﻿	<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+		<PropertyGroup>
+			<ProjectGuid>{809786E6-5814-4057-ACDE-1139C9CA25A9}</ProjectGuid>
+		</PropertyGroup>
+		<ItemGroup>
+			<Projects Include="Facturas_A_B.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="Facturas_E.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="Facturas_Detalle.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="Cae_Anticipado.dproj">
+				<Dependencies/>
+			</Projects>
+		</ItemGroup>
+		<ProjectExtensions>
+			<Borland.Personality>Default.Personality.12</Borland.Personality>
+			<Borland.ProjectType/>
+			<BorlandProject>
+				<Default.Personality/>
+			</BorlandProject>
+		</ProjectExtensions>
+		<Target Name="Facturas_A_B">
+			<MSBuild Projects="Facturas_A_B.dproj"/>
+		</Target>
+		<Target Name="Facturas_A_B:Clean">
+			<MSBuild Targets="Clean" Projects="Facturas_A_B.dproj"/>
+		</Target>
+		<Target Name="Facturas_A_B:Make">
+			<MSBuild Targets="Make" Projects="Facturas_A_B.dproj"/>
+		</Target>
+		<Target Name="Facturas_E">
+			<MSBuild Projects="Facturas_E.dproj"/>
+		</Target>
+		<Target Name="Facturas_E:Clean">
+			<MSBuild Targets="Clean" Projects="Facturas_E.dproj"/>
+		</Target>
+		<Target Name="Facturas_E:Make">
+			<MSBuild Targets="Make" Projects="Facturas_E.dproj"/>
+		</Target>
+		<Target Name="Facturas_Detalle">
+			<MSBuild Projects="Facturas_Detalle.dproj"/>
+		</Target>
+		<Target Name="Facturas_Detalle:Clean">
+			<MSBuild Targets="Clean" Projects="Facturas_Detalle.dproj"/>
+		</Target>
+		<Target Name="Facturas_Detalle:Make">
+			<MSBuild Targets="Make" Projects="Facturas_Detalle.dproj"/>
+		</Target>
+		<Target Name="Cae_Anticipado">
+			<MSBuild Projects="Cae_Anticipado.dproj"/>
+		</Target>
+		<Target Name="Cae_Anticipado:Clean">
+			<MSBuild Targets="Clean" Projects="Cae_Anticipado.dproj"/>
+		</Target>
+		<Target Name="Cae_Anticipado:Make">
+			<MSBuild Targets="Make" Projects="Cae_Anticipado.dproj"/>
+		</Target>
+		<Target Name="Build">
+			<CallTarget Targets="Facturas_A_B;Facturas_E;Facturas_Detalle;Cae_Anticipado"/>
+		</Target>
+		<Target Name="Clean">
+			<CallTarget Targets="Facturas_A_B:Clean;Facturas_E:Clean;Facturas_Detalle:Clean;Cae_Anticipado:Clean"/>
+		</Target>
+		<Target Name="Make">
+			<CallTarget Targets="Facturas_A_B:Make;Facturas_E:Make;Facturas_Detalle:Make;Cae_Anticipado:Make"/>
+		</Target>
+		<Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+	</Project>

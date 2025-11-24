@@ -1,0 +1,11 @@
+C:\Website\FEAFIP\Ejemplos\VBnet\CAEA\FAEFIPDemo\bin\Debug\FAEFIPDemo.exe
+C:\Website\FEAFIP\Ejemplos\VBnet\CAEA\FAEFIPDemo\bin\Debug\FAEFIPDemo.pdb
+C:\Website\FEAFIP\Ejemplos\VBnet\CAEA\FAEFIPDemo\bin\Debug\FAEFIPDemo.xml
+C:\Website\FEAFIP\Ejemplos\VBnet\CAEA\FAEFIPDemo\obj\x86\Debug\Interop.FEAFIPLib.dll
+C:\Website\FEAFIP\Ejemplos\VBnet\CAEA\FAEFIPDemo\obj\x86\Debug\CAEA.vbproj.ResolveComReference.cache
+C:\Website\FEAFIP\Ejemplos\VBnet\CAEA\FAEFIPDemo\obj\x86\Debug\WindowsApplication1.Form1.resources
+C:\Website\FEAFIP\Ejemplos\VBnet\CAEA\FAEFIPDemo\obj\x86\Debug\WindowsApplication1.Resources.resources
+C:\Website\FEAFIP\Ejemplos\VBnet\CAEA\FAEFIPDemo\obj\x86\Debug\CAEA.vbproj.GenerateResource.Cache
+C:\Website\FEAFIP\Ejemplos\VBnet\CAEA\FAEFIPDemo\obj\x86\Debug\FAEFIPDemo.exe
+C:\Website\FEAFIP\Ejemplos\VBnet\CAEA\FAEFIPDemo\obj\x86\Debug\FAEFIPDemo.xml
+C:\Website\FEAFIP\Ejemplos\VBnet\CAEA\FAEFIPDemo\obj\x86\Debug\FAEFIPDemo.pdb

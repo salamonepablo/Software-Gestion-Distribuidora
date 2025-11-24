@@ -1,0 +1,104 @@
+ URLWSAA = "https://wsaahomo.afip.gov.ar/ws/services/LoginCms"
+ URLWSW = "https:'wswhomo.afip.gov.ar/wsfexv1/service.asmx"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ws = CreateObect("FEAFIPLib.wsfexv1")
+  ws:CUIT = 20939802593
+  ws:URL = "https://wswhomo.afip.gov.ar/wsfexv1/service.asmx"
+  If ws:login("certificado.crt", "clave.key", "https://wsaahomo.afip.gov.ar/ws/services/LoginCms")
+    CAE = ""
+    Vencimiento = ""
+    If ws:CmpConsultar(19, 100, 169, CAE, Vencimiento)
+      doc = CreateObject("MSXML2.DOMDocument60")
+
+
+      response = Replace(ws:XMLResponse, 'xmlns:soap="http://www.w3.org/2003/05/soap-envelope"', "")
+      response = Replace(response, "soap:", "")
+      response = Replace(response, 'xmlns="http://ar.gov.afip.dif.fexv1/"', "")
+
+
+      doc:loadXML (response)
+      docNode = doc:selectSingleNode("/Envelope/Body/FEXGetCMPResponse/FEXGetCMPResult/FEXResultGet")
+
+      Id = docNode:selectSingleNode("Id"):Text
+      Fecha_cbte = docNode:selectSingleNode("Fecha_cbte"):Text
+
+
+
+
+
+      Items = docNode:selectNodes("Items/Item")
+
+      For I = 0 To Items:length - 1
+
+        Pro_codigo = Items:Item[I]:selectSingleNode("Pro_codigo"):Text
+        Pro_ds = Items(I):selectSingleNode("Pro_ds"):Text
+
+
+      Next
+    Else
+      MessageBox(0, ws:ErrorDesc, "FEAFIP", 0)
+    EndIf
+  Else
+    MessageBox(0, ws:ErrorDesc, "FEAFIP", 0)
+  EndIf

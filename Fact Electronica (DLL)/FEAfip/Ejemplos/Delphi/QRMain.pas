@@ -1,0 +1,72 @@
+unit QRMain;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls;
+
+type
+  TForm1 = class(TForm)
+    Button1: TButton;
+    procedure Button1Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form1: TForm1;
+
+implementation
+
+{$R *.dfm}
+
+uses
+  FEAFIPLib_TLB,
+  ComObj;
+
+procedure TForm1.Button1Click(Sender: TObject);
+var
+  Qr: IQr;
+  ver: Integer;
+  fecha: string;
+  cuit: double;
+  ptoVta: Integer;
+  tipoComp: Integer;
+  nroCmp: Integer;
+  importe: double;
+  moneda: string;
+  ctz: double;
+  tipoDocRec: Integer;
+  nroDocRec: double;
+  tipoCodAut: string;
+  codAut: double;
+begin
+  Qr := CreateComObject(CLASS_Qr) as IQr;
+  Qr.ArchivoQR := Qr.RutaLibreria + 'qr.bmp'; // Admite formatos BMP, PNG y JPG con solo cambiar la extension
+
+  ver := 1;
+  fecha := '';
+  cuit := 20939802593;
+  ptoVta := 2;
+  tipoComp := 1;
+  nroCmp := 1;
+  importe := 100.20;
+  moneda := 'PES';
+  ctz := 1.00;
+  tipoDocRec := 80;
+  nroDocRec := 27929007862;
+  tipoCodAut := 'E';  // A = CAEA; E = CAE
+  codAut := 12345678901234;
+  if Qr.Generar(ver, fecha, cuit, ptoVta, tipoComp, nroCmp, importe, moneda,
+    ctz, tipoDocRec, nroDocRec, tipoCodAut, codAut) then
+  begin
+    ShowMessage('QR generado con éxito');
+  end
+  else
+    ShowMessage(Qr.ErrorDesc);
+end;
+
+end.

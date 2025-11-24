@@ -1,0 +1,15 @@
+package feafip  ;
+
+import com4j.*;
+
+/**
+ * Defines methods to create COM objects
+ */
+public abstract class ClassFactory {
+  private ClassFactory() {} // instanciation is not allowed
+
+public static Iwsfev1 createwsfev1() {
+	return COM4J.createInstance( Iwsfev1.class, "{5F4A1D94-F1C0-4359-A297-0AB7A9205581}" );;
+}
+
+}

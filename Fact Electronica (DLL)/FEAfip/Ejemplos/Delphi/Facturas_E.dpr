@@ -1,0 +1,14 @@
+program Facturas_E;
+
+uses
+  Forms,
+  uMainE in 'uMainE.pas' {Form2},
+  FEAFIPLib_TLB in 'FEAFIPLib_TLB.pas';
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.CreateForm(TForm2, Form2);
+  Application.Run;
+end.

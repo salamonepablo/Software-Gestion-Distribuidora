@@ -1,0 +1,534 @@
+[Root]
+Most Recent Package=Paquete de instalación SPCSI
+
+
+[Package|Paquete de instalación estándar 1|Root]
+SubWizProgID=PDWizard.SetupPkgSubWiz
+BuildFolder=C:\Users\Pablo\SPCSI\SPCPaqueteInstalacion
+
+[Package|Paquete de instalación estándar 1|Configure DAO ISAMs]
+Applicable=No
+
+[Package|Paquete de instalación estándar 1|Configure DAO ODBC]
+JetWorkspace=
+ODBCDirect=
+
+[Package|Paquete de instalación estándar 1|Files Found]
+
+[Package|Paquete de instalación estándar 1|Files Released]
+
+[Package|Paquete de instalación estándar 1|Missing Dependency Information]
+C:\Users\Pablo\Documents\Trabajo\LGR\VB Portable\imprimir-flexgrid\Printer FlexGrid.dll=
+C:\Program Files\Common Files\microsoft shared\DAO\dao360.dll=
+C:\Windows\System32\MSDBRPT.DLL=
+C:\Windows\System32\msstdfmt.dll=
+C:\Program Files\Common Files\DESIGNER\MSDE.DLL=
+C:\Program Files\Common Files\System\ado\msado25.tlb=
+C:\Windows\System32\vsrpt8.ocx=
+
+[Package|Paquete de instalación estándar 1|Out-of-Date Dependency Information]
+C:\Windows\System32\mscomct2.ocx=
+C:\Windows\System32\msflxgrd.ocx=
+
+[Package|Paquete de instalación estándar 1|Files Added]
+
+[Package|Paquete de instalación estándar 1|Files Removed]
+
+[Package|Paquete de instalación estándar 1|Files In Project]
+C:\Users\Pablo\SPCSI\SPCSI.exe=Yes
+C:\Windows\System32\msvbvm60.dll=Yes
+C:\Windows\System32\oleaut32.dll=Yes
+C:\Windows\System32\olepro32.dll=Yes
+C:\Windows\System32\asycfilt.dll=Yes
+C:\Windows\System32\stdole2.tlb=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\COMCAT.DLL=Yes
+C:\Windows\System32\VB6ES.DLL=Yes
+C:\Windows\System32\vsrpt8.ocx=Yes
+C:\Program Files\Common Files\System\ado\msado25.tlb=Yes
+C:\Program Files\Common Files\DESIGNER\MSDE.DLL=Yes
+C:\Program Files\Common Files\DESIGNER\MSDERUN.DLL=Yes
+C:\Windows\System32\msstdfmt.dll=Yes
+C:\Windows\System32\MSDBRPT.DLL=Yes
+C:\Program Files\Common Files\microsoft shared\DAO\dao360.dll=Yes
+C:\Users\Pablo\Documents\Trabajo\LGR\VB Portable\imprimir-flexgrid\Printer FlexGrid.dll=Yes
+C:\Windows\System32\TABCTL32.OCX=Yes
+C:\Windows\System32\TABCTES.DLL=Yes
+C:\Windows\System32\MSHFLXGD.OCX=Yes
+C:\Windows\System32\MSHFGES.DLL=Yes
+C:\Windows\System32\msflxgrd.ocx=Yes
+C:\Windows\System32\FLXGDES.DLL=Yes
+C:\Windows\System32\MSADODC.OCX=Yes
+C:\Windows\System32\ADODCES.DLL=Yes
+C:\Windows\System32\mscomct2.ocx=Yes
+C:\Windows\System32\MSCC2ES.DLL=Yes
+C:\Windows\System32\PICCLP32.OCX=Yes
+C:\Windows\System32\PCCLPES.DLL=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\MDAC_TYP.EXE=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP.EXE=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP1.EXE=Yes
+C:\Windows\System32\VB6STKIT.DLL=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\ST6UNST.EXE=Yes
+
+[Package|Paquete de instalación estándar 1|Configure Registry Files]
+Applicable=No
+
+[Package|Paquete de instalación estándar 1|Configure Remote Servers]
+Applicable=No
+
+[Package|Paquete de instalación estándar 1|Install Locations]
+C:\Users\Pablo\SPCSI\SPCSI.exe=$(AppPath)
+C:\Windows\System32\msvbvm60.dll=$(WinSysPathSysFile)
+C:\Windows\System32\oleaut32.dll=$(WinSysPathSysFile)
+C:\Windows\System32\olepro32.dll=$(WinSysPathSysFile)
+C:\Windows\System32\asycfilt.dll=$(WinSysPathSysFile)
+C:\Windows\System32\stdole2.tlb=$(WinSysPathSysFile)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\COMCAT.DLL=$(WinSysPathSysFile)
+C:\Windows\System32\VB6ES.DLL=$(WinSysPath)
+C:\Windows\System32\vsrpt8.ocx=$(WinSysPath)
+C:\Program Files\Common Files\System\ado\msado25.tlb=$(WinSysPath)
+C:\Program Files\Common Files\DESIGNER\MSDE.DLL=$(WinSysPath)
+C:\Program Files\Common Files\DESIGNER\MSDERUN.DLL=$(CommonFiles)\designer
+C:\Windows\System32\msstdfmt.dll=$(WinSysPath)
+C:\Windows\System32\MSDBRPT.DLL=$(WinSysPath)
+C:\Program Files\Common Files\microsoft shared\DAO\dao360.dll=$(WinSysPath)
+C:\Users\Pablo\Documents\Trabajo\LGR\VB Portable\imprimir-flexgrid\Printer FlexGrid.dll=$(WinSysPath)
+C:\Windows\System32\TABCTL32.OCX=$(WinSysPath)
+C:\Windows\System32\TABCTES.DLL=$(WinSysPath)
+C:\Windows\System32\MSHFLXGD.OCX=$(WinSysPath)
+C:\Windows\System32\MSHFGES.DLL=$(WinSysPath)
+C:\Windows\System32\msflxgrd.ocx=$(WinSysPath)
+C:\Windows\System32\FLXGDES.DLL=$(WinSysPath)
+C:\Windows\System32\MSADODC.OCX=$(WinSysPath)
+C:\Windows\System32\ADODCES.DLL=$(WinSysPath)
+C:\Windows\System32\mscomct2.ocx=$(WinSysPath)
+C:\Windows\System32\MSCC2ES.DLL=$(WinSysPath)
+C:\Windows\System32\PICCLP32.OCX=$(WinSysPath)
+C:\Windows\System32\PCCLPES.DLL=$(WinSysPath)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\MDAC_TYP.EXE=$(AppPath)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP.EXE=$(AppPath)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP1.EXE=$(WinPath)
+C:\Windows\System32\VB6STKIT.DLL=$(WinSysPathSysFile)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\ST6UNST.EXE=$(WinPath)
+
+[Package|Paquete de instalación estándar 1|Configure Shared Files]
+Applicable=Yes
+C:\Users\Pablo\SPCSI\SPCSI.exe=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\MDAC_TYP.EXE=Yes
+
+[Package|Paquete de instalación estándar 1|Distribution]
+Type=single
+Size=
+Title=SPC Software Integral
+
+[Package|Paquete de instalación estándar 1|IconGroups]
+Group0=SPC Software Integral
+PrivateGroup0=Verdadero
+Parent0=$(Programs)
+
+[Package|Paquete de instalación estándar 1|SPC Software Integral]
+Icon1=SPCSI.exe
+Title1=SPCSI
+StartIn1=$(AppPath)
+Key1=Icon1
+
+[Package|Paquete de instalación estándar 1|Package]
+PackageFolder=C:\Users\Pablo\SPCSI\SPCPaqueteInstalacion
+ProjectFolder=C:\Users\Pablo\SPCSI
+ServerSideCab=
+File1=C:\Users\Pablo\SPCSI\SPCPaqueteInstalacion\setup.exe
+File2=C:\Users\Pablo\SPCSI\SPCPaqueteInstalacion\Setup.Lst
+File3=C:\Users\Pablo\SPCSI\SPCPaqueteInstalacion\SPCSI.CAB
+Handler1=PDWizard.FolderDplySubWiz
+Handler2=PDWizard.WebPostDplySubWiz
+
+
+[Package|Paquete de instalación estándar 2|Root]
+SubWizProgID=PDWizard.SetupPkgSubWiz
+BuildFolder=C:\Users\Pablo\SPCSI\SPCPaqueteInstalacion2
+
+[Package|Paquete de instalación estándar 2|Configure DAO ISAMs]
+Applicable=No
+
+[Package|Paquete de instalación estándar 2|Configure DAO ODBC]
+JetWorkspace=
+ODBCDirect=
+
+[Package|Paquete de instalación estándar 2|Files Found]
+
+[Package|Paquete de instalación estándar 2|Files Released]
+
+[Package|Paquete de instalación estándar 2|Missing Dependency Information]
+C:\Users\Pablo\Documents\Trabajo\LGR\VB Portable\imprimir-flexgrid\Printer FlexGrid.dll=
+C:\Program Files\Common Files\microsoft shared\DAO\dao360.dll=
+C:\Windows\System32\MSDBRPT.DLL=
+C:\Windows\System32\msstdfmt.dll=
+C:\Program Files\Common Files\DESIGNER\MSDE.DLL=
+C:\Program Files\Common Files\System\ado\msado25.tlb=
+C:\Windows\System32\vsrpt8.ocx=
+
+[Package|Paquete de instalación estándar 2|Out-of-Date Dependency Information]
+C:\Windows\System32\mscomct2.ocx=
+C:\Windows\System32\msflxgrd.ocx=
+
+[Package|Paquete de instalación estándar 2|Files Added]
+C:\Users\Pablo\SPCSI\DB_SPC_SI.mdb=
+
+[Package|Paquete de instalación estándar 2|Files Removed]
+
+[Package|Paquete de instalación estándar 2|Files In Project]
+C:\Users\Pablo\SPCSI\SPCSI.exe=Yes
+C:\Windows\System32\msvbvm60.dll=Yes
+C:\Windows\System32\oleaut32.dll=Yes
+C:\Windows\System32\olepro32.dll=Yes
+C:\Windows\System32\asycfilt.dll=Yes
+C:\Windows\System32\stdole2.tlb=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\COMCAT.DLL=Yes
+C:\Windows\System32\VB6ES.DLL=Yes
+C:\Windows\System32\vsrpt8.ocx=Yes
+C:\Program Files\Common Files\System\ado\msado25.tlb=Yes
+C:\Program Files\Common Files\DESIGNER\MSDE.DLL=Yes
+C:\Program Files\Common Files\DESIGNER\MSDERUN.DLL=Yes
+C:\Windows\System32\msstdfmt.dll=Yes
+C:\Windows\System32\MSDBRPT.DLL=Yes
+C:\Program Files\Common Files\microsoft shared\DAO\dao360.dll=Yes
+C:\Users\Pablo\Documents\Trabajo\LGR\VB Portable\imprimir-flexgrid\Printer FlexGrid.dll=Yes
+C:\Windows\System32\TABCTL32.OCX=Yes
+C:\Windows\System32\TABCTES.DLL=Yes
+C:\Windows\System32\MSHFLXGD.OCX=Yes
+C:\Windows\System32\MSHFGES.DLL=Yes
+C:\Windows\System32\msflxgrd.ocx=Yes
+C:\Windows\System32\FLXGDES.DLL=Yes
+C:\Windows\System32\MSADODC.OCX=Yes
+C:\Windows\System32\ADODCES.DLL=Yes
+C:\Windows\System32\mscomct2.ocx=Yes
+C:\Windows\System32\MSCC2ES.DLL=Yes
+C:\Windows\System32\PICCLP32.OCX=Yes
+C:\Windows\System32\PCCLPES.DLL=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\MDAC_TYP.EXE=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP.EXE=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP1.EXE=Yes
+C:\Windows\System32\VB6STKIT.DLL=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\ST6UNST.EXE=Yes
+C:\Users\Pablo\SPCSI\DB_SPC_SI.mdb=Yes
+
+[Package|Paquete de instalación estándar 2|Configure Registry Files]
+Applicable=No
+
+[Package|Paquete de instalación estándar 2|Configure Remote Servers]
+Applicable=No
+
+[Package|Paquete de instalación estándar 2|Install Locations]
+C:\Users\Pablo\SPCSI\SPCSI.exe=$(AppPath)
+C:\Windows\System32\msvbvm60.dll=$(WinSysPathSysFile)
+C:\Windows\System32\oleaut32.dll=$(WinSysPathSysFile)
+C:\Windows\System32\olepro32.dll=$(WinSysPathSysFile)
+C:\Windows\System32\asycfilt.dll=$(WinSysPathSysFile)
+C:\Windows\System32\stdole2.tlb=$(WinSysPathSysFile)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\COMCAT.DLL=$(WinSysPathSysFile)
+C:\Windows\System32\VB6ES.DLL=$(WinSysPath)
+C:\Windows\System32\vsrpt8.ocx=$(WinSysPath)
+C:\Program Files\Common Files\System\ado\msado25.tlb=$(WinSysPath)
+C:\Program Files\Common Files\DESIGNER\MSDE.DLL=$(WinSysPath)
+C:\Program Files\Common Files\DESIGNER\MSDERUN.DLL=$(CommonFiles)\designer
+C:\Windows\System32\msstdfmt.dll=$(WinSysPath)
+C:\Windows\System32\MSDBRPT.DLL=$(WinSysPath)
+C:\Program Files\Common Files\microsoft shared\DAO\dao360.dll=$(WinSysPath)
+C:\Users\Pablo\Documents\Trabajo\LGR\VB Portable\imprimir-flexgrid\Printer FlexGrid.dll=$(WinSysPath)
+C:\Windows\System32\TABCTL32.OCX=$(WinSysPath)
+C:\Windows\System32\TABCTES.DLL=$(WinSysPath)
+C:\Windows\System32\MSHFLXGD.OCX=$(WinSysPath)
+C:\Windows\System32\MSHFGES.DLL=$(WinSysPath)
+C:\Windows\System32\msflxgrd.ocx=$(WinSysPath)
+C:\Windows\System32\FLXGDES.DLL=$(WinSysPath)
+C:\Windows\System32\MSADODC.OCX=$(WinSysPath)
+C:\Windows\System32\ADODCES.DLL=$(WinSysPath)
+C:\Windows\System32\mscomct2.ocx=$(WinSysPath)
+C:\Windows\System32\MSCC2ES.DLL=$(WinSysPath)
+C:\Windows\System32\PICCLP32.OCX=$(WinSysPath)
+C:\Windows\System32\PCCLPES.DLL=$(WinSysPath)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\MDAC_TYP.EXE=$(AppPath)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP.EXE=$(AppPath)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP1.EXE=$(WinPath)
+C:\Windows\System32\VB6STKIT.DLL=$(WinSysPathSysFile)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\ST6UNST.EXE=$(WinPath)
+C:\Users\Pablo\SPCSI\DB_SPC_SI.mdb=$(AppPath)
+
+[Package|Paquete de instalación estándar 2|Configure Shared Files]
+Applicable=Yes
+C:\Users\Pablo\SPCSI\SPCSI.exe=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\MDAC_TYP.EXE=Yes
+C:\Users\Pablo\SPCSI\DB_SPC_SI.mdb=Yes
+
+[Package|Paquete de instalación estándar 2|Distribution]
+Type=single
+Size=
+Title=SPC Software Integral
+
+[Package|Paquete de instalación estándar 2|IconGroups]
+Group0=SPC Software Integral
+PrivateGroup0=Verdadero
+Parent0=$(Programs)
+
+[Package|Paquete de instalación estándar 2|SPC Software Integral]
+Icon1=SPCSI.exe
+Title1=SPCSI
+StartIn1=$(AppPath)
+Key1=Icon1
+
+[Package|Paquete de instalación estándar 2|Package]
+PackageFolder=C:\Users\Pablo\SPCSI\SPCPaqueteInstalacion2
+ProjectFolder=C:\Users\Pablo\SPCSI
+ServerSideCab=
+File1=C:\Users\Pablo\SPCSI\SPCPaqueteInstalacion2\setup.exe
+File2=C:\Users\Pablo\SPCSI\SPCPaqueteInstalacion2\Setup.Lst
+File3=C:\Users\Pablo\SPCSI\SPCPaqueteInstalacion2\SPCSI.CAB
+Handler1=PDWizard.FolderDplySubWiz
+Handler2=PDWizard.WebPostDplySubWiz
+
+
+[Package|Paquete de instalación SPCSI|Root]
+SubWizProgID=PDWizard.SetupPkgSubWiz
+BuildFolder=c:\Trabajos Activos\SPCSI FE\PaqSPC
+
+[Package|Paquete de instalación SPCSI|Configure DAO ISAMs]
+Applicable=No
+
+[Package|Paquete de instalación SPCSI|Configure DAO ODBC]
+JetWorkspace=
+ODBCDirect=
+
+[Package|Paquete de instalación SPCSI|Files Found]
+
+[Package|Paquete de instalación SPCSI|Files Released]
+DB_SPC_SI.mdb=
+
+[Package|Paquete de instalación SPCSI|Missing Dependency Information]
+C:\Users\Pablo\Documents\Trabajo\LGR\VB Portable\imprimir-flexgrid\Printer FlexGrid.dll=
+C:\Program Files\Common Files\microsoft shared\DAO\dao360.dll=
+C:\Windows\System32\MSDBRPT.DLL=
+C:\Windows\System32\msstdfmt.dll=
+C:\Program Files\Common Files\DESIGNER\MSDE.DLL=
+C:\Program Files\Common Files\System\ado\msado25.tlb=
+C:\Windows\System32\vsrpt8.ocx=
+C:\Program Files\Seagate Software\Viewers\ActiveXViewer\cselexpt.ocx=
+D:\VB Portable\TABCTL32.OCX=
+C:\Program Files\Microsoft Office\Office12\MSACC.OLB=
+C:\Program Files\Seagate Software\Report Designer Component\crystalwizard.dll=
+C:\Program Files\Seagate Software\Viewers\ActiveXViewer\sviewhlp.dll=
+C:\Program Files\Seagate Software\Report Designer Component\craxdrt.dll=
+C:\Program Files\Microsoft Office\Office14\EXCEL.EXE=
+D:\VB Portable\imprimir-flexgrid\Printer FlexGrid.dll=
+C:\Windows\SysWOW64\cselexpt.ocx=
+C:\Users\Pablo\Trabajos\SPCSI FE\BarCode.dll=
+C:\Program Files (x86)\Common Files\System\ado\msjro.dll=
+C:\Program Files (x86)\Microsoft Office\Office15\MSACC.OLB=
+C:\Windows\SysWOW64\crystalwizard.dll=
+C:\Windows\SysWOW64\craxdrt.dll=
+C:\Windows\SysWOW64\sviewhlp.dll=
+C:\Windows\SysWOW64\crviewer.dll=
+C:\Program Files (x86)\Microsoft Office\Office15\EXCEL.EXE=
+C:\Windows\SysWOW64\Printer FlexGrid.dll=
+C:\Program Files (x86)\Common Files\microsoft shared\DAO\dao360.dll=
+C:\Windows\SysWOW64\MSDBRPT.DLL=
+C:\Program Files (x86)\Common Files\designer\MSDE.DLL=
+C:\Program Files (x86)\Common Files\System\ado\msado25.tlb=
+C:\Windows\SysWOW64\vsrpt8.ocx=
+C:\Windows\SysWOW64\BarCode.dll=
+C:\Program Files (x86)\Microsoft Office\Office14\MSACC.OLB=
+C:\Program Files (x86)\Microsoft Office\Office14\EXCEL.EXE=
+C:\Windows\SysWOW64\MSSTDFMT.DLL=
+C:\Program Files (x86)\Common Files\DESIGNER\MSDERUN.DLL=
+C:\Windows\SysWOW64\MSDE.DLL=
+
+[Package|Paquete de instalación SPCSI|Out-of-Date Dependency Information]
+C:\Windows\System32\mscomct2.ocx=
+C:\Windows\System32\msflxgrd.ocx=
+C:\Windows\SysWOW64\mscomct2.ocx=
+C:\Windows\SysWOW64\MSFLXGRD.OCX=
+
+[Package|Paquete de instalación SPCSI|Files Added]
+c:\trabajos activos\spcsi fe\db_spc_si.mdb=
+C:\Trabajos Activos\SPCSI FE\Interleaved 2of5.ttf=
+
+[Package|Paquete de instalación SPCSI|Files Removed]
+c:\trabajos activos\spcsi fe\db_spc_si.mdb=
+
+[Package|Paquete de instalación SPCSI|Files In Project]
+C:\Windows\System32\msvbvm60.dll=Yes
+C:\Windows\System32\oleaut32.dll=Yes
+C:\Windows\System32\olepro32.dll=Yes
+C:\Windows\System32\asycfilt.dll=Yes
+C:\Windows\System32\stdole2.tlb=Yes
+C:\Windows\System32\VB6ES.DLL=Yes
+C:\Windows\System32\VB6STKIT.DLL=Yes
+C:\Program Files (x86)\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\COMCAT.DLL=Yes
+C:\Windows\SysWOW64\vsrpt8.ocx=Yes
+C:\Program Files (x86)\Common Files\System\ado\msado25.tlb=Yes
+C:\Program Files (x86)\Common Files\designer\MSDERUN.DLL=Yes
+C:\Windows\SysWOW64\MSSTDFMT.DLL=Yes
+C:\Windows\SysWOW64\MSDBRPT.DLL=Yes
+C:\Program Files (x86)\Common Files\microsoft shared\DAO\dao360.dll=Yes
+C:\Windows\SysWOW64\Printer FlexGrid.dll=Yes
+C:\Windows\SysWOW64\crviewer.dll=Yes
+C:\Windows\SysWOW64\sviewhlp.dll=Yes
+C:\Windows\SysWOW64\craxdrt.dll=Yes
+C:\Windows\SysWOW64\crystalwizard.dll=Yes
+C:\Program Files (x86)\Common Files\System\ado\msjro.dll=Yes
+C:\Windows\SysWOW64\TABCTL32.OCX=Yes
+C:\Windows\SysWOW64\TABCTES.DLL=Yes
+C:\Windows\SysWOW64\MSHFLXGD.OCX=Yes
+C:\Windows\SysWOW64\MSHFGES.DLL=Yes
+C:\Windows\SysWOW64\MSFLXGRD.OCX=Yes
+C:\Windows\SysWOW64\FLXGDES.DLL=Yes
+C:\Windows\SysWOW64\MSADODC.OCX=Yes
+C:\Windows\SysWOW64\ADODCES.DLL=Yes
+C:\Windows\SysWOW64\MSCOMCT2.OCX=Yes
+C:\Windows\SysWOW64\MSCC2ES.DLL=Yes
+C:\Windows\SysWOW64\PICCLP32.OCX=Yes
+C:\Windows\SysWOW64\PCCLPES.DLL=Yes
+C:\Windows\SysWOW64\cselexpt.ocx=Yes
+C:\Program Files (x86)\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP.EXE=Yes
+C:\Program Files (x86)\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP1.EXE=Yes
+C:\Program Files (x86)\Microsoft Visual Studio\VB98\Wizards\PDWizard\ST6UNST.EXE=Yes
+C:\Trabajos Activos\SPCSI FE\SPCSI.exe=Yes
+C:\Windows\SysWOW64\MSDE.DLL=Yes
+C:\Program Files (x86)\Microsoft Office\Office14\EXCEL.EXE=Yes
+C:\Program Files (x86)\Microsoft Office\Office14\MSACC.OLB=Yes
+C:\Windows\SysWOW64\BarCode.dll=Yes
+C:\Trabajos Activos\SPCSI FE\DB_SPC_SI.mdb=No
+C:\Trabajos Activos\SPCSI FE\Interleaved 2of5.ttf=Yes
+
+[Package|Paquete de instalación SPCSI|Configure Registry Files]
+Applicable=No
+
+[Package|Paquete de instalación SPCSI|Configure Remote Servers]
+Applicable=No
+
+[Package|Paquete de instalación SPCSI|Install Locations]
+C:\Users\Pablo\SPCSI\SPCSI.exe=$(AppPath)
+C:\Windows\System32\msvbvm60.dll=$(WinSysPathSysFile)
+C:\Windows\System32\oleaut32.dll=$(WinSysPathSysFile)
+C:\Windows\System32\olepro32.dll=$(WinSysPathSysFile)
+C:\Windows\System32\asycfilt.dll=$(WinSysPathSysFile)
+C:\Windows\System32\stdole2.tlb=$(WinSysPathSysFile)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\COMCAT.DLL=$(WinSysPathSysFile)
+C:\Windows\System32\VB6ES.DLL=$(WinSysPath)
+C:\Windows\System32\vsrpt8.ocx=$(WinSysPath)
+C:\Program Files\Common Files\System\ado\msado25.tlb=$(WinSysPath)
+C:\Program Files\Common Files\DESIGNER\MSDE.DLL=$(WinSysPath)
+C:\Program Files\Common Files\DESIGNER\MSDERUN.DLL=$(CommonFiles)\designer
+C:\Windows\System32\msstdfmt.dll=$(WinSysPath)
+C:\Windows\System32\MSDBRPT.DLL=$(WinSysPath)
+C:\Program Files\Common Files\microsoft shared\DAO\dao360.dll=$(WinSysPath)
+C:\Users\Pablo\Documents\Trabajo\LGR\VB Portable\imprimir-flexgrid\Printer FlexGrid.dll=$(WinSysPath)
+C:\Windows\System32\TABCTL32.OCX=$(WinSysPath)
+C:\Windows\System32\TABCTES.DLL=$(WinSysPath)
+C:\Windows\System32\MSHFLXGD.OCX=$(WinSysPath)
+C:\Windows\System32\MSHFGES.DLL=$(WinSysPath)
+C:\Windows\System32\msflxgrd.ocx=$(WinSysPath)
+C:\Windows\System32\FLXGDES.DLL=$(WinSysPath)
+C:\Windows\System32\MSADODC.OCX=$(WinSysPath)
+C:\Windows\System32\ADODCES.DLL=$(WinSysPath)
+C:\Windows\System32\mscomct2.ocx=$(WinSysPath)
+C:\Windows\System32\MSCC2ES.DLL=$(WinSysPath)
+C:\Windows\System32\PICCLP32.OCX=$(WinSysPath)
+C:\Windows\System32\PCCLPES.DLL=$(WinSysPath)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\MDAC_TYP.EXE=$(AppPath)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP.EXE=$(AppPath)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP1.EXE=$(WinPath)
+C:\Windows\System32\VB6STKIT.DLL=$(WinSysPathSysFile)
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\ST6UNST.EXE=$(WinPath)
+C:\Users\Pablo\SPCSI\DB_SPC_SI.mdb=$(AppPath)
+D:\Mis Documentos\Mio\SPCSI\SPCSI.exe=$(AppPath)
+D:\VB Portable\imprimir-flexgrid\Printer FlexGrid.dll=$(WinSysPath)
+C:\Program Files\Microsoft Office\Office14\EXCEL.EXE=$(AppPath)
+C:\Program Files\Seagate Software\Viewers\ActiveXViewer\crviewer.dll=$(WinSysPath)
+C:\Program Files\Seagate Software\Report Designer Component\craxdrt.dll=$(WinSysPath)
+C:\Program Files\Seagate Software\Viewers\ActiveXViewer\sviewhlp.dll=$(WinSysPath)
+C:\Program Files\Seagate Software\Report Designer Component\crystalwizard.dll=$(WinSysPath)
+C:\Program Files\Microsoft Office\Office12\MSACC.OLB=$(WinSysPath)
+D:\VB Portable\TABCTL32.OCX=$(WinSysPath)
+C:\Program Files\Seagate Software\Viewers\ActiveXViewer\cselexpt.ocx=$(WinSysPath)
+C:\Users\Pablo\Trabajos\SPCSI FE\SPCSI.exe=$(AppPath)
+C:\Program Files (x86)\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\COMCAT.DLL=$(WinSysPathSysFile)
+C:\Windows\SysWOW64\vsrpt8.ocx=$(WinSysPath)
+C:\Program Files (x86)\Common Files\System\ado\msado25.tlb=$(WinSysPath)
+C:\Program Files (x86)\Common Files\designer\MSDE.DLL=$(WinSysPath)
+C:\Program Files (x86)\Common Files\designer\MSDERUN.DLL=$(CommonFiles)\designer
+C:\Windows\SysWOW64\MSSTDFMT.DLL=$(WinSysPath)
+C:\Windows\SysWOW64\STDFTES.DLL=$(WinSysPath)
+C:\Windows\SysWOW64\MSDBRPT.DLL=$(WinSysPath)
+C:\Program Files (x86)\Common Files\microsoft shared\DAO\dao360.dll=$(WinSysPath)
+C:\Windows\SysWOW64\Printer FlexGrid.dll=$(WinSysPath)
+C:\Program Files (x86)\Microsoft Office\Office15\EXCEL.EXE=$(AppPath)
+C:\Windows\SysWOW64\crviewer.dll=$(WinSysPath)
+C:\Windows\SysWOW64\sviewhlp.dll=$(WinSysPath)
+C:\Windows\SysWOW64\craxdrt.dll=$(WinSysPath)
+C:\Windows\SysWOW64\crystalwizard.dll=$(WinSysPath)
+C:\Program Files (x86)\Microsoft Office\Office15\MSACC.OLB=$(WinSysPath)
+C:\Program Files (x86)\Common Files\System\ado\msjro.dll=$(WinSysPath)
+C:\Users\Pablo\Trabajos\SPCSI FE\BarCode.dll=$(WinSysPath)
+C:\Windows\SysWOW64\TABCTL32.OCX=$(WinSysPath)
+C:\Windows\SysWOW64\TABCTES.DLL=$(WinSysPath)
+C:\Windows\SysWOW64\MSHFLXGD.OCX=$(WinSysPath)
+C:\Windows\SysWOW64\MSHFGES.DLL=$(WinSysPath)
+C:\Windows\SysWOW64\MSFLXGRD.OCX=$(WinSysPath)
+C:\Windows\SysWOW64\FLXGDES.DLL=$(WinSysPath)
+C:\Windows\SysWOW64\MSADODC.OCX=$(WinSysPath)
+C:\Windows\SysWOW64\ADODCES.DLL=$(WinSysPath)
+C:\Windows\SysWOW64\MSCOMCT2.OCX=$(WinSysPath)
+C:\Windows\SysWOW64\MSCC2ES.DLL=$(WinSysPath)
+C:\Windows\SysWOW64\PICCLP32.OCX=$(WinSysPath)
+C:\Windows\SysWOW64\PCCLPES.DLL=$(WinSysPath)
+C:\Windows\SysWOW64\cselexpt.ocx=$(WinSysPath)
+C:\Program Files (x86)\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\MDAC_TYP.EXE=$(AppPath)
+C:\Program Files (x86)\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP.EXE=$(AppPath)
+C:\Program Files (x86)\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP1.EXE=$(WinPath)
+C:\Program Files (x86)\Microsoft Visual Studio\VB98\Wizards\PDWizard\ST6UNST.EXE=$(WinPath)
+C:\Users\Pablo\Trabajos\SPCSI FE\DB_SPC_SI.mdb=$(AppPath)
+C:\Trabajos Activos\SPCSI FE\SPCSI.exe=$(AppPath)
+C:\Windows\SysWOW64\MSDE.DLL=$(WinSysPath)
+C:\Program Files (x86)\Microsoft Office\Office14\EXCEL.EXE=$(AppPath)
+C:\Program Files (x86)\Microsoft Office\Office14\MSACC.OLB=$(WinSysPath)
+C:\Windows\SysWOW64\BarCode.dll=$(WinSysPath)
+C:\Trabajos Activos\SPCSI FE\Interleaved 2of5.ttf=$(Font)
+
+[Package|Paquete de instalación SPCSI|Configure Shared Files]
+Applicable=Yes
+C:\Users\Pablo\SPCSI\SPCSI.exe=Yes
+C:\Program Files\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\MDAC_TYP.EXE=Yes
+C:\Users\Pablo\SPCSI\DB_SPC_SI.mdb=Yes
+D:\Mis Documentos\Mio\SPCSI\SPCSI.exe=No
+C:\Program Files\Microsoft Office\Office14\EXCEL.EXE=No
+C:\Users\Pablo\Trabajos\SPCSI FE\SPCSI.exe=Yes
+C:\Program Files (x86)\Microsoft Office\Office15\EXCEL.EXE=No
+C:\Program Files (x86)\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\MDAC_TYP.EXE=Yes
+C:\Users\Pablo\Trabajos\SPCSI FE\DB_SPC_SI.mdb=No
+C:\Trabajos Activos\SPCSI FE\SPCSI.exe=Yes
+C:\Program Files (x86)\Microsoft Office\Office14\EXCEL.EXE=Yes
+
+[Package|Paquete de instalación SPCSI|Distribution]
+Type=single
+Size=
+Title=SPC Software Integral
+
+[Package|Paquete de instalación SPCSI|IconGroups]
+Group0=SPC Software Integral
+PrivateGroup0=Falso
+Parent0=$(Programs)
+
+[Package|Paquete de instalación SPCSI|SPC Software Integral]
+Icon1=SPCSI.exe
+Title1=SPCSI
+StartIn1=$(AppPath)
+Key1=Icon1
+
+[Package|Paquete de instalación SPCSI|Package]
+PackageFolder=c:\Trabajos Activos\SPCSI FE\PaqSPC
+ProjectFolder=C:\Trabajos Activos\SPCSI FE
+ServerSideCab=
+File1=c:\Trabajos Activos\SPCSI FE\PaqSPC\setup.exe
+File2=c:\Trabajos Activos\SPCSI FE\PaqSPC\Setup.Lst
+File3=c:\Trabajos Activos\SPCSI FE\PaqSPC\SPCSI.CAB
+Handler1=PDWizard.FolderDplySubWiz
+Handler2=PDWizard.WebPostDplySubWiz

@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2015/06/01 15:22:34.503.pas,C:\Users\Abel\Documents\RAD Studio\Projects\Unit1.pas=C:\Website\FEAFIP\Ejemplos\Delphi\uMainMtxca.pas</Transaction>
+    <Transaction>2015/06/01 15:22:34.503.dfm,C:\Users\Abel\Documents\RAD Studio\Projects\Unit1.dfm=C:\Website\FEAFIP\Ejemplos\Delphi\uMainMtxca.dfm</Transaction>
+    <Transaction>2015/06/01 15:23:24.263.dproj,C:\Users\Abel\Documents\RAD Studio\Projects\Project2.dproj=C:\Users\Abel\Documents\RAD Studio\Projects\Facturas_Detalle.dproj</Transaction>
+    <Transaction>2015/06/01 15:23:49.273.dproj,C:\Users\Abel\Documents\RAD Studio\Projects\Facturas_Detalle.dproj=C:\Website\FEAFIP\Ejemplos\Delphi\Facturas_Detalle.dproj</Transaction>
+  </Transactions>
+</BorlandProject>

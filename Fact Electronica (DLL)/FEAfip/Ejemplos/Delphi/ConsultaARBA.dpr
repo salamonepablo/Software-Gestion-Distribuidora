@@ -1,0 +1,14 @@
+program ConsultaARBA;
+
+uses
+  Forms,
+  uMainConsultaARBA in 'uMainConsultaARBA.pas' {Form1},
+  FEAFIPLib_TLB in 'FEAFIPLib_TLB.pas';
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.CreateForm(TForm1, Form1);
+  Application.Run;
+end.

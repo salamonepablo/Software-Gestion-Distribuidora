@@ -1,0 +1,50 @@
+C:\WebSite\FEEJEMPLOS\VBnet\Facturas A y B\FAEFIPDemo\FAEFIPDemo\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\WebSite\FEEJEMPLOS\VBnet\Facturas A y B\FAEFIPDemo\FAEFIPDemo\obj\x86\Debug\WindowsApplication1.Form1.resources
+C:\WebSite\FEEJEMPLOS\VBnet\Facturas A y B\FAEFIPDemo\FAEFIPDemo\obj\x86\Debug\WindowsApplication1.Resources.resources
+C:\WebSite\FEEJEMPLOS\VBnet\Facturas A y B\FAEFIPDemo\FAEFIPDemo\obj\x86\Debug\GenerateResource.read.1.tlog
+C:\WebSite\FEEJEMPLOS\VBnet\Facturas A y B\FAEFIPDemo\FAEFIPDemo\obj\x86\Debug\GenerateResource.write.1.tlog
+C:\WebSite\FEEJEMPLOS\VBnet\Facturas A y B\FAEFIPDemo\FAEFIPDemo\bin\Debug\FAEFIPDemo.exe
+C:\WebSite\FEEJEMPLOS\VBnet\Facturas A y B\FAEFIPDemo\FAEFIPDemo\bin\Debug\FAEFIPDemo.pdb
+C:\WebSite\FEEJEMPLOS\VBnet\Facturas A y B\FAEFIPDemo\FAEFIPDemo\bin\Debug\FAEFIPDemo.xml
+C:\WebSite\FEEJEMPLOS\VBnet\Facturas A y B\FAEFIPDemo\FAEFIPDemo\obj\x86\Debug\Interop.FEAFIPLib.dll
+C:\WebSite\FEEJEMPLOS\VBnet\Facturas A y B\FAEFIPDemo\FAEFIPDemo\obj\x86\Debug\FAEFIPDemo.vbproj.ResolveComReference.cache
+C:\WebSite\FEEJEMPLOS\VBnet\Facturas A y B\FAEFIPDemo\FAEFIPDemo\obj\x86\Debug\FAEFIPDemo.exe
+C:\WebSite\FEEJEMPLOS\VBnet\Facturas A y B\FAEFIPDemo\FAEFIPDemo\obj\x86\Debug\FAEFIPDemo.xml
+C:\WebSite\FEEJEMPLOS\VBnet\Facturas A y B\FAEFIPDemo\FAEFIPDemo\obj\x86\Debug\FAEFIPDemo.pdb
+C:\Program Files (x86)\FEAFIP\Ejemplos\VBnet\Facturas A y B\FAEFIPDemo\FAEFIPDemo\obj\x86\Debug\Interop.FEAFIPLib.dll
+C:\Program Files (x86)\FEAFIP\Ejemplos\VBnet\Facturas A y B\FAEFIPDemo\FAEFIPDemo\obj\x86\Debug\FAEFIPDemo.vbproj.ResolveComReference.cache
+C:\Program Files (x86)\FEAFIP\Ejemplos\VBnet\Facturas A y B\FAEFIPDemo\FAEFIPDemo\obj\x86\Debug\FAEFIPDemo.xml
+C:\Program Files (x86)\FEAFIP\Ejemplos\VBnet\Facturas A y B\FAEFIPDemo\FAEFIPDemo\obj\x86\Debug\FAEFIPDemo.pdb
+C:\Program Files (x86)\FEAFIP\Ejemplos\VBnet\Facturas A y B\FAEFIPDemo\FAEFIPDemo\bin\Debug\FAEFIPDemo.exe
+C:\Program Files (x86)\FEAFIP\Ejemplos\VBnet\Facturas A y B\FAEFIPDemo\FAEFIPDemo\bin\Debug\FAEFIPDemo.pdb
+C:\Program Files (x86)\FEAFIP\Ejemplos\VBnet\Facturas A y B\FAEFIPDemo\FAEFIPDemo\bin\Debug\FAEFIPDemo.xml
+C:\Program Files (x86)\FEAFIP\Ejemplos\VBnet\Facturas A y B\FAEFIPDemo\FAEFIPDemo\obj\x86\Debug\WindowsApplication1.Form1.resources
+C:\Program Files (x86)\FEAFIP\Ejemplos\VBnet\Facturas A y B\FAEFIPDemo\FAEFIPDemo\obj\x86\Debug\WindowsApplication1.Resources.resources
+C:\Program Files (x86)\FEAFIP\Ejemplos\VBnet\Facturas A y B\FAEFIPDemo\FAEFIPDemo\obj\x86\Debug\FAEFIPDemo.vbproj.GenerateResource.Cache
+C:\Program Files (x86)\FEAFIP\Ejemplos\VBnet\Facturas A y B\FAEFIPDemo\FAEFIPDemo\obj\x86\Debug\FAEFIPDemo.exe
+C:\Website\FEAFIP\Ejemplos\VBnet\Facturas A y B\FAEFIPDemo\FAEFIPDemo\obj\x86\Debug\Interop.FEAFIPLib.dll
+C:\Website\FEAFIP\Ejemplos\VBnet\Facturas A y B\FAEFIPDemo\FAEFIPDemo\obj\x86\Debug\FAEFIPDemo.vbproj.ResolveComReference.cache
+C:\Website\FEAFIP\Ejemplos\VBnet\Facturas A y B\FAEFIPDemo\FAEFIPDemo\obj\x86\Debug\FAEFIPDemo.exe
+C:\Website\FEAFIP\Ejemplos\VBnet\Facturas A y B\FAEFIPDemo\FAEFIPDemo\obj\x86\Debug\FAEFIPDemo.xml
+C:\Website\FEAFIP\Ejemplos\VBnet\Facturas A y B\FAEFIPDemo\FAEFIPDemo\obj\x86\Debug\FAEFIPDemo.pdb
+C:\Website\FEAFIP\Ejemplos\VBnet\Facturas A y B\FAEFIPDemo\FAEFIPDemo\bin\Debug\FAEFIPDemo.exe
+C:\Website\FEAFIP\Ejemplos\VBnet\Facturas A y B\FAEFIPDemo\FAEFIPDemo\bin\Debug\FAEFIPDemo.pdb
+C:\Website\FEAFIP\Ejemplos\VBnet\Facturas A y B\FAEFIPDemo\FAEFIPDemo\bin\Debug\FAEFIPDemo.xml
+C:\Website\FEAFIP\Ejemplos\VBnet\Facturas A y B\FAEFIPDemo\FAEFIPDemo\obj\x86\Debug\WindowsApplication1.Form1.resources
+C:\Website\FEAFIP\Ejemplos\VBnet\Facturas A y B\FAEFIPDemo\FAEFIPDemo\obj\x86\Debug\WindowsApplication1.Resources.resources
+C:\Website\FEAFIP\Ejemplos\VBnet\Facturas A y B\FAEFIPDemo\FAEFIPDemo\obj\x86\Debug\FAEFIPDemo.vbproj.GenerateResource.Cache
+C:\xampp\htdocs\FEAFIP\Ejemplos\VBnet\Consulta de CUIT o DNI\FAEFIPDemo\FAEFIPDemo\obj\x86\Debug\Interop.FEAFIPLib.dll
+C:\xampp\htdocs\FEAFIP\Ejemplos\VBnet\Consulta de CUIT o DNI\FAEFIPDemo\FAEFIPDemo\obj\x86\Debug\FAEFIPDemo.vbproj.ResolveComReference.cache
+C:\xampp\htdocs\FEAFIP\Ejemplos\VBnet\Consulta de CUIT o DNI\FAEFIPDemo\FAEFIPDemo\obj\x86\Debug\FAEFIPDemo.xml
+C:\xampp\htdocs\FEAFIP\Ejemplos\VBnet\Consulta de CUIT o DNI\FAEFIPDemo\FAEFIPDemo\obj\x86\Debug\FAEFIPDemo.pdb
+C:\xampp\bitingenieria.com.ar\feafip\Ejemplos\VBnet\Consulta de CUIT o DNI\FAEFIPDemo\FAEFIPDemo\obj\x86\Debug\Interop.FEAFIPLib.dll
+C:\xampp\bitingenieria.com.ar\feafip\Ejemplos\VBnet\Consulta de CUIT o DNI\FAEFIPDemo\FAEFIPDemo\obj\x86\Debug\FAEFIPDemo.vbproj.ResolveComReference.cache
+C:\xampp\bitingenieria.com.ar\feafip\Ejemplos\VBnet\Consulta de CUIT o DNI\FAEFIPDemo\FAEFIPDemo\obj\x86\Debug\FAEFIPDemo.xml
+C:\xampp\bitingenieria.com.ar\feafip\Ejemplos\VBnet\Consulta de CUIT o DNI\FAEFIPDemo\FAEFIPDemo\obj\x86\Debug\FAEFIPDemo.pdb
+C:\xampp\bitingenieria.com.ar\feafip\Ejemplos\VBnet\Consulta de CUIT o DNI\FAEFIPDemo\FAEFIPDemo\bin\Debug\FAEFIPDemo.exe
+C:\xampp\bitingenieria.com.ar\feafip\Ejemplos\VBnet\Consulta de CUIT o DNI\FAEFIPDemo\FAEFIPDemo\bin\Debug\FAEFIPDemo.pdb
+C:\xampp\bitingenieria.com.ar\feafip\Ejemplos\VBnet\Consulta de CUIT o DNI\FAEFIPDemo\FAEFIPDemo\bin\Debug\FAEFIPDemo.xml
+C:\xampp\bitingenieria.com.ar\feafip\Ejemplos\VBnet\Consulta de CUIT o DNI\FAEFIPDemo\FAEFIPDemo\obj\x86\Debug\WindowsApplication1.Form1.resources
+C:\xampp\bitingenieria.com.ar\feafip\Ejemplos\VBnet\Consulta de CUIT o DNI\FAEFIPDemo\FAEFIPDemo\obj\x86\Debug\WindowsApplication1.Resources.resources
+C:\xampp\bitingenieria.com.ar\feafip\Ejemplos\VBnet\Consulta de CUIT o DNI\FAEFIPDemo\FAEFIPDemo\obj\x86\Debug\FAEFIPDemo.vbproj.GenerateResource.Cache
+C:\xampp\bitingenieria.com.ar\feafip\Ejemplos\VBnet\Consulta de CUIT o DNI\FAEFIPDemo\FAEFIPDemo\obj\x86\Debug\FAEFIPDemo.exe
