@@ -64,3 +64,6 @@ AR-*LOTE*.txt
 #   powershell -ExecutionPolicy Bypass -File .\tools\Verify-RepoState.ps1
 
 # End of .gitignore
+
+# Ignorar el archivo QuilplacVB/Padron.mdb
+QuilplacVB/Padron.mdb
