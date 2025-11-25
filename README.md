@@ -1,98 +1,52 @@
-# SPCSI (VB6)
+# Software de Gestión para Distribuidoras (ERP)
 
-Proyecto legacy en Visual Basic 6. Este repositorio busca estabilizar y versionar el código fuente, gestionar dependencias y facilitar releases reproducibles.
-
-## Objetivos
-- Control de versiones (Git + tags SemVer).
-- Documentar dependencias (OCX / DLL) necesarias para build y runtime.
-- Script para automatizar cambio de versión en `SPCSI.vbp`.
-- Flujo de ramas sencillo para mantenimiento y hotfixes.
-
-## Estructura Principal
-- `SPCSI.vbp`: archivo de proyecto VB6 donde se definen formularios y número de versión.
-- Archivos `.frm`, `.frx`, `.bas`: código y recursos de la aplicación.
-- Base de datos Access `DB_SPC_SI.mdb` (principal) y backups históricos.
-- Carpeta `tools/`: utilidades (scripts PowerShell) para versionado.
-- Carpeta `docs/`: documentación adicional.
-
-## Versionado (Semantic Versioning)
-Se usa formato `MAJOR.MINOR.PATCH` sobre los campos:
-- `MajorVer`
-- `MinorVer`
-- `RevisionVer` (se mapea a PATCH)
-
-Ejemplo: `1.4.12` => `MajorVer=1`, `MinorVer=4`, `RevisionVer=12`.
-
-### Cuándo incrementar
-- MAJOR: cambios incompatibles, estructura de DB, gran refactor.
-- MINOR: nuevas funcionalidades retro-compatibles.
-- PATCH: correcciones, ajustes menores, fixes urgentes.
-
-## Script de versión
-Utilidad: `tools/Increment-Version.ps1`.
-Permite incrementar o fijar versión directamente en el `.vbp`.
-
-Uso:
-```powershell
-# Incrementar patch (revision) por defecto
-powershell -ExecutionPolicy Bypass -File .\tools\Increment-Version.ps1
-
-# Incrementar minor
-powershell -ExecutionPolicy Bypass -File .\tools\Increment-Version.ps1 -Increment minor
-
-# Incrementar major
-powershell -ExecutionPolicy Bypass -File .\tools\Increment-Version.ps1 -Increment major
-
-# Fijar versión exacta
-powershell -ExecutionPolicy Bypass -File .\tools\Increment-Version.ps1 -SetVersion 1.5.0
-```
-El script muestra la versión previa y la nueva.
-
-## Flujo de Ramas
-- `main`: estado estable / últimas releases.
-- `develop` (opcional si hay evolución continua): integración de nuevas features antes de preparar release.
-- `feature/<nombre>`: ramas para desarrollar funcionalidades específicas.
-- `release/<version>`: estabilizar antes del tag (tests, ajustes finales).
-- `hotfix/<issue>`: correcciones urgentes partiendo desde `main`.
-
-### Proceso de Release
-1. Asegurar cambios integrados en `develop` (o directamente en `main` si el flujo es simple).
-2. Crear rama `release/x.y.z` si se usa flujo con `develop`.
-3. Ejecutar script de versión para fijar número definitivo.
-4. Commit: `git commit -am "Release x.y.z"`.
-5. Tag anotado: `git tag -a vX.Y.Z -m "Release vX.Y.Z"`.
-6. Push código y tags:
-```powershell
-git push
-git push --tags
-```
-7. Publicar binario compilado (si aplica) en la sección Releases de GitHub.
-
-## Compilación VB6 por línea de comandos
-Si VB6 IDE está instalado (ruta típica `"C:\Program Files (x86)\Microsoft Visual Studio\VB98\VB6.EXE"`):
-```powershell
-& "C:\Program Files (x86)\Microsoft Visual Studio\VB98\VB6.EXE" /make SPCSI.vbp /out build.log
-```
-Verificar que todas las dependencias (OCX/DLL) estén registradas (`regsvr32 nombre.ocx`).
-
-## Dependencias
-Listado detallado en `docs/Dependencies.md`. Incluye componentes Crystal Reports, ADO, DAO, OCXs de grids y reportes.
-
-## Base de Datos
-- Mantener sólo la versión activa `DB_SPC_SI.mdb`.
-- Backups históricos están ignorados (modificar `.gitignore` si se requiere preservarlos).
-
-## Buenas Prácticas
-- Commits pequeños y descriptivos.
-- Evitar subir binarios compilados; usar Releases para distribuir.
-- Documentar cambios relevantes en `CHANGELOG.md` (crear si se desea).
-- Revisar diferencias en `.vbp` antes de hacer tag (para confirmar versión).
-
-## Próximos Pasos
-- Completar `docs/Dependencies.md`.
-- Crear `CHANGELOG.md` (opcional).
-- Automatizar release con GitHub Actions (build + adjuntar artefacto).
-- Usar `tools/Verify-RepoState.ps1` antes de un commit grande para asegurar que no haya `.exe` y que `DB_SPC_SI.mdb` esté presente.
+**Sistema de escritorio completo para la administración de inventario, facturación y cuentas corrientes, desarrollado en Visual Basic 6 y adaptado a la legislación fiscal de Argentina.**
 
 ---
-Cualquier mejora futura: contenedores de build, migración gradual, tests automatizados alrededor de lógica crítica.
+
+## 📖 Acerca del Proyecto
+
+Este proyecto es un software de gestión integral (ERP) que desarrollé para una empresa distribuidora de baterías con el objetivo de automatizar y digitalizar sus procesos de venta, control de stock y seguimiento de deudas de clientes.
+
+El sistema se enfoca en la eficiencia operativa y el cumplimiento de las normativas fiscales de Argentina, permitiendo la emisión de comprobantes electrónicos y la generación de informes para la gestión contable.
+
+---
+
+## ✨ Características Principales
+
+Este software cuenta con una variedad de módulos que cubren las necesidades clave de una empresa distribuidora:
+
+#### **Facturación Electrónica y Gestión de Comprobantes**
+Módulo completo para la emisión de Facturas, Notas de Crédito y Notas de Débito electrónicas, cumpliendo con los requisitos de la AFIP en Argentina. También permite la impresión de Remitos (albaranes) y Recibos.
+
+*Ejemplo de comprobante generado en PDF:*
+[FA004-8948 ok.pdf](https://github.com/user-attachments/files/22713392/FA004-8948.ok.pdf)
+
+![Interfaz de facturación del sistema](https://github.com/user-attachments/assets/b3ffbc6d-df1e-4f4e-8960-c5a21d303dee)
+
+![Detalle final de una factura con sus ítems](https://github.com/user-attachments/assets/1d80687a-4430-47a7-a255-677f15951f15)
+
+#### **Control de Cuentas Corrientes de Clientes**
+Permite un seguimiento detallado de los saldos, pagos y movimientos históricos de la cuenta corriente de cada cliente, facilitando la gestión de cobranzas.
+
+![Pantalla de movimientos de cuenta corriente](https://github.com/user-attachments/assets/dd5b0b06-6de2-426b-bec9-bbf5e33ac676)
+
+#### **Gestión Contable y Fiscal**
+Genera los archivos e informes necesarios para la gestión contable, como el "Libro de IVA Ventas", simplificando la declaración de impuestos ante Hacienda (AFIP).
+
+![Generación del informe Libro IVA Ventas](https://github.com/user-attachments/assets/a77a5959-639d-489c-8fb3-d530ef874811)
+
+#### **Cálculo de Comisiones y Reportes Avanzados**
+El sistema incluye herramientas para el cálculo automático de comisiones para los vendedores y una variedad de reportes personalizables para la toma de decisiones.
+
+![Reporte de comisiones por vendedor](https://github.com/user-attachments/assets/1a5c0ccf-c40a-4b76-87ac-048044b0f408)
+
+![Reporte de ranking de ventas](https://github.com/user-attachments/assets/597b6c60-2178-457a-9407-74255bb97168)
+
+---
+
+## 🛠️ Tecnologías Utilizadas
+
+* **Lenguaje de Programación:** Visual Basic 6
+* **Base de Datos:** Access
+* **Reportes:** Exportación a PDF, EXCEL, Archivos de Texto Plano.
