@@ -66,4 +66,4 @@ AR-*LOTE*.txt
 # End of .gitignore
 
 # Ignorar el archivo QuilplacVB/Padron.mdb
-/QuilplacVB/*.mdb
+/QuilplacVB
