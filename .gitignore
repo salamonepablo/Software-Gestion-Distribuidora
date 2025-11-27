@@ -16,6 +16,8 @@
 *.pfx
 *.crt
 *.key
+*.lic
+feafip.dll
 
 
 # Intermediate / cache
