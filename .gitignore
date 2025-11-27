@@ -21,7 +21,7 @@ feafip.dll
 
 
 # Intermediate / cache
-*.obj
+*.obj5
 *.tmp
 *.bin
 
