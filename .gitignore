@@ -1,0 +1,71 @@
+# VB6 Project Ignore File
+# Mantener solo código fuente y la base principal DB_SPC_SI.mdb.
+# Excluir ejecutables, artefactos compilados y bases históricas / backups.
+
+# VB6 build outputs
+*.exe
+*.dll
+*.ocx
+*.tlb
+*.pdb
+*.log
+*.bak
+*.exe
+
+# Claves / certificados (normalmente NO deberían subirse)
+*.pfx
+*.crt
+*.key
+*.lic
+feafip.dll
+
+
+# Intermediate / cache
+*.obj5
+*.tmp
+*.bin
+
+# VB6 workspace/layout files (regenerable)
+*.vbw
+
+# Access database backups y variantes (ignorar todas menos la principal)
+DB_SPC_SI*.mdb
+!DB_SPC_SI.mdb
+!/**/DB_SPC_SI.mdb
+
+# Si se necesita conservar una versión específica de respaldo, eliminar su línea de coincidencia y añadir negación similar.
+
+# Crystal Reports temp exports
+~$*
+
+# Office temp files
+~$*.doc*
+~$*.xls*
+
+# VS Code settings if personal
+.vscode/*.code-workspace
+.vscode/*.json
+
+# Git metadata (safety)
+.git-*
+
+# Logs / traces
+*.trace
+*.err
+
+# pdfs / Reports Documents generated
+*.pdf
+
+# Generated HTML or TXT lots (opcional)
+AR-*LOTE*.txt
+
+# Uncomment to ignore FRX binary companions (NOT recommended – needed for forms resources)
+# *.frx
+
+# Verificación rápida:
+#   powershell -ExecutionPolicy Bypass -File .\tools\Verify-RepoState.ps1
+
+# End of .gitignore
+
+# Ignorar el archivo QuilplacVB/Padron.mdb
+/QuilplacVB
