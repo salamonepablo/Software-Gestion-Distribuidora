@@ -1,0 +1,147 @@
+[Root]
+Most Recent Package=Paquete de instalación QuilplacVB
+
+
+[Package|Paquete de instalación QuilplacVB|Root]
+SubWizProgID=PDWizard.SetupPkgSubWiz
+BuildFolder=k:\
+
+[Package|Paquete de instalación QuilplacVB|Configure DAO ISAMs]
+Applicable=No
+
+[Package|Paquete de instalación QuilplacVB|Configure DAO ODBC]
+JetWorkspace=
+ODBCDirect=
+
+[Package|Paquete de instalación QuilplacVB|Files Found]
+
+[Package|Paquete de instalación QuilplacVB|Files Released]
+
+[Package|Paquete de instalación QuilplacVB|Missing Dependency Information]
+C:\WINDOWS\system32\vsrpt8.ocx=
+C:\Archivos de programa\Archivos comunes\designer\MSDE.DLL=
+
+[Package|Paquete de instalación QuilplacVB|Out-of-Date Dependency Information]
+
+[Package|Paquete de instalación QuilplacVB|Files Added]
+
+[Package|Paquete de instalación QuilplacVB|Files Removed]
+
+[Package|Paquete de instalación QuilplacVB|Files In Project]
+C:\QuilplacVB\Quilplac.exe=Yes
+C:\WINDOWS\system32\msvbvm60.dll=Yes
+C:\Archivos de programa\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\OLEAUT32.DLL=Yes
+C:\Archivos de programa\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\OLEPRO32.DLL=Yes
+C:\Archivos de programa\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\ASYCFILT.DLL=Yes
+C:\Archivos de programa\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\STDOLE2.TLB=Yes
+C:\Archivos de programa\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\COMCAT.DLL=Yes
+C:\WINDOWS\system32\VB6ES.DLL=Yes
+C:\Archivos de programa\Archivos comunes\designer\MSDE.DLL=Yes
+C:\WINDOWS\system32\vsrpt8.ocx=Yes
+C:\WINDOWS\system32\MSDBRPTR.DLL=Yes
+C:\WINDOWS\system32\MSSTDFMT.DLL=Yes
+C:\WINDOWS\system32\STDFTES.DLL=Yes
+C:\WINDOWS\system32\DBRPRES.DLL=Yes
+C:\Archivos de programa\Archivos comunes\designer\MSDERUN.DLL=Yes
+C:\Archivos de programa\Archivos comunes\Microsoft Shared\DAO\dao360.dll=Yes
+C:\WINDOWS\system32\msjet40.dll=Yes
+C:\WINDOWS\system32\msjter40.dll=Yes
+C:\WINDOWS\system32\msjint40.dll=Yes
+C:\WINDOWS\system32\vbajet32.dll=Yes
+C:\WINDOWS\system32\expsrv.dll=Yes
+C:\WINDOWS\system32\mswstr10.dll=Yes
+C:\WINDOWS\system32\mswdat10.dll=Yes
+C:\WINDOWS\system32\msrd2x40.dll=Yes
+C:\WINDOWS\system32\msrd3x40.dll=Yes
+C:\WINDOWS\system32\msrepl40.dll=Yes
+C:\WINDOWS\system32\msjtes40.dll=Yes
+C:\WINDOWS\system32\VB5DB.DLL=Yes
+C:\WINDOWS\system32\MSHFLXGD.OCX=Yes
+C:\WINDOWS\system32\MSHFGES.DLL=Yes
+C:\WINDOWS\system32\MSFLXGRD.OCX=Yes
+C:\WINDOWS\system32\FLXGDES.DLL=Yes
+C:\WINDOWS\system32\MSADODC.OCX=Yes
+C:\WINDOWS\system32\ADODCES.DLL=Yes
+C:\Archivos de programa\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\MDAC_TYP.EXE=Yes
+C:\Archivos de programa\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP.EXE=Yes
+C:\Archivos de programa\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP1.EXE=Yes
+C:\WINDOWS\system32\VB6STKIT.DLL=Yes
+C:\Archivos de programa\Microsoft Visual Studio\VB98\Wizards\PDWizard\ST6UNST.EXE=Yes
+
+[Package|Paquete de instalación QuilplacVB|Configure Registry Files]
+Applicable=No
+
+[Package|Paquete de instalación QuilplacVB|Configure Remote Servers]
+Applicable=No
+
+[Package|Paquete de instalación QuilplacVB|Install Locations]
+C:\QuilplacVB\Quilplac.exe=$(AppPath)
+C:\WINDOWS\system32\msvbvm60.dll=$(WinSysPathSysFile)
+C:\Archivos de programa\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\OLEAUT32.DLL=$(WinSysPathSysFile)
+C:\Archivos de programa\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\OLEPRO32.DLL=$(WinSysPathSysFile)
+C:\Archivos de programa\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\ASYCFILT.DLL=$(WinSysPathSysFile)
+C:\Archivos de programa\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\STDOLE2.TLB=$(WinSysPathSysFile)
+C:\Archivos de programa\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\COMCAT.DLL=$(WinSysPathSysFile)
+C:\WINDOWS\system32\VB6ES.DLL=$(WinSysPath)
+C:\Archivos de programa\Archivos comunes\designer\MSDE.DLL=$(WinSysPath)
+C:\WINDOWS\system32\vsrpt8.ocx=$(WinSysPath)
+C:\WINDOWS\system32\MSDBRPTR.DLL=$(WinSysPath)
+C:\WINDOWS\system32\MSSTDFMT.DLL=$(WinSysPath)
+C:\WINDOWS\system32\STDFTES.DLL=$(WinSysPath)
+C:\WINDOWS\system32\DBRPRES.DLL=$(WinSysPath)
+C:\Archivos de programa\Archivos comunes\designer\MSDERUN.DLL=$(CommonFiles)\designer
+C:\Archivos de programa\Archivos comunes\Microsoft Shared\DAO\dao360.dll=$(MSDAOPath)
+C:\WINDOWS\system32\msjet40.dll=$(WinSysPathSysFile)
+C:\WINDOWS\system32\msjter40.dll=$(WinSysPathSysFile)
+C:\WINDOWS\system32\msjint40.dll=$(WinSysPathSysFile)
+C:\WINDOWS\system32\vbajet32.dll=$(WinSysPathSysFile)
+C:\WINDOWS\system32\expsrv.dll=$(WinSysPathSysFile)
+C:\WINDOWS\system32\mswstr10.dll=$(WinSysPathSysFile)
+C:\WINDOWS\system32\mswdat10.dll=$(WinSysPathSysFile)
+C:\WINDOWS\system32\msrd2x40.dll=$(WinSysPathSysFile)
+C:\WINDOWS\system32\msrd3x40.dll=$(WinSysPathSysFile)
+C:\WINDOWS\system32\msrepl40.dll=$(WinSysPathSysFile)
+C:\WINDOWS\system32\msjtes40.dll=$(WinSysPathSysFile)
+C:\WINDOWS\system32\VB5DB.DLL=$(WinSysPath)
+C:\WINDOWS\system32\MSHFLXGD.OCX=$(WinSysPath)
+C:\WINDOWS\system32\MSHFGES.DLL=$(WinSysPath)
+C:\WINDOWS\system32\MSFLXGRD.OCX=$(WinSysPath)
+C:\WINDOWS\system32\FLXGDES.DLL=$(WinSysPath)
+C:\WINDOWS\system32\MSADODC.OCX=$(WinSysPath)
+C:\WINDOWS\system32\ADODCES.DLL=$(WinSysPath)
+C:\Archivos de programa\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\MDAC_TYP.EXE=$(AppPath)
+C:\Archivos de programa\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP.EXE=$(AppPath)
+C:\Archivos de programa\Microsoft Visual Studio\VB98\Wizards\PDWizard\SETUP1.EXE=$(WinPath)
+C:\WINDOWS\system32\VB6STKIT.DLL=$(WinSysPathSysFile)
+C:\Archivos de programa\Microsoft Visual Studio\VB98\Wizards\PDWizard\ST6UNST.EXE=$(WinPath)
+
+[Package|Paquete de instalación QuilplacVB|Configure Shared Files]
+Applicable=Yes
+C:\QuilplacVB\Quilplac.exe=No
+C:\Archivos de programa\Microsoft Visual Studio\VB98\Wizards\PDWizard\Redist\MDAC_TYP.EXE=No
+
+[Package|Paquete de instalación QuilplacVB|Distribution]
+Type=single
+Size=
+Title=QUILPLAC S.A. - Modulo de Retenciones -
+
+[Package|Paquete de instalación QuilplacVB|IconGroups]
+Group0=QUILPLAC S.A. - Modulo de Retenciones -
+PrivateGroup0=-1
+Parent0=$(Programs)
+
+[Package|Paquete de instalación QuilplacVB|QUILPLAC S.A. - Modulo de Retenciones -]
+Icon1=Quilplac.exe
+Title1=QUILPLAC S.A. - Modulo de Retenciones -
+StartIn1=$(AppPath)
+Key1=Icon1
+
+[Package|Paquete de instalación QuilplacVB|Package]
+PackageFolder=k:\
+ProjectFolder=C:\QuilplacVB
+ServerSideCab=
+File1=k:\setup.exe
+File2=k:\Setup.Lst
+File3=k:\Quilplac.CAB
+Handler1=PDWizard.FolderDplySubWiz
+Handler2=PDWizard.WebPostDplySubWiz

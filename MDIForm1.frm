@@ -1,0 +1,101 @@
+VERSION 5.00
+Begin VB.MDIForm MDIForm1 
+   BackColor       =   &H8000000C&
+   Caption         =   "Pago a Proveedores"
+   ClientHeight    =   4665
+   ClientLeft      =   225
+   ClientTop       =   855
+   ClientWidth     =   8700
+   Icon            =   "MDIForm1.frx":0000
+   LinkTopic       =   "MDIForm1"
+   StartUpPosition =   3  'Windows Default
+   WindowState     =   2  'Maximized
+   Begin VB.Menu ImpPadron 
+      Caption         =   "&Importar Padron"
+      Begin VB.Menu ImpTXT 
+         Caption         =   "Importar&TXT"
+      End
+   End
+   Begin VB.Menu Provee 
+      Caption         =   "&Proveedores"
+      Begin VB.Menu ABM 
+         Caption         =   "&ABM Proveedores"
+      End
+      Begin VB.Menu Consul 
+         Caption         =   "&Consultas"
+         Enabled         =   0   'False
+      End
+      Begin VB.Menu Listados 
+         Caption         =   "&Listados"
+         Enabled         =   0   'False
+      End
+   End
+   Begin VB.Menu Rete 
+      Caption         =   "&Retencion"
+      Begin VB.Menu Compro 
+         Caption         =   "Comprobante &Retencion"
+      End
+      Begin VB.Menu Consu 
+         Caption         =   "&Consultas"
+         Begin VB.Menu ConProveedor 
+            Caption         =   "Consulta &Por Proveedor"
+         End
+         Begin VB.Menu connumpago 
+            Caption         =   "Consulta por &Numero de Pago"
+         End
+         Begin VB.Menu Confecha 
+            Caption         =   "Consulta entre &Fechas"
+         End
+      End
+      Begin VB.Menu Elimino 
+         Caption         =   "Eliminar Pago"
+      End
+      Begin VB.Menu Exportar 
+         Caption         =   "Exportar Retenciones a TXT"
+      End
+      Begin VB.Menu EPE 
+         Caption         =   "Exportar Percepciones a Excel"
+      End
+   End
+End
+Attribute VB_Name = "MDIForm1"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = False
+Attribute VB_PredeclaredId = True
+Attribute VB_Exposed = False
+Private Sub ABM_Click()
+    FormProveedores.Show
+End Sub
+
+Private Sub Compro_Click()
+    FormComprobanteIIBB.Show
+End Sub
+
+Private Sub Confecha_Click()
+    FormConsultaEntreFechas.Show
+End Sub
+
+Private Sub ConProveedor_Click()
+    FormConsultaCodigoProveedor.Show
+End Sub
+
+Private Sub connumpago_Click()
+    FormConsultaNumeroPago.Show
+End Sub
+
+Private Sub Elimino_Click()
+    FormEliminarPago.Show
+End Sub
+Private Sub EPE_Click()
+'    FormAExcelDbf.Show
+End Sub
+
+Private Sub Exportar_Click()
+    FormAExcel.Show
+End Sub
+
+Private Sub ImpTXT_Click()
+
+    FormImportTxt.Show
+    
+End Sub
