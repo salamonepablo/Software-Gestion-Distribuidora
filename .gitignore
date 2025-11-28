@@ -17,7 +17,7 @@
 *.crt
 *.key
 *.lic
-feafip.dll
+feafip.*
 
 
 # Intermediate / cache
