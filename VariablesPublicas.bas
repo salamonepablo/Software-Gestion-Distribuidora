@@ -130,9 +130,14 @@ Public Function DescCondIVA(condicionIva As String) As String
     
     tCndIVA.Seek "=", condicionIva
     
-    If Not tCndIVA.NoMatch Then tCndIVA.MoveFirst
-    
-    DescCondIVA = tCndIVA!Descripcion
+    If Not tCndIVA.NoMatch Then
+        tCndIVA.MoveFirst
+        DescCondIVA = tCndIVA!Descripcion
+     Else
+        tCndIVA.Close
+        DescCondIVA = " "
+        Exit Function
+    End If
     
     tCndIVA.Close
     BaseSPC.Close
@@ -178,7 +183,7 @@ Public Function RevertirFactura(TipoComp As Long, NroCbte As Double)
     BaseSPC.Close
 
 End Function
-Public Function ePadron(FDesde As String, FHasta As String, CUIT) As Double
+Public Function ePadron(fDesde As String, fHasta As String, CUIT) As Double
     
     Dim lwsPadron As wsPadronARBA
     Dim clienteConCertificado As Double
@@ -189,7 +194,7 @@ Public Function ePadron(FDesde As String, FHasta As String, CUIT) As Double
     lwsPadron.ModoProduccion = True ' Debe dar de alta el cuit en el entorno de test de ARBA http://www.test.arba.gov.ar/
     'If lwsPadron.ConsultaAlicuota("20220301", "20220331", CDbl(Replace(Text1.text, "-", ""))) Then
     
-    If lwsPadron.ConsultaAlicuota(FDesde, FHasta, CDbl(Replace(CUIT, "-", ""))) Then
+    If lwsPadron.ConsultaAlicuota(fDesde, fHasta, CDbl(Replace(CUIT, "-", ""))) Then
        ' lbPercepcion.Caption = CStr(lwsPadron.ConsultaAlicuotaRespuesta.AlicuotaPercepcion)
        ' lbRetencion.Caption = CStr(lwsPadron.ConsultaAlicuotaRespuesta.AlicuotaRetencion)
        ' lbGrupoPercepcion.Caption = CStr(lwsPadron.ConsultaAlicuotaRespuesta.GrupoPercepcion)

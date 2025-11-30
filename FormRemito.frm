@@ -710,6 +710,194 @@ Attribute VB_Exposed = False
  Dim fila2 As Integer
  Dim renglon As Integer
  
+Private Sub ImprimirRemito()
+
+   Dim RemC
+   Dim RemD
+   Dim NumeroRemito As Long
+   Dim DescripcionCondIVA As String
+   Dim Aclaracion As String
+        
+    'On Error GoTo CapturaErrores
+
+   Aclaracion = "Nota: "
+   x = 0
+   Y = 0
+   renglon = 0
+   vNroRemito = "0002- " & TextNumeroRemito.text
+   NumeroRemito = CLng(TextNumeroRemito.text)
+   DescripcionCondIVA = DescCondIVA(vCondIVA)
+    
+   vSQLRc = "SELECT * FROM RemitoC WHERE IdSucursal=" & IdSucursal & " AND NroRemito=" & NumeroRemito & " ORDER By NroRemito"
+   vSQLRd = "SELECT * FROM RemitoD WHERE IdSucursal=" & IdSucursal & " AND NroRemito=" & NumeroRemito & " ORDER By NroRemito, ItemRemito"
+   'vSQLRdir = "SELECT * FROM RemitoD WHERE NroRemito=" & CLng(TextNumeroRemito.text) & " ORDER By NroRemito"
+    
+  ' MsgBox (vSQLRc)
+  ' MsgBox (vSQLRd)
+  ' MsgBox (vSQLRdir)
+    
+    Set BaseSPC = OpenDatabase(App.Path & "\DB_SPC_SI.mdb")
+    
+    Set RemC = BaseSPC.OpenRecordset(vSQLRc, dbOpenDynaset)
+    Set RemD = BaseSPC.OpenRecordset(vSQLRd, dbOpenDynaset)
+      
+        
+    'With p
+        'Seteo escala a mm
+            'Set Printer = Printer
+            Printer.Copies = 3
+            'Printer.Copies = 1
+            Printer.ScaleMode = 6
+        
+        'Imprimir Fecha
+            Printer.CurrentX = x + 163
+            Printer.CurrentY = Y + 17
+            Printer.Font = "Arial"
+            Printer.FontSize = 12
+            Printer.FontBold = True
+            'Printer.Print Format(FormFactura.TextFechaFactura.text, "DD/MM/YYYY")
+            Printer.Print Format(TextFechaRemito.text, "DD/MM/YYYY")
+        
+        'Imprimir Nombres
+           Printer.CurrentX = x + 38
+            Printer.CurrentY = Y + 49
+            Printer.Font = "Arial"
+            Printer.FontSize = 10
+            Printer.FontBold = False
+            Printer.Print TextApellidoNombre.text
+            
+        'Imprimir Direccion
+            Printer.CurrentX = x + 38
+            Printer.CurrentY = Y + 56
+            Printer.Font = "Arial"
+            Printer.FontSize = 10
+            Printer.FontBold = False
+            Printer.Print TextDireccion.text
+            
+        'Imprimir Localidad
+            Printer.CurrentX = x + 38
+            Printer.CurrentY = Y + 63
+            Printer.Font = "Arial"
+            Printer.FontSize = 10
+            Printer.FontBold = False
+            Printer.Print TextLocalidad.text
+            
+        'Imprimir CUIT
+            Printer.CurrentX = x + 148
+            Printer.CurrentY = Y + 48
+            Printer.Font = "Arial"
+            Printer.FontSize = 10
+            Printer.FontBold = False
+            Printer.Print TextCuit.text
+            
+        'Imprimir Marca Responsable Inscripto
+            Printer.CurrentX = x + 38
+            Printer.CurrentY = Y + 70
+            Printer.Font = "Arial"
+            Printer.FontSize = 10
+            Printer.FontBold = False
+            'Printer.Print "X"
+            Printer.Print vCondIVA & " - " & DescripcionCondIVA
+            
+        'Imprimir Marca Contado
+         '   Printer.CurrentX = X + 70
+         '   Printer.CurrentY = Y + 80
+         '   Printer.Font = "Courier New"
+         '   Printer.FontSize = 10
+         '   Printer.FontBold = False
+         '   Printer.Print "X"
+            
+        'Imprimir Marca CtaCte
+         '   Printer.CurrentX = X + 100
+         '   Printer.CurrentY = Y + 80
+         '   Printer.Font = "Courier New"
+         '   Printer.FontSize = 10
+         '   Printer.FontBold = False
+         '   Printer.Print "X"
+            
+        'Imprimir Nro Remito
+          '  Printer.CurrentX = x + 138
+          '  Printer.CurrentY = Y + 80
+          '  Printer.Font = "Courier New"
+          '  Printer.FontSize = 9
+          '  Printer.FontBold = False
+          '  Printer.Print vNroRemito
+            
+        'Imprimir Detalle
+          '  vsqlfc = "SELECT * FROM FacturaC WHERE TipoFactura='" & TextTipoFactura.text & "' AND NroFactura=" & TextNumeroFactura.text & " ORDER By NroFactura"
+          '  vsqlFD = "SELECT * FROM FacturaD WHERE TipoFactura='" & TextTipoFactura.text & "' AND NroFactura=" & TextNumeroFactura.text & " ORDER By NroFactura"
+            
+          '  Set RemC = BaseSPC.OpenRecordset(vsqlfc, dbOpenDynaset)
+          '  Set RemD = BaseSPC.OpenRecordset(vsqlFD, dbOpenDynaset)
+            
+           
+            RemC.MoveFirst
+            RemD.MoveFirst
+            
+          'Guardo Aclaración
+            If RemC!AclaracionRemito <> "" Then Aclaracion = Aclaracion & RemC!AclaracionRemito
+                
+                    While Not RemD.EOF
+                        'Imprimo el detalle
+                            Printer.CurrentX = x + 26
+                            Printer.CurrentY = Y + 100 + renglon
+                            Printer.Font = "Courier New"
+                            Printer.FontSize = 10
+                            Printer.FontBold = False
+                            Printer.Print Format(RemD!cantidad, "#,###,###,#0.00")
+                            
+                        'Detalle
+                            Printer.CurrentX = x + 38
+                            Printer.CurrentY = Y + 100 + renglon
+                            Printer.Font = "Courier New"
+                            Printer.FontSize = 10
+                            Printer.FontBold = False
+                            'Printer.Print RemD!IdCodProd & Chr(9) & Descripcion(RemD!IdCodProd)
+                            Printer.Print Chr(9) & Descripcion(RemD!IdCodProd)
+                        
+                         renglon = renglon + 5
+                            
+                        RemD.MoveNext
+                    Wend
+        
+                        'Aclaración
+                            Printer.CurrentX = x + 38
+                            Printer.CurrentY = Y + 220 + renglon
+                            Printer.Font = "Courier New"
+                            Printer.FontSize = 10
+                            Printer.FontBold = False
+                            'Printer.Print RemD!IdCodProd & Chr(9) & Descripcion(RemD!IdCodProd)
+                            Printer.Print Chr(9) & Aclaracion
+        
+        
+        Printer.EndDoc
+        
+'    End With
+    
+    RemC.Close
+    RemD.Close
+    
+    BaseSPC.Close
+        
+CapturaErrores:
+    'If Err = 321 Then
+    'End If
+'    MsgBox (Err & " " & Err.Description)
+'    End
+    
+End Sub
+
+Public Function Descripcion(IdCodProd As Variant) As String
+
+    Set tProductos = BaseSPC.OpenRecordset("Productos", dbOpenTable)
+    
+    tProductos.Index = "PrimaryKey"
+    
+    tProductos.Seek "=", IdCodProd
+
+    If Not tProductos.NoMatch Then Descripcion = tProductos!Descripcion
+
+End Function
 Private Sub BotonAgregar_Click()
     If fila2 < renglon Then
         If Fila > 1 Then
@@ -878,6 +1066,7 @@ Private Sub BotonGrabar_Click()
         'else
             rstRemitoC.AddNew
                 rstRemitoC.Fields!IdSucursal = CLng(Left(cmbSucursal.text, 1))
+                IdSucursal = rstRemitoC.Fields!IdSucursal
                 rstRemitoC.Fields!NroRemito = CLng(TextNumeroRemito.text)
                 rstRemitoC.Fields!FechaRemito = TextFechaRemito.text
                 rstRemitoC.Fields!CodCliente = TextCodigoCliente.text
@@ -889,11 +1078,11 @@ Private Sub BotonGrabar_Click()
                    Rta = MsgBox("¿Desea Agregar una Aclaración en el Remito?", vbYesNo, "Aclaración")
             
                     If Rta = vbYes Then
-                       Dim aclaracion As String
-                       aclaracion = InputBox("Ingrese Aclaración", "SPCSI Observaciones")
+                       Dim Aclaracion As String
+                       Aclaracion = InputBox("Ingrese Aclaración", "SPCSI Observaciones")
                        ' Validar que no se haya cancelado el InputBox
-                       If aclaracion <> "" Then
-                           rstRemitoC.Fields!AclaracionRemito = aclaracion
+                       If Aclaracion <> "" Then
+                           rstRemitoC.Fields!AclaracionRemito = Aclaracion
                        Else
                            rstRemitoC.Fields!AclaracionRemito = " "
                        End If
@@ -997,6 +1186,12 @@ Private Sub BotonGrabar_Click()
         BotonNueva.Enabled = False
         BotonImprimir.Enabled = False
                         
+        Rta = MsgBox("¿Desea Imprimir el remito?", vbYesNo, "INFO DEL SISTEMA")
+        
+        If Rta = vbYes Then
+            Call ImprimirRemito
+        End If
+        
         modificaStock = 0
         
         Call blanqueototal
@@ -1929,6 +2124,7 @@ Private Sub TextCodigoCliente_LostFocus()
                 TextCodigoPostal.text = rstCliente.Fields!CP
                 TextProvincia.text = rstCliente.Fields!Prov
                 vendedorCliente = rstCliente.Fields!Vendedor
+                vCondIVA = rstCliente.Fields!condicionIva
                 Call buscocuilyvendedor
             End If
         End If

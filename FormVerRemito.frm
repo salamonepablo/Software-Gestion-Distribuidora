@@ -453,7 +453,7 @@ Private Sub BotonImprimir_Click()
     Call ImprimirRemito
 
 End Sub
-Private Sub ImprimirRemito_Old()
+Private Sub ImprimirRemito_old()
 
     Dim RemC
     Dim RemD
@@ -605,9 +605,11 @@ Private Sub ImprimirRemito()
    Dim RemD
    Dim NumeroRemito As Long
    Dim DescripcionCondIVA As String
+   Dim Aclaracion As String
         
     'On Error GoTo CapturaErrores
 
+   Aclaracion = "Nota: "
    x = 0
    Y = 0
    renglon = 0
@@ -631,7 +633,9 @@ Private Sub ImprimirRemito()
         
     'With p
         'Seteo escala a mm
-            Printer.Copies = 3
+            'Set Printer = Printers(4)
+            'Printer.Copies = 3
+            Printer.Copies = 1
             Printer.ScaleMode = 6
         
         'Imprimir Fecha
@@ -718,6 +722,9 @@ Private Sub ImprimirRemito()
            
             RemC.MoveFirst
             RemD.MoveFirst
+            
+          'Guardo Aclaración
+            If RemC!AclaracionRemito <> "" Then Aclaracion = Aclaracion & RemC!AclaracionRemito
                 
                     While Not RemD.EOF
                         'Imprimo el detalle
@@ -741,6 +748,17 @@ Private Sub ImprimirRemito()
                             
                         RemD.MoveNext
                     Wend
+        
+                        'Aclaración
+                            Printer.CurrentX = x + 38
+                            Printer.CurrentY = Y + 220 + renglon
+                            Printer.Font = "Courier New"
+                            Printer.FontSize = 10
+                            Printer.FontBold = False
+                            'Printer.Print RemD!IdCodProd & Chr(9) & Descripcion(RemD!IdCodProd)
+                            Printer.Print Chr(9) & Aclaracion
+        
+        
         Printer.EndDoc
         
 '    End With
