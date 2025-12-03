@@ -3713,6 +3713,205 @@ Public Function Descripcion(IdCodProd As Variant) As String
 
 End Function
 
+Private Sub ImprimirRemitoII()
+
+   Dim RemC
+   Dim RemD
+   Dim NumeroRemito As Long
+   Dim DescripcionCondIVA As String
+   Dim Aclaracion As String
+        
+    'On Error GoTo CapturaErrores
+
+   Aclaracion = " "
+   x = 0
+   Y = 0
+   renglon = 0
+   vNroRemito = "0002- " & TextNumeroRemito.text
+   NumeroRemito = CLng(TextNumeroRemito.text)
+   DescripcionCondIVA = DescCondIVA(vCondIVA)
+    
+   vSQLRc = "SELECT * FROM RemitoC WHERE IdSucursal=" & IdSucursal & " AND NroRemito=" & NumeroRemito & " ORDER By NroRemito"
+   vSQLRd = "SELECT * FROM RemitoD WHERE IdSucursal=" & IdSucursal & " AND NroRemito=" & NumeroRemito & " ORDER By NroRemito, ItemRemito"
+   'vSQLRdir = "SELECT * FROM RemitoD WHERE NroRemito=" & CLng(TextNumeroRemito.text) & " ORDER By NroRemito"
+    
+  ' MsgBox (vSQLRc)
+  ' MsgBox (vSQLRd)
+  ' MsgBox (vSQLRdir)
+    
+    Set BaseSPC = OpenDatabase(App.Path & "\DB_SPC_SI.mdb")
+    
+    Set RemC = BaseSPC.OpenRecordset(vSQLRc, dbOpenDynaset)
+    Set RemD = BaseSPC.OpenRecordset(vSQLRd, dbOpenDynaset)
+      
+        
+    'With p
+        'Seteo escala a mm
+            'Set Printer = Printer
+            Printer.Copies = 3
+            'Printer.Copies = 1
+            Printer.ScaleMode = 6
+        
+        'Imprimir Fecha
+            Printer.CurrentX = x + 163
+            Printer.CurrentY = Y + 17
+            Printer.Font = "Arial"
+            Printer.FontSize = 12
+            Printer.FontBold = True
+            'Printer.Print Format(FormFactura.TextFechaFactura.text, "DD/MM/YYYY")
+            'Printer.Print Format(TextFechaRemito.text, "DD/MM/YYYY")
+            Printer.Print Format(RemC!FechaRemito, "DD/MM/YYYY")
+        
+        'Imprimir Nombres
+           Printer.CurrentX = x + 38
+            Printer.CurrentY = Y + 49
+            Printer.Font = "Arial"
+            Printer.FontSize = 10
+            Printer.FontBold = False
+            Printer.Print FormFactura.TextApellidoNombre.text
+            
+        'Imprimir Direccion
+            Printer.CurrentX = x + 38
+            Printer.CurrentY = Y + 56
+            Printer.Font = "Arial"
+            Printer.FontSize = 10
+            Printer.FontBold = False
+            Printer.Print FormFactura.TextDireccion.text
+            
+        'Imprimir Localidad
+            Printer.CurrentX = x + 38
+            Printer.CurrentY = Y + 63
+            Printer.Font = "Arial"
+            Printer.FontSize = 10
+            Printer.FontBold = False
+            Printer.Print FormFactura.TextLocalidad.text
+            
+        'Imprimir CUIT
+            Printer.CurrentX = x + 148
+            Printer.CurrentY = Y + 48
+            Printer.Font = "Arial"
+            Printer.FontSize = 10
+            Printer.FontBold = False
+            Printer.Print FormFactura.TextCuit.text
+            
+        'Imprimir Marca Responsable Inscripto
+            Printer.CurrentX = x + 38
+            Printer.CurrentY = Y + 70
+            Printer.Font = "Arial"
+            Printer.FontSize = 10
+            Printer.FontBold = False
+            'Printer.Print "X"
+            Printer.Print vCondIVA & " - " & DescripcionCondIVA
+            
+        'Imprimir Marca Contado
+         '   Printer.CurrentX = X + 70
+         '   Printer.CurrentY = Y + 80
+         '   Printer.Font = "Courier New"
+         '   Printer.FontSize = 10
+         '   Printer.FontBold = False
+         '   Printer.Print "X"
+            
+        'Imprimir Marca CtaCte
+         '   Printer.CurrentX = X + 100
+         '   Printer.CurrentY = Y + 80
+         '   Printer.Font = "Courier New"
+         '   Printer.FontSize = 10
+         '   Printer.FontBold = False
+         '   Printer.Print "X"
+            
+        'Imprimir Nro Remito
+          '  Printer.CurrentX = x + 138
+          '  Printer.CurrentY = Y + 80
+          '  Printer.Font = "Courier New"
+          '  Printer.FontSize = 9
+          '  Printer.FontBold = False
+          '  Printer.Print vNroRemito
+            
+        'Imprimir Detalle
+          '  vsqlfc = "SELECT * FROM FacturaC WHERE TipoFactura='" & TextTipoFactura.text & "' AND NroFactura=" & TextNumeroFactura.text & " ORDER By NroFactura"
+          '  vsqlFD = "SELECT * FROM FacturaD WHERE TipoFactura='" & TextTipoFactura.text & "' AND NroFactura=" & TextNumeroFactura.text & " ORDER By NroFactura"
+            
+          '  Set RemC = BaseSPC.OpenRecordset(vsqlfc, dbOpenDynaset)
+          '  Set RemD = BaseSPC.OpenRecordset(vsqlFD, dbOpenDynaset)
+            
+           
+            RemC.MoveFirst
+            RemD.MoveFirst
+            
+          'Guardo Aclaración
+            If RemC!AclaracionRemito <> "" Then Aclaracion = Aclaracion & RemC!AclaracionRemito
+                
+                    While Not RemD.EOF
+                        'Imprimo el detalle
+                            Printer.CurrentX = x + 26
+                            Printer.CurrentY = Y + 100 + renglon
+                            Printer.Font = "Courier New"
+                            Printer.FontSize = 10
+                            Printer.FontBold = False
+                            Printer.Print Format(RemD!cantidad, "#,###,###,#0.00")
+                            
+                        'Detalle
+                            Printer.CurrentX = x + 38
+                            Printer.CurrentY = Y + 100 + renglon
+                            Printer.Font = "Courier New"
+                            Printer.FontSize = 10
+                            Printer.FontBold = False
+                            'Printer.Print RemD!IdCodProd & Chr(9) & Descripcion(RemD!IdCodProd)
+                            Printer.Print Chr(9) & Descripcion(RemD!IdCodProd)
+                        
+                         renglon = renglon + 5
+                            
+                        RemD.MoveNext
+                    Wend
+        
+                        'Aclaración
+                            Printer.CurrentX = x + 38
+                            Printer.CurrentY = Y + 205 + renglon
+                            Printer.Font = "Courier New"
+                            Printer.FontSize = 10
+                            Printer.FontBold = False
+                            
+                            ' 2. Calcular la altura de la letra actual para saber cuánto bajar
+                                alturaRenglon = Printer.TextHeight("A")
+                            
+                            ' 3. Dividir el texto 'Aclaracion' usando la barra "/" como separador
+                                lineasAclaracion = Split(Aclaracion, "/")
+                            
+                            ' 4. Recorrer cada parte e imprimirla
+                                For I = LBound(lineasAclaracion) To UBound(lineasAclaracion)
+                                
+                                ' Fijamos la posición X (siempre la misma para alinear a la izquierda)
+                                    Printer.CurrentX = x + 38
+                                
+                                ' Fijamos la posición Y
+                                ' Y Base + Ajuste original + Renglon + (Número de línea actual * Altura de letra)
+                                    Printer.CurrentY = (Y + 205 + renglon) + (I * alturaRenglon)
+                                
+                                ' Imprimimos (Usamos Trim para borrar espacios que hayan quedado pegados a la barra)
+                                    Printer.Print Chr(9) & Trim(lineasAclaracion(I))
+                                
+                                ' Opcional: Si querés limitar a solo 3 renglones aunque escriban más:
+                                    'If I = 2 Then Exit For
+                                Next I
+                                                       
+                            'Printer.Print Chr(9) & Aclaracion
+        Printer.EndDoc
+        
+'    End With
+    
+    RemC.Close
+    RemD.Close
+    
+'    BaseSPC.Close
+        
+CapturaErrores:
+    'If Err = 321 Then
+    'End If
+'    MsgBox (Err & " " & Err.Description)
+'    End
+
+End Sub
+
 Private Sub BotonAceptar_Click()
 
     If FormImprimir.CheckImprimirFactura.Value = 1 Then
@@ -3721,7 +3920,8 @@ Private Sub BotonAceptar_Click()
     End If
         
     If FormImprimir.CheckImprimirRemito.Value = 1 Then
-        Call ImprimirRemito
+        'Call ImprimirRemito
+        Call ImprimirRemitoII
     End If
 
 End Sub
@@ -3733,7 +3933,7 @@ Private Sub BotonSalir_Click()
     FormFactura.TextCodigoCliente.SetFocus
     FormFactura.MSFlexGrid1.Visible = False
     
-       
+      
     Unload FormImprimir
 
 End Sub

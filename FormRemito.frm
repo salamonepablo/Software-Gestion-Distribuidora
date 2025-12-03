@@ -720,7 +720,7 @@ Private Sub ImprimirRemito()
         
     'On Error GoTo CapturaErrores
 
-   Aclaracion = "Nota: "
+   Aclaracion = " "
    x = 0
    Y = 0
    renglon = 0
@@ -862,14 +862,35 @@ Private Sub ImprimirRemito()
         
                         'Aclaración
                             Printer.CurrentX = x + 38
-                            Printer.CurrentY = Y + 220 + renglon
+                            Printer.CurrentY = Y + 205 + renglon
                             Printer.Font = "Courier New"
                             Printer.FontSize = 10
                             Printer.FontBold = False
-                            'Printer.Print RemD!IdCodProd & Chr(9) & Descripcion(RemD!IdCodProd)
-                            Printer.Print Chr(9) & Aclaracion
-        
-        
+                            
+                            ' 2. Calcular la altura de la letra actual para saber cuánto bajar
+                                alturaRenglon = Printer.TextHeight("A")
+                            
+                            ' 3. Dividir el texto 'Aclaracion' usando la barra "/" como separador
+                                lineasAclaracion = Split(Aclaracion, "/")
+                            
+                            ' 4. Recorrer cada parte e imprimirla
+                                For I = LBound(lineasAclaracion) To UBound(lineasAclaracion)
+                                
+                                ' Fijamos la posición X (siempre la misma para alinear a la izquierda)
+                                    Printer.CurrentX = x + 38
+                                
+                                ' Fijamos la posición Y
+                                ' Y Base + Ajuste original + Renglon + (Número de línea actual * Altura de letra)
+                                    Printer.CurrentY = (Y + 205 + renglon) + (I * alturaRenglon)
+                                
+                                ' Imprimimos (Usamos Trim para borrar espacios que hayan quedado pegados a la barra)
+                                    Printer.Print Chr(9) & Trim(lineasAclaracion(I))
+                                
+                                ' Opcional: Si querés limitar a solo 3 renglones aunque escriban más:
+                                    'If I = 2 Then Exit For
+                                Next I
+                                                       
+                            'Printer.Print Chr(9) & Aclaracion
         Printer.EndDoc
         
 '    End With

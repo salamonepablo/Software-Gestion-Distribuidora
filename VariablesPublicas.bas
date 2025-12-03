@@ -419,7 +419,7 @@ End Function
 Public Sub CrearQR(Fecha As String, CUIT As Double, PtoVta As Long, TipoComp As Long, nroCmp As Double, Importe As Double, Moneda As String, ctz As Double, tipoDocRec As Long, nroDocRec As Double, TipoCodAut As String, codAut As Double)
 
   Dim Qr As FEAFIPLib.Qr
-  Dim tipoDoc, carpetaQR As String
+  Dim tipoDoc, CarpetaQR As String
   
   Set Qr = New FEAFIPLib.Qr
   
@@ -438,8 +438,8 @@ Public Sub CrearQR(Fecha As String, CUIT As Double, PtoVta As Long, TipoComp As 
         tipoDoc = "NCB"
   End Select
     
-  carpetaQR = "\QRs\" + "qr" + "_" & tipoDoc & "_" & PtoVta & "_" & nroCmp & ".jpg"
-  Qr.ArchivoQR = Qr.RutaLibreria & carpetaQR ' Admite formatos BMP, PNG y JPG con solo cambiar la extension
+  CarpetaQR = "\QRs\" + "qr" + "_" & tipoDoc & "_" & PtoVta & "_" & nroCmp & ".jpg"
+  Qr.ArchivoQR = Qr.RutaLibreria & CarpetaQR ' Admite formatos BMP, PNG y JPG con solo cambiar la extension
 
   'Long
   Ver = 1

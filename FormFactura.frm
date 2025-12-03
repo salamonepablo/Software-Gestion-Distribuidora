@@ -1522,11 +1522,11 @@ Private Sub BotonGrabar_Click()
          '   End If
          
              If Rta = IDYES Then
-                Dim aclaracion As String
-                aclaracion = InputBox("Ingrese Aclaración", "SPCSI Observaciones")
+                Dim Aclaracion As String
+                Aclaracion = InputBox("Ingrese Aclaración", "SPCSI Observaciones")
                 ' Validar que no se haya cancelado el InputBox
-                If aclaracion <> "" Then
-                    rstFacturaC.Fields!AclaracionFactura = aclaracion
+                If Aclaracion <> "" Then
+                    rstFacturaC.Fields!AclaracionFactura = Aclaracion
                 Else
                     rstFacturaC.Fields!AclaracionFactura = " "
                 End If
@@ -1712,8 +1712,8 @@ Private Sub BotonGrabar_Click()
  '
                 
                 'Para probar sin emitir FE
-'                    Call CrearQR(CStr(CbteFch), 30708432543#, 4, 1, CDbl(CbteDesde), CDbl(ImpTotal), "PES", 1, 80, CUITCliente(TextCodigoCliente.text), "E", CDbl(75303526219793#))
-'                    Call ActualizarCAE("FacturaC", "A", CbteDesde, (75303526219793#), CStr(Format$(Now, "YYYYMMDD")))
+                    'Call Copiar_QR(CbteDesde)
+                    'Call ActualizarCAE("FacturaC", "A", CbteDesde, (75303526219793#), CStr(Format$(Now, "YYYYMMDD")))
                 
      '//////////////////////////////////////////////////////////////////////////////////
             
@@ -1846,6 +1846,73 @@ CapturaErrores:
 '        Fila = 0
 End Sub
 
+Private Sub Copiar_QR(ByVal NroComprobante As Double)
+    Dim FSO As Object
+    Dim CarpetaQR As Object
+    Dim Archivo As Object
+    Dim ArchivoMasReciente As Object
+    Dim RutaCarpeta As String
+    Dim RutaDestino As String
+    Dim NuevoNombre As String
+    
+    ' Definir la ruta de la carpeta QRs
+    RutaCarpeta = App.Path & "\QRs\"
+    
+    ' Crear objeto FileSystemObject para manejar archivos
+    Set FSO = CreateObject("Scripting.FileSystemObject")
+    
+    ' Verificar si la carpeta existe
+    If Not FSO.FolderExists(RutaCarpeta) Then
+        MsgBox "No se encuentra la carpeta de QRs: " & RutaCarpeta, vbCritical
+        Set FSO = Nothing
+        Exit Sub
+    End If
+    
+    Set CarpetaQR = FSO.GetFolder(RutaCarpeta)
+    
+    ' Buscar el archivo más reciente
+    For Each Archivo In CarpetaQR.Files
+        ' Filtramos solo archivos de imagen (ajustar extensión si es necesario, ej: .png)
+        If InStr(1, UCase(Archivo.Name), ".JPG") > 0 Or InStr(1, UCase(Archivo.Name), ".PNG") > 0 Or InStr(1, UCase(Archivo.Name), ".BMP") > 0 Then
+            If ArchivoMasReciente Is Nothing Then
+                Set ArchivoMasReciente = Archivo
+            Else
+                ' Comparamos la fecha de última modificación
+                If Archivo.DateLastModified > ArchivoMasReciente.DateLastModified Then
+                    Set ArchivoMasReciente = Archivo
+                End If
+            End If
+        End If
+    Next Archivo
+    
+    ' Si encontramos un archivo, procedemos a copiarlo
+    If Not ArchivoMasReciente Is Nothing Then
+        ' Construir el nuevo nombre: qr_FA_4_ + NumeroFactura + .jpg
+        ' Nota: Asumo extensión .jpg, si el original es .png, habría que mantenerla.
+        ' Aquí fuerzo .jpg según tu pedido.
+        
+        NuevoNombre = "qr_FA_4_" & CStr(NroComprobante) & ".jpg"
+        RutaDestino = RutaCarpeta & NuevoNombre
+        
+        On Error Resume Next ' Por si el archivo destino ya existe o hay error de permisos
+        FSO.CopyFile ArchivoMasReciente.Path, RutaDestino, True ' True para sobrescribir
+        
+        If Err.Number <> 0 Then
+            MsgBox "Error al copiar el QR: " & Err.Description, vbExclamation
+        'Else
+            ' Opcional: MsgBox "QR Copiado exitosamente como: " & NuevoNombre
+        End If
+        On Error GoTo 0
+    Else
+        MsgBox "No se encontraron archivos de imagen en la carpeta QRs.", vbExclamation
+    End If
+    
+    ' Limpieza de objetos
+    Set ArchivoMasReciente = Nothing
+    Set Archivo = Nothing
+    Set CarpetaQR = Nothing
+    Set FSO = Nothing
+End Sub
 Private Sub DesHagoStock(CodProd, descuentoCantidad)
 'Private Sub DesHagoStock(CodProd, IdDepoOrigen, IdDepoDestino, Cant)
     'Seteo Tabla Stock
