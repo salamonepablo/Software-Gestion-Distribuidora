@@ -212,7 +212,11 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Dim cl As New arisBarcode
-
+Private Declare Function GetProfileString Lib "kernel32" Alias "GetProfileStringA" _
+    (ByVal lpAppName As String, ByVal lpKeyName As String, _
+     ByVal lpDefault As String, ByVal lpReturnedString As String, _
+     ByVal nSize As Long) As Long
+     
 Private Function CalcularBarCode() As String
     
     Dim TipoC, FechaVC As String
@@ -3744,10 +3748,25 @@ Private Sub ImprimirRemitoII()
     Set RemC = BaseSPC.OpenRecordset(vSQLRc, dbOpenDynaset)
     Set RemD = BaseSPC.OpenRecordset(vSQLRd, dbOpenDynaset)
       
+      
+      
         
     'With p
         'Seteo escala a mm
             'Set Printer = Printer
+            
+    ' 1. La que usará VB6 si imprimes ahora
+        'impresoraActual = Printer.DeviceName
+    
+    ' 2. La que Windows tiene marcada con el tilde verde
+        'impresoraDefault = ObtenerImpresoraPorDefecto()
+    
+        'MsgBox "Impresora Seteada (VB6): " & impresoraActual & vbCrLf & _
+        '   "Impresora Default (Windows): " & impresoraDefault
+    
+        'Seteamos impresora por defecto
+            Call SetearImpresoraPorDefecto
+            
             Printer.Copies = 3
             'Printer.Copies = 1
             Printer.ScaleMode = 6
@@ -3912,6 +3931,46 @@ CapturaErrores:
 
 End Sub
 
+
+Private Sub SetearImpresoraPorDefecto()
+    Dim p As Printer
+    Dim nombreDefault As String
+    
+    ' 1. Obtenemos el nombre real de la impresora por defecto de Windows (usando la API)
+    nombreDefault = ObtenerImpresoraPorDefecto()
+    
+    ' 2. Recorremos todas las impresoras instaladas en VB6
+    For Each p In Printers
+        ' Comparamos los nombres
+        If UCase(p.DeviceName) = UCase(nombreDefault) Then
+            ' 3. ¡La encontramos! Se la asignamos al objeto Printer
+            Set Printer = p
+            Exit For
+        End If
+    Next
+End Sub
+' Función para obtener el nombre de la impresora por defecto real
+Public Function ObtenerImpresoraPorDefecto() As String
+    Dim buffer As String
+    Dim r As Long
+    
+    buffer = Space$(255)
+    ' Busca en la configuración de Windows la entrada "device" bajo "windows"
+    r = GetProfileString("windows", "device", "", buffer, Len(buffer))
+    
+    If r > 0 Then
+        ' El resultado viene como "NombreImpresora,Driver,Puerto"
+        ' Cortamos el string hasta la primera coma para obtener solo el nombre
+        buffer = Left$(buffer, r)
+        If InStr(buffer, ",") > 0 Then
+            ObtenerImpresoraPorDefecto = Left$(buffer, InStr(buffer, ",") - 1)
+        Else
+            ObtenerImpresoraPorDefecto = buffer
+        End If
+    Else
+        ObtenerImpresoraPorDefecto = "No se encontró impresora por defecto"
+    End If
+End Function
 Private Sub BotonAceptar_Click()
 
     If FormImprimir.CheckImprimirFactura.Value = 1 Then

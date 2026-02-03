@@ -1712,8 +1712,8 @@ Private Sub BotonGrabar_Click()
  '
                 
                 'Para probar sin emitir FE
-                    'Call Copiar_QR(CbteDesde)
-                    'Call ActualizarCAE("FacturaC", "A", CbteDesde, (75303526219793#), CStr(Format$(Now, "YYYYMMDD")))
+'                    Call Copiar_QR(CbteDesde)
+ '                   Call ActualizarCAE("FacturaC", "A", CbteDesde, (75303526219793#), CStr(Format$(Now, "YYYYMMDD")))
                 
      '//////////////////////////////////////////////////////////////////////////////////
             

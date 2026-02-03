@@ -55,6 +55,8 @@ DB_SPC_SI*.mdb
 
 # pdfs / Reports Documents generated
 *.pdf
+*.jpg
+*.png
 
 # Generated HTML or TXT lots (opcional)
 AR-*LOTE*.txt
