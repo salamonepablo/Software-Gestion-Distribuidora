@@ -287,7 +287,7 @@ Begin VB.Form FormRemito
       Begin VB.Label Label2 
          AutoSize        =   -1  'True
          BackColor       =   &H00C0C0C0&
-         Caption         =   "Nº Remito"
+         Caption         =   "Nro. Remito"
          BeginProperty Font 
             Name            =   "MS Sans Serif"
             Size            =   8.25
@@ -301,7 +301,7 @@ Begin VB.Form FormRemito
          Left            =   3000
          TabIndex        =   43
          Top             =   240
-         Width           =   855
+         Width           =   1020
       End
       Begin VB.Label Label4 
          AutoSize        =   -1  'True
@@ -363,7 +363,7 @@ Begin VB.Form FormRemito
    End
    Begin MSFlexGridLib.MSFlexGrid MSFlexGrid1 
       Height          =   1815
-      Left            =   4200
+      Left            =   4320
       TabIndex        =   31
       Top             =   720
       Visible         =   0   'False
@@ -457,7 +457,7 @@ Begin VB.Form FormRemito
       Begin VB.Label Label1 
          AutoSize        =   -1  'True
          BackColor       =   &H00C0C0C0&
-         Caption         =   "Código Cliente:"
+         Caption         =   "Codigo Cliente:"
          BeginProperty Font 
             Name            =   "MS Sans Serif"
             Size            =   8.25
@@ -471,7 +471,7 @@ Begin VB.Form FormRemito
          Left            =   120
          TabIndex        =   21
          Top             =   360
-         Width           =   1290
+         Width           =   1305
       End
       Begin VB.Label Label5 
          AutoSize        =   -1  'True
@@ -693,6 +693,11 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+Private Declare Function GetProfileString Lib "kernel32" Alias "GetProfileStringA" _
+    (ByVal lpAppName As String, ByVal lpKeyName As String, _
+     ByVal lpDefault As String, ByVal lpReturnedString As String, _
+     ByVal nSize As Long) As Long
+     
  Dim db As DAO.Database
  Dim rstEmpleado As DAO.Recordset
  Dim rstCliente As DAO.Recordset
@@ -745,6 +750,10 @@ Private Sub ImprimirRemito()
     'With p
         'Seteo escala a mm
             'Set Printer = Printer
+            
+        'Seteamos impresora por defecto
+            Call SetearImpresoraPorDefecto
+            
             Printer.Copies = 3
             'Printer.Copies = 1
             Printer.ScaleMode = 6
@@ -860,14 +869,14 @@ Private Sub ImprimirRemito()
                         RemD.MoveNext
                     Wend
         
-                        'Aclaración
+                        'Aclaraciï¿½n
                             Printer.CurrentX = x + 38
                             Printer.CurrentY = Y + 205 + renglon
                             Printer.Font = "Courier New"
                             Printer.FontSize = 10
                             Printer.FontBold = False
                             
-                            ' 2. Calcular la altura de la letra actual para saber cuánto bajar
+                            ' 2. Calcular la altura de la letra actual para saber cuï¿½nto bajar
                                 alturaRenglon = Printer.TextHeight("A")
                             
                             ' 3. Dividir el texto 'Aclaracion' usando la barra "/" como separador
@@ -876,17 +885,17 @@ Private Sub ImprimirRemito()
                             ' 4. Recorrer cada parte e imprimirla
                                 For I = LBound(lineasAclaracion) To UBound(lineasAclaracion)
                                 
-                                ' Fijamos la posición X (siempre la misma para alinear a la izquierda)
+                                ' Fijamos la posiciï¿½n X (siempre la misma para alinear a la izquierda)
                                     Printer.CurrentX = x + 38
                                 
-                                ' Fijamos la posición Y
-                                ' Y Base + Ajuste original + Renglon + (Número de línea actual * Altura de letra)
+                                ' Fijamos la posiciï¿½n Y
+                                ' Y Base + Ajuste original + Renglon + (Nï¿½mero de lï¿½nea actual * Altura de letra)
                                     Printer.CurrentY = (Y + 205 + renglon) + (I * alturaRenglon)
                                 
                                 ' Imprimimos (Usamos Trim para borrar espacios que hayan quedado pegados a la barra)
                                     Printer.Print Chr(9) & Trim(lineasAclaracion(I))
                                 
-                                ' Opcional: Si querés limitar a solo 3 renglones aunque escriban más:
+                                ' Opcional: Si querï¿½s limitar a solo 3 renglones aunque escriban mï¿½s:
                                     'If I = 2 Then Exit For
                                 Next I
                                                        
@@ -919,6 +928,48 @@ Public Function Descripcion(IdCodProd As Variant) As String
     If Not tProductos.NoMatch Then Descripcion = tProductos!Descripcion
 
 End Function
+
+Private Sub SetearImpresoraPorDefecto()
+    Dim p As Printer
+    Dim nombreDefault As String
+    
+    ' 1. Obtenemos el nombre real de la impresora por defecto de Windows (usando la API)
+    nombreDefault = ObtenerImpresoraPorDefecto()
+    
+    ' 2. Recorremos todas las impresoras instaladas en VB6
+    For Each p In Printers
+        ' Comparamos los nombres
+        If UCase(p.DeviceName) = UCase(nombreDefault) Then
+            ' 3. La encontramos! Se la asignamos al objeto Printer
+            Set Printer = p
+            Exit For
+        End If
+    Next
+End Sub
+
+' Funcion para obtener el nombre de la impresora por defecto real
+Public Function ObtenerImpresoraPorDefecto() As String
+    Dim buffer As String
+    Dim r As Long
+    
+    buffer = Space$(255)
+    ' Busca en la configuracion de Windows la entrada "device" bajo "windows"
+    r = GetProfileString("windows", "device", "", buffer, Len(buffer))
+    
+    If r > 0 Then
+        ' El resultado viene como "NombreImpresora,Driver,Puerto"
+        ' Cortamos el string hasta la primera coma para obtener solo el nombre
+        buffer = Left$(buffer, r)
+        If InStr(buffer, ",") > 0 Then
+            ObtenerImpresoraPorDefecto = Left$(buffer, InStr(buffer, ",") - 1)
+        Else
+            ObtenerImpresoraPorDefecto = buffer
+        End If
+    Else
+        ObtenerImpresoraPorDefecto = "No se encontro impresora por defecto"
+    End If
+End Function
+
 Private Sub BotonAgregar_Click()
     If fila2 < renglon Then
         If Fila > 1 Then
@@ -1056,7 +1107,7 @@ Private Sub BotonGrabar_Click()
             DepoOrigen = tDepositos!IDDEPOSITO
             'MsgBox (DepoOrigen)
            Else
-            A = MsgBox("ERROR !!", vbCritical, "Vendedor sin Depósito Asociado")
+            A = MsgBox("ERROR !!", vbCritical, "Vendedor sin Deposito Asociado")
            End If
               
            tDepositos.Close
@@ -1233,13 +1284,13 @@ CapturaErrores:
 End Sub
 Private Sub ActualizarStock(CodProd, IdDepoOrigen, Cant)
 
-    'Sumo el Stock en Depósito Destino
+    'Sumo el Stock en Deposito Destino
         Set tS = db.OpenRecordset("Stock", dbOpenTable)
         
         tS.Index = "PrimaryKey"
         tS.MoveFirst
         
-        'Resto el Stock en Depósito Origen
+        'Resto el Stock en Depï¿½sito Origen
           tS.Seek "=", CodProd, IdDepoOrigen
             
         If Not tS.NoMatch Then
@@ -1251,7 +1302,7 @@ Private Sub ActualizarStock(CodProd, IdDepoOrigen, Cant)
             tS.Update
         End If
     
-    'Sumo el Stock en Depósito Destino
+    'Sumo el Stock en Depï¿½sito Destino
     '    tS.Seek "=", CodProd, IdDepoDestino
               
         'Si tiene stock de este producto
@@ -1696,7 +1747,7 @@ Sub SeteoGrilla()
     FG1.Col = 1
     FG1.ColWidth(1) = 4700
     FG1.CellFontBold = True
-    FG1.text = "Descripción"
+    FG1.text = "Descripcion"
     FG1.ColAlignment(1) = flexAlignCenterCenter
     
     FG1.Col = 2
