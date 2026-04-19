@@ -15,6 +15,23 @@ Begin VB.Form FormBuscarFormularios
       TabIndex        =   0
       Top             =   120
       Width           =   5295
+      Begin VB.CommandButton cmdBuscarRecibo 
+         Caption         =   "Buscar &e-Recibo"
+         BeginProperty Font 
+            Name            =   "MS Sans Serif"
+            Size            =   8.25
+            Charset         =   0
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         Height          =   615
+         Left            =   2760
+         TabIndex        =   8
+         Top             =   3480
+         Width           =   1695
+      End
       Begin VB.CommandButton cmdBuscarNotaDebitoInt 
          Caption         =   "Buscar Nota de Débito &Interna"
          BeginProperty Font 
@@ -208,6 +225,12 @@ Private Sub cmdBuscarPresupuesto_KeyPress(KeyAscii As Integer)
 
 End Sub
 
+
+Private Sub cmdBuscarRecibo_Click()
+
+    FormBuscarRecibo.Show
+
+End Sub
 
 Private Sub cmdBuscarRemito_Click()
 

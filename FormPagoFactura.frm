@@ -1209,7 +1209,7 @@ Private Sub ImprimirReciboE()
        
         Dim NroFactura As String
         Dim NroRecibo As Long
-        Dim NRec As String
+        Dim Nrec As String
         Dim NroRemito As String
         Dim IdSuc As String
         Dim vSQL As String
@@ -1254,7 +1254,11 @@ Private Sub ImprimirReciboE()
            NroRecibo = 0
            If Not tUltimosNumeros.NoMatch Then
              NroRecibo = (CLng(tUltimosNumeros!UltimoNumero))
-             NRec = CStr(tUltimosNumeros!UltimoNumero)
+             If NroRecibo = CLng(TextNumeroPago.text) Then
+                Nrec = CStr(tUltimosNumeros!UltimoNumero)
+              Else
+               Nrec = CStr((tUltimosNumeros!UltimoNumero + 1))
+             End If
             Else
                 
            End If
@@ -1347,10 +1351,10 @@ Private Sub ImprimirReciboE()
                         'En el numero de factura poner de la bbdd
                         NroRecibo = CStr(NroRecibo)
                         'Largo = 8 - Len(NroRecibo)
-                        Largo = 8 - Len(NRec)
+                        Largo = 8 - Len(Nrec)
                         For I = 1 To Largo
                             'NroRecibo = "0" & NroRecibo
-                            NRec = "0" & NRec
+                            Nrec = "0" & Nrec
                         Next I
                         
                         IdSuc = CStr(Left(cmbSucursal.text, 1))
@@ -1361,7 +1365,7 @@ Private Sub ImprimirReciboE()
                         
                         'Printer.Print "Nº: 000" & CInt(Left(cmbSucursal.text, 1)) & "-" & NroRecibo
                         'Printer.Print IdSuc & "-" & NroRecibo
-                        Printer.Print IdSuc & "-" & NRec
+                        Printer.Print IdSuc & "-" & Nrec
                         
                         .CurrentX = 150
                         .CurrentY = .CurrentY + 2
@@ -1576,7 +1580,7 @@ Private Sub ImprimirReciboE()
                           '  .FontName = "Courier New"
                            ' .FontBold = False
                             .FontSize = 10
-                            vTransf = Val(textTransferencia.text)
+                            vTransf = Val(TextTransferencia.text)
                             Printer.Print "* Transferencia: " & Chr(9) & Format(vTransf, "Currency")
                             
                             .CurrentX = 32
@@ -2040,14 +2044,14 @@ Private Sub BotonGuardar_Click()
             tRecibosD.Update
         End If
         
-        If textTransferencia.text <> "" Then
+        If TextTransferencia.text <> "" Then
             rstPagoD.AddNew
                 rstPagoD.Fields!IdSucursal = CInt(Left(cmbSucursal.text, 1))
                 rstPagoD.Fields!NroPago = TextNumeroPago.text
                 If NroLinea >= 0 Then NroLinea = NroLinea + 1
                 rstPagoD.Fields!LineaPago = CInt(NroLinea)
                 rstPagoD.Fields!FormaPago = "Transferencia"
-                rstPagoD.Fields!ImportePago = Format(Val(textTransferencia.text), "#0.00")
+                rstPagoD.Fields!ImportePago = Format(Val(TextTransferencia.text), "#0.00")
             rstPagoD.Update
         
             tRecibosD.AddNew
@@ -2055,7 +2059,7 @@ Private Sub BotonGuardar_Click()
                 tRecibosD.Fields!NroPago = CLng(TextNumeroPago.text)
                 tRecibosD.Fields!LineaPago = CInt(NroLinea)
                 tRecibosD.Fields!FormaPago = "Transferencia"
-                tRecibosD.Fields!ImportePago = Format(Val(textTransferencia.text), "#0.00")
+                tRecibosD.Fields!ImportePago = Format(Val(TextTransferencia.text), "#0.00")
             tRecibosD.Update
         End If
             
@@ -3031,7 +3035,7 @@ Private Sub blancoCambioCheck()
 
   
     TextEfectivo.text = ""
-    textTransferencia.text = ""
+    TextTransferencia.text = ""
     TextRezago.text = ""
     TextMercaderia.text = ""
     TextObservaciones.text = ""
@@ -3055,7 +3059,7 @@ Private Sub blanco()
     TextSaldoLinea2.text = 0
     'TextNumeroPago.Text = 0
     TextEfectivo.text = ""
-    textTransferencia.text = ""
+    TextTransferencia.text = ""
     TextRezago.text = ""
     TextMercaderia.text = ""
     TextObservaciones.text = ""
@@ -3318,7 +3322,7 @@ Private Sub calculo()
             efectivo = 0
         End If
         
-        transferencia = Val(textTransferencia.text)
+        transferencia = Val(TextTransferencia.text)
         
         If transferencia < 0 Then
             transferencia = 0
@@ -3382,7 +3386,7 @@ Private Sub calculoresta()
             efectivo = 0
         End If
 
-        transferencia = Val(textTransferencia.text)
+        transferencia = Val(TextTransferencia.text)
         If transferencia = 0 Then
             transferencia = 0
         End If
@@ -3567,7 +3571,7 @@ End Sub
 
 Private Sub textTransferencia_Change()
 
-    If textTransferencia.text <> "" Then
+    If TextTransferencia.text <> "" Then
         Call calculo
         Call calculoabonado
     Else
@@ -3580,7 +3584,7 @@ End Sub
 
 Private Sub TextTransferencia_GotFocus()
 
-    textTransferencia.SelLength = Len(textTransferencia.text)
+    TextTransferencia.SelLength = Len(TextTransferencia.text)
 
 End Sub
 
