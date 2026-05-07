@@ -1291,7 +1291,7 @@ Private Sub cmdImprimir_Click()
 
     Printer.ScaleMode = vbTwips
     Printer.FontName = "Courier New"
-    Printer.FontSize = 10
+    Printer.FontSize = 8
     Printer.FontBold = False
     Printer.Copies = 1
 
@@ -2170,7 +2170,7 @@ Private Sub CargarOrdenPorNumero(ByVal nroOrden As Long)
     txtSubTransferencia.text = FormatMoney(NzC(rs!SubtotalTransferencia))
     txtSubFacturas.text = FormatMoney(NzC(rs!SubtotalFacturas))
     txtEfectivo.text = FormatMoney(NzC(rs!efectivo))
-    SetRetIIBBText FormatMoney(NzC(rs!RetencionIIBB))
+    'SetRetIIBBText FormatMoney(NzC(rs!RetencionIIBB))
     txtTotalPago.text = FormatMoney(NzC(rs!totalPago))
     txtSaldo.text = FormatMoney(NzC(rs!Saldo))
     txtImporteLetras.text = NzS(rs!MontoLetras)
