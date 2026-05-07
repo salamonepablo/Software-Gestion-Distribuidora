@@ -29,6 +29,23 @@ Begin VB.Form MenuPrincipal
       TabIndex        =   11
       Top             =   600
       Width           =   13935
+      Begin VB.CommandButton cmdOrdenPago 
+         Caption         =   "&Orden de Pago"
+         BeginProperty Font 
+            Name            =   "MS Sans Serif"
+            Size            =   8.25
+            Charset         =   0
+            Weight          =   700
+            Underline       =   0   'False
+            Italic          =   0   'False
+            Strikethrough   =   0   'False
+         EndProperty
+         Height          =   600
+         Left            =   10440
+         TabIndex        =   25
+         Top             =   2400
+         Width           =   2835
+      End
       Begin VB.CommandButton cmdRemTemp 
          Caption         =   "Remitos Temporales"
          BeginProperty Font 
@@ -95,6 +112,7 @@ Begin VB.Form MenuPrincipal
          Left            =   10440
          TabIndex        =   21
          Top             =   2400
+         Visible         =   0   'False
          Width           =   2835
       End
       Begin VB.CommandButton cmdNDInterna 
@@ -930,6 +948,12 @@ End Sub
 Private Sub cmdNotaDebito_Click()
 
     FormNotasdeDebito.Show
+
+End Sub
+
+Private Sub cmdOrdenPago_Click()
+
+    FormOrdenPago.Show
 
 End Sub
 

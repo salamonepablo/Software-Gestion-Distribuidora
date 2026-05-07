@@ -14,21 +14,21 @@ Begin VB.Form FormOrdenPago
    Begin VB.Frame Frame1 
       Height          =   10455
       Left            =   120
-      TabIndex        =   0
+      TabIndex        =   30
       Top             =   0
       Width           =   16215
       Begin VB.Frame Frame6 
-         Caption         =   "Reimpresiï¿½n"
+         Caption         =   "Reimpresión"
          Height          =   2415
          Left            =   8400
-         TabIndex        =   55
+         TabIndex        =   58
          Top             =   6240
          Width           =   7455
          Begin VB.ComboBox cboBuscarOrden 
             Height          =   315
             Left            =   360
             Style           =   2  'Dropdown List
-            TabIndex        =   57
+            TabIndex        =   29
             Top             =   720
             Width           =   2415
          End
@@ -45,7 +45,7 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   615
             Left            =   600
-            TabIndex        =   56
+            TabIndex        =   59
             Top             =   1200
             Width           =   1815
          End
@@ -63,7 +63,7 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   195
             Left            =   240
-            TabIndex        =   58
+            TabIndex        =   60
             Top             =   360
             Width           =   1290
          End
@@ -80,7 +80,7 @@ Begin VB.Form FormOrdenPago
          Caption         =   "Detalle de Transferencia"
          Height          =   2415
          Left            =   8400
-         TabIndex        =   45
+         TabIndex        =   54
          Top             =   3720
          Width           =   7455
          Begin VB.CommandButton cmdAddTransferencia 
@@ -96,7 +96,7 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   495
             Left            =   6360
-            TabIndex        =   54
+            TabIndex        =   16
             Top             =   480
             Width           =   855
          End
@@ -113,7 +113,7 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   495
             Left            =   6360
-            TabIndex        =   53
+            TabIndex        =   17
             Top             =   1080
             Width           =   855
          End
@@ -130,7 +130,7 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   495
             Left            =   13080
-            TabIndex        =   48
+            TabIndex        =   56
             Top             =   600
             Width           =   1215
          End
@@ -147,21 +147,21 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   495
             Left            =   13080
-            TabIndex        =   47
+            TabIndex        =   55
             Top             =   1200
             Width           =   1215
          End
          Begin VB.TextBox txtSubTransferencia 
             Height          =   285
             Left            =   1440
-            TabIndex        =   46
+            TabIndex        =   18
             Top             =   1800
             Width           =   1695
          End
          Begin MSFlexGridLib.MSFlexGrid grdTransferencia 
             Height          =   1455
             Left            =   480
-            TabIndex        =   49
+            TabIndex        =   15
             Top             =   240
             Width           =   5775
             _ExtentX        =   10186
@@ -183,7 +183,7 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   195
             Left            =   480
-            TabIndex        =   50
+            TabIndex        =   57
             Top             =   1800
             Width           =   900
          End
@@ -192,7 +192,7 @@ Begin VB.Form FormOrdenPago
          Caption         =   "Detalle de Facturas"
          Height          =   2415
          Left            =   8400
-         TabIndex        =   39
+         TabIndex        =   50
          Top             =   1080
          Width           =   7455
          Begin VB.CommandButton cmdAddFacturas 
@@ -208,7 +208,7 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   495
             Left            =   6360
-            TabIndex        =   52
+            TabIndex        =   8
             Top             =   360
             Width           =   855
          End
@@ -225,7 +225,7 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   495
             Left            =   6360
-            TabIndex        =   51
+            TabIndex        =   9
             Top             =   960
             Width           =   855
          End
@@ -242,7 +242,7 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   495
             Left            =   13080
-            TabIndex        =   42
+            TabIndex        =   52
             Top             =   600
             Width           =   1215
          End
@@ -259,21 +259,21 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   495
             Left            =   13080
-            TabIndex        =   41
+            TabIndex        =   51
             Top             =   1200
             Width           =   1215
          End
          Begin VB.TextBox txtSubFacturas 
             Height          =   285
             Left            =   1440
-            TabIndex        =   40
+            TabIndex        =   10
             Top             =   1800
             Width           =   1695
          End
          Begin MSFlexGridLib.MSFlexGrid grdFacturas 
             Height          =   1455
             Left            =   480
-            TabIndex        =   43
+            TabIndex        =   7
             Top             =   240
             Width           =   5775
             _ExtentX        =   10186
@@ -295,7 +295,7 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   195
             Left            =   480
-            TabIndex        =   44
+            TabIndex        =   53
             Top             =   1800
             Width           =   900
          End
@@ -304,7 +304,7 @@ Begin VB.Form FormOrdenPago
          Caption         =   "Totales"
          Height          =   1335
          Left            =   600
-         TabIndex        =   26
+         TabIndex        =   43
          Top             =   8760
          Width           =   15375
          Begin VB.CommandButton cmdImprimir 
@@ -320,7 +320,7 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   375
             Left            =   12720
-            TabIndex        =   38
+            TabIndex        =   49
             Top             =   840
             Width           =   1455
          End
@@ -337,7 +337,7 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   375
             Left            =   9240
-            TabIndex        =   37
+            TabIndex        =   27
             Top             =   840
             Width           =   1455
          End
@@ -354,7 +354,7 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   375
             Left            =   4800
-            TabIndex        =   36
+            TabIndex        =   28
             Top             =   840
             Width           =   1455
          End
@@ -371,35 +371,35 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   375
             Left            =   1200
-            TabIndex        =   35
+            TabIndex        =   48
             Top             =   840
             Width           =   1455
          End
          Begin VB.TextBox txtImporteLetras 
             Height          =   375
             Left            =   6960
-            TabIndex        =   34
+            TabIndex        =   26
             Top             =   360
             Width           =   7935
          End
          Begin VB.TextBox txtSaldo 
             Height          =   375
             Left            =   4800
-            TabIndex        =   32
+            TabIndex        =   25
             Top             =   360
             Width           =   1695
          End
          Begin VB.TextBox txtTotalPago 
             Height          =   375
             Left            =   2880
-            TabIndex        =   30
+            TabIndex        =   24
             Top             =   360
             Width           =   1695
          End
          Begin VB.TextBox txtEfectivo 
             Height          =   375
             Left            =   960
-            TabIndex        =   28
+            TabIndex        =   23
             Top             =   360
             Width           =   1695
          End
@@ -417,7 +417,7 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   195
             Left            =   7080
-            TabIndex        =   33
+            TabIndex        =   47
             Top             =   120
             Width           =   1500
          End
@@ -435,7 +435,7 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   195
             Left            =   4920
-            TabIndex        =   31
+            TabIndex        =   46
             Top             =   120
             Width           =   495
          End
@@ -453,7 +453,7 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   195
             Left            =   3000
-            TabIndex        =   29
+            TabIndex        =   45
             Top             =   120
             Width           =   945
          End
@@ -471,7 +471,7 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   195
             Left            =   1080
-            TabIndex        =   27
+            TabIndex        =   44
             Top             =   120
             Width           =   720
          End
@@ -480,7 +480,7 @@ Begin VB.Form FormOrdenPago
          Caption         =   "Detalle de Otros"
          Height          =   2415
          Left            =   600
-         TabIndex        =   20
+         TabIndex        =   39
          Top             =   6240
          Width           =   7455
          Begin VB.CommandButton cmdDelOtros 
@@ -496,7 +496,7 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   495
             Left            =   6360
-            TabIndex        =   60
+            TabIndex        =   21
             Top             =   960
             Width           =   855
          End
@@ -513,14 +513,14 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   495
             Left            =   6360
-            TabIndex        =   59
+            TabIndex        =   20
             Top             =   360
             Width           =   855
          End
          Begin VB.TextBox txtSubOtros 
             Height          =   285
             Left            =   1440
-            TabIndex        =   23
+            TabIndex        =   22
             Top             =   1800
             Width           =   1695
          End
@@ -537,7 +537,7 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   495
             Left            =   13080
-            TabIndex        =   22
+            TabIndex        =   41
             Top             =   1200
             Width           =   1215
          End
@@ -554,14 +554,14 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   495
             Left            =   13080
-            TabIndex        =   21
+            TabIndex        =   40
             Top             =   600
             Width           =   1215
          End
          Begin MSFlexGridLib.MSFlexGrid grdOtros 
             Height          =   1455
             Left            =   480
-            TabIndex        =   24
+            TabIndex        =   19
             Top             =   240
             Width           =   5775
             _ExtentX        =   10186
@@ -583,7 +583,7 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   195
             Left            =   480
-            TabIndex        =   25
+            TabIndex        =   42
             Top             =   1800
             Width           =   900
          End
@@ -592,7 +592,7 @@ Begin VB.Form FormOrdenPago
          Caption         =   "Detalle de Cheques"
          Height          =   2535
          Left            =   600
-         TabIndex        =   14
+         TabIndex        =   37
          Top             =   3600
          Width           =   7455
          Begin VB.CommandButton cmdAddCheque 
@@ -608,7 +608,7 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   495
             Left            =   6360
-            TabIndex        =   17
+            TabIndex        =   12
             Top             =   600
             Width           =   855
          End
@@ -625,21 +625,21 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   495
             Left            =   6360
-            TabIndex        =   16
+            TabIndex        =   13
             Top             =   1200
             Width           =   855
          End
          Begin VB.TextBox txtSubCheques 
             Height          =   285
             Left            =   1440
-            TabIndex        =   15
+            TabIndex        =   14
             Top             =   2040
             Width           =   1695
          End
          Begin MSFlexGridLib.MSFlexGrid grdCheques 
             Height          =   1575
             Left            =   480
-            TabIndex        =   18
+            TabIndex        =   11
             Top             =   360
             Width           =   5775
             _ExtentX        =   10186
@@ -662,7 +662,7 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   195
             Left            =   480
-            TabIndex        =   19
+            TabIndex        =   38
             Top             =   2040
             Width           =   900
          End
@@ -671,13 +671,13 @@ Begin VB.Form FormOrdenPago
          Caption         =   "Detalle de Deuda"
          Height          =   2415
          Left            =   600
-         TabIndex        =   8
+         TabIndex        =   35
          Top             =   1080
          Width           =   7455
          Begin VB.TextBox txtSubDeuda 
             Height          =   285
             Left            =   1440
-            TabIndex        =   13
+            TabIndex        =   6
             Top             =   1920
             Width           =   1695
          End
@@ -694,7 +694,7 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   495
             Left            =   6360
-            TabIndex        =   11
+            TabIndex        =   5
             Top             =   1080
             Width           =   855
          End
@@ -711,14 +711,14 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   495
             Left            =   6360
-            TabIndex        =   10
+            TabIndex        =   4
             Top             =   480
             Width           =   855
          End
          Begin MSFlexGridLib.MSFlexGrid grdDeuda 
             Height          =   1575
             Left            =   480
-            TabIndex        =   9
+            TabIndex        =   3
             Top             =   240
             Width           =   5775
             _ExtentX        =   10186
@@ -740,7 +740,7 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   195
             Left            =   480
-            TabIndex        =   12
+            TabIndex        =   36
             Top             =   1920
             Width           =   900
          End
@@ -748,27 +748,27 @@ Begin VB.Form FormOrdenPago
       Begin VB.Frame Frame2 
          Height          =   855
          Left            =   600
-         TabIndex        =   1
+         TabIndex        =   31
          Top             =   120
          Width           =   15255
          Begin VB.TextBox txtProveedor 
             Height          =   375
             Left            =   3960
-            TabIndex        =   7
+            TabIndex        =   2
             Top             =   360
             Width           =   11055
          End
          Begin VB.TextBox txtFecha 
             Height          =   375
             Left            =   2160
-            TabIndex        =   5
+            TabIndex        =   1
             Top             =   360
             Width           =   1335
          End
          Begin VB.TextBox txtNroOrden 
             Height          =   375
             Left            =   360
-            TabIndex        =   3
+            TabIndex        =   0
             Top             =   360
             Width           =   1335
          End
@@ -786,7 +786,7 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   195
             Left            =   4080
-            TabIndex        =   6
+            TabIndex        =   34
             Top             =   120
             Width           =   885
          End
@@ -804,7 +804,7 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   195
             Left            =   2280
-            TabIndex        =   4
+            TabIndex        =   33
             Top             =   120
             Width           =   540
          End
@@ -822,7 +822,7 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   195
             Left            =   480
-            TabIndex        =   2
+            TabIndex        =   32
             Top             =   120
             Width           =   945
          End
@@ -845,12 +845,6 @@ Private Const SEP_COL As String = "|"
 Private Const SEP_ROW As String = vbCrLf
 
 Private m_Cargando As Boolean
-Private WithEvents txtGridEditor As TextBox
-Private m_CurrentGrid As MSFlexGrid
-Private m_CurrentRow As Integer
-Private m_CurrentCol As Integer
-Private m_FechaAnterior As String
-Private m_OriginalValue As String
 
 ' Columnas grillas (0-based)
 Private Enum eColDeuda
@@ -868,20 +862,6 @@ End Enum
 Private Enum eColOtros
     colOtroConcepto = 0
     colOtroImporte = 1
-End Enum
-
-Private Enum eColTransferencia
-    colTransfBanco = 0
-    colTransfNroCuenta = 1
-    colTransfCUIT = 2
-    colTransfImporte = 3
-End Enum
-
-Private Enum eColFacturas
-    colFactNumero = 0
-    colFactFecha = 1
-    colFactImporte = 2
-    colFactDescripcion = 3
 End Enum
 
 Private Sub Form_KeyDown(KeyCode As Integer, Shift As Integer)
@@ -921,20 +901,6 @@ Private Sub grdDeuda_KeyDown(KeyCode As Integer, Shift As Integer)
              EditarCeldaGrid grdOtros
          End If
      End Sub
-
-     Private Sub grdTransferencia_KeyDown(KeyCode As Integer, Shift As Integer)
-         If KeyCode = vbKeyReturn Then
-             KeyCode = 0
-             EditarCeldaGrid grdTransferencia
-         End If
-     End Sub
-
-     Private Sub grdFacturas_KeyDown(KeyCode As Integer, Shift As Integer)
-         If KeyCode = vbKeyReturn Then
-             KeyCode = 0
-             EditarCeldaGrid grdFacturas
-         End If
-     End Sub
 Private Sub Form_Load()
     On Error GoTo EH
 
@@ -955,17 +921,6 @@ Private Sub Form_Load()
     txtFecha.text = Format$(Date, "dd/mm/yyyy")
     txtNroOrden.text = CStr(GetSiguienteNumeroOrden())
     CargarComboReimpresion
-
-    Set txtGridEditor = Me.Controls.Add("VB.TextBox", "txtGridEditor")
-    With txtGridEditor
-        .Visible = False
-        .BorderStyle = 1
-        .BackColor = RGB(255, 255, 255)
-        .Font.Name = "MS Sans Serif"
-        .Font.Size = 8.25
-    End With
-
-    m_FechaAnterior = Format$(Date, "dd/mm/yyyy")
 
     RecalcularTodo
     m_Cargando = False
@@ -1034,38 +989,6 @@ Private Sub InitGrids()
         .ColWidth(colOtroImporte) = 1500
     End With
 
-    ' Transferencia
-    With grdTransferencia
-        .Rows = 2
-        .Cols = 4
-        .FixedRows = 1
-        .FixedCols = 0
-        .TextMatrix(0, colTransfBanco) = "Banco"
-        .TextMatrix(0, colTransfNroCuenta) = "Nro. Cuenta"
-        .TextMatrix(0, colTransfCUIT) = "CUIT"
-        .TextMatrix(0, colTransfImporte) = "Importe"
-        .ColWidth(colTransfBanco) = 1800
-        .ColWidth(colTransfNroCuenta) = 1600
-        .ColWidth(colTransfCUIT) = 1500
-        .ColWidth(colTransfImporte) = 1400
-    End With
-
-    ' Facturas
-    With grdFacturas
-        .Rows = 2
-        .Cols = 4
-        .FixedRows = 1
-        .FixedCols = 0
-        .TextMatrix(0, colFactNumero) = "Numero"
-        .TextMatrix(0, colFactFecha) = "Fecha"
-        .TextMatrix(0, colFactImporte) = "Importe"
-        .TextMatrix(0, colFactDescripcion) = "Descripcion"
-        .ColWidth(colFactNumero) = 1500
-        .ColWidth(colFactFecha) = 1200
-        .ColWidth(colFactImporte) = 1400
-        .ColWidth(colFactDescripcion) = 1675
-    End With
-
     Exit Sub
 EH:
     MsgBox "Error inicializando grillas: " & Err.Description, vbExclamation, "Orden de Pago"
@@ -1091,11 +1014,6 @@ Private Sub LimpiarFormulario(ByVal nuevoNumero As Boolean)
     ResetGridRows grdDeuda
     ResetGridRows grdCheques
     ResetGridRows grdOtros
-    ResetGridRows grdTransferencia
-    ResetGridRows grdFacturas
-
-    txtSubTransferencia.text = "0,00"
-    txtSubFacturas.text = "0,00"
 
     If nuevoNumero Then
         txtNroOrden.text = CStr(GetSiguienteNumeroOrden())
@@ -1153,24 +1071,6 @@ Private Sub cmdDelOtro_Click()
     RecalcularTodo
 End Sub
 
-Private Sub cmdAddTransferencia_Click()
-    AddRow grdTransferencia
-End Sub
-
-Private Sub cmdDelTransferencia_Click()
-    DelCurrentRow grdTransferencia
-    RecalcularTodo
-End Sub
-
-Private Sub cmdAddFacturas_Click()
-    AddRow grdFacturas
-End Sub
-
-Private Sub cmdDelFacturas_Click()
-    DelCurrentRow grdFacturas
-    RecalcularTodo
-End Sub
-
 Private Sub AddRow(ByRef g As MSFlexGrid)
     On Error GoTo EH
     g.Rows = g.Rows + 1
@@ -1214,255 +1114,36 @@ Private Sub grdOtros_DblClick()
     EditarCeldaGrid grdOtros
 End Sub
 
-Private Sub grdTransferencia_DblClick()
-    EditarCeldaGrid grdTransferencia
-End Sub
-
-Private Sub grdFacturas_DblClick()
-    EditarCeldaGrid grdFacturas
-End Sub
-
 Private Sub EditarCeldaGrid(ByRef g As MSFlexGrid)
     On Error GoTo EH
 
     Dim r As Integer, c As Integer
-    Dim cellLeft As Long, cellTop As Long
-    Dim cellWidth As Long, cellHeight As Long
+    Dim v As String
 
     r = g.Row
     c = g.Col
 
     If r < 1 Then Exit Sub
 
-    cellLeft = g.Left + g.Parent.Left + g.ColPos(c)
-    cellTop = g.Top + g.Parent.Top + g.RowPos(r)
-    cellWidth = g.ColWidth(c)
-    cellHeight = g.RowHeight(r)
+    v = InputBox$("Editar valor:", "Editar celda", g.TextMatrix(r, c))
+    v = Trim$(v)
 
-    With txtGridEditor
-        .Move cellLeft, cellTop, cellWidth, cellHeight
-        .text = g.TextMatrix(r, c)
-        .Visible = True
-        .SetFocus
-        .SelStart = 0
-        .SelLength = Len(.text)
-    End With
+    If g.Name = "grdDeuda" And c = colDeudaImporte Then
+        g.TextMatrix(r, c) = FormatMoney(ParseCurrency(v))
+    ElseIf g.Name = "grdCheques" And c = colChequeImporte Then
+        g.TextMatrix(r, c) = FormatMoney(ParseCurrency(v))
+    ElseIf g.Name = "grdOtros" And c = colOtroImporte Then
+        g.TextMatrix(r, c) = FormatMoney(ParseCurrency(v))
+    Else
+        g.TextMatrix(r, c) = v
+    End If
 
-    Set m_CurrentGrid = g
-    m_CurrentRow = r
-    m_CurrentCol = c
-    m_OriginalValue = g.TextMatrix(r, c)
-
+    RecalcularTodo
     Exit Sub
+
 EH:
-    MsgBox "Error iniciando edicion: " & Err.Description, vbExclamation, "Orden de Pago"
+    MsgBox "Error editando celda: " & Err.Description, vbExclamation, "Orden de Pago"
 End Sub
-
-Private Sub txtGridEditor_KeyDown(KeyCode As Integer, Shift As Integer)
-    If KeyCode = vbKeyReturn Then
-        KeyCode = 0
-        FinalizarEdicion True
-    ElseIf KeyCode = vbKeyEscape Then
-        KeyCode = 0
-        FinalizarEdicion False
-    End If
-End Sub
-
-Private Sub txtGridEditor_LostFocus()
-    If txtGridEditor.Visible Then
-        FinalizarEdicion True
-    End If
-End Sub
-
-Private Sub FinalizarEdicion(ByVal guardar As Boolean)
-    On Error GoTo EH
-
-    If Not txtGridEditor.Visible Then Exit Sub
-
-    Dim valorNuevo As String
-    Dim valorFinal As String
-
-    If guardar Then
-        valorNuevo = Trim$(txtGridEditor.text)
-
-        If Not ValidarYFormatearCelda(m_CurrentGrid, m_CurrentRow, m_CurrentCol, valorNuevo, valorFinal) Then
-            Exit Sub
-        End If
-
-        m_CurrentGrid.TextMatrix(m_CurrentRow, m_CurrentCol) = valorFinal
-        RecalcularTodo
-    End If
-
-    txtGridEditor.Visible = False
-    Set m_CurrentGrid = Nothing
-
-    Exit Sub
-EH:
-    MsgBox "Error finalizando edicion: " & Err.Description, vbExclamation, "Orden de Pago"
-    txtGridEditor.Visible = False
-End Sub
-
-Private Function ValidarYFormatearCelda(ByRef g As MSFlexGrid, ByVal r As Integer, ByVal c As Integer, ByVal valorNuevo As String, ByRef valorFinal As String) As Boolean
-    On Error GoTo EH
-
-    ValidarYFormatearCelda = False
-    valorFinal = valorNuevo
-
-    Select Case True
-        Case g.Name = "grdDeuda" And c = colDeudaImporte
-            valorFinal = FormatMoney(ParseCurrency(valorNuevo))
-            ValidarYFormatearCelda = True
-
-        Case g.Name = "grdCheques" And c = colChequeImporte
-            valorFinal = FormatMoney(ParseCurrency(valorNuevo))
-            ValidarYFormatearCelda = True
-
-        Case g.Name = "grdCheques" And c = colChequeFecha
-            If Len(valorNuevo) > 0 And Not ValidarFechaDD_MM_YYYY(valorNuevo) Then
-                MsgBox "Fecha invalida. Use formato DD/MM/YYYY", vbExclamation, "Validacion"
-                txtGridEditor.SelStart = 0
-                txtGridEditor.SelLength = Len(txtGridEditor.text)
-                Exit Function
-            End If
-            ValidarYFormatearCelda = True
-
-        Case g.Name = "grdOtros" And c = colOtroImporte
-            valorFinal = FormatMoney(ParseCurrency(valorNuevo))
-            ValidarYFormatearCelda = True
-
-        Case g.Name = "grdTransferencia" And c = colTransfImporte
-            valorFinal = FormatMoney(ParseCurrency(valorNuevo))
-            ValidarYFormatearCelda = True
-
-        Case g.Name = "grdTransferencia" And c = colTransfCUIT
-            If Len(valorNuevo) > 0 And Not ValidarCUIT(valorNuevo) Then
-                MsgBox "CUIT invalido. Use formato XX-XXXXXXXX-X (ej: 20-12345678-9)", vbExclamation, "Validacion"
-                txtGridEditor.SelStart = 0
-                txtGridEditor.SelLength = Len(txtGridEditor.text)
-                Exit Function
-            End If
-            ValidarYFormatearCelda = True
-
-        Case g.Name = "grdFacturas" And c = colFactImporte
-            valorFinal = FormatMoney(ParseCurrency(valorNuevo))
-            ValidarYFormatearCelda = True
-
-        Case g.Name = "grdFacturas" And c = colFactNumero
-            If Len(valorNuevo) > 0 And Not ValidarNumeroFactura(valorNuevo) Then
-                MsgBox "Numero de factura invalido. Use formato XXXX-XXXXXXXX (ej: 0001-00012345)", vbExclamation, "Validacion"
-                txtGridEditor.SelStart = 0
-                txtGridEditor.SelLength = Len(txtGridEditor.text)
-                Exit Function
-            End If
-            ValidarYFormatearCelda = True
-
-        Case g.Name = "grdFacturas" And c = colFactFecha
-            If Len(valorNuevo) > 0 And Not ValidarFechaDD_MM_YYYY(valorNuevo) Then
-                MsgBox "Fecha invalida. Use formato DD/MM/YYYY", vbExclamation, "Validacion"
-                txtGridEditor.SelStart = 0
-                txtGridEditor.SelLength = Len(txtGridEditor.text)
-                Exit Function
-            End If
-            ValidarYFormatearCelda = True
-
-        Case Else
-            ValidarYFormatearCelda = True
-    End Select
-
-    Exit Function
-EH:
-    MsgBox "Error en validacion: " & Err.Description, vbExclamation, "Validacion"
-    ValidarYFormatearCelda = False
-End Function
-
-Private Function ValidarFechaDD_MM_YYYY(ByVal fechaStr As String) As Boolean
-    On Error GoTo EH
-
-    Dim partes() As String
-    Dim dia As Integer, mes As Integer, anno As Integer
-
-    ValidarFechaDD_MM_YYYY = False
-
-    If Len(fechaStr) <> 10 Then Exit Function
-    If Mid(fechaStr, 3, 1) <> "/" Or Mid(fechaStr, 6, 1) <> "/" Then Exit Function
-
-    partes = Split(fechaStr, "/")
-    If UBound(partes) <> 2 Then Exit Function
-
-    dia = CInt(partes(0))
-    mes = CInt(partes(1))
-    anno = CInt(partes(2))
-
-    If mes < 1 Or mes > 12 Then Exit Function
-    If dia < 1 Or dia > 31 Then Exit Function
-    If anno < 1900 Or anno > 2100 Then Exit Function
-
-    Dim testDate As Date
-    testDate = DateSerial(anno, mes, dia)
-
-    ValidarFechaDD_MM_YYYY = True
-    Exit Function
-EH:
-    ValidarFechaDD_MM_YYYY = False
-End Function
-
-Private Function ParseDateDD_MM_YYYY(ByVal fechaStr As String) As Date
-    On Error GoTo EH
-
-    Dim partes() As String
-    Dim dia As Integer, mes As Integer, anno As Integer
-
-    partes = Split(fechaStr, "/")
-    dia = CInt(partes(0))
-    mes = CInt(partes(1))
-    anno = CInt(partes(2))
-
-    ParseDateDD_MM_YYYY = DateSerial(anno, mes, dia)
-    Exit Function
-EH:
-    ParseDateDD_MM_YYYY = Date
-End Function
-
-Private Function ValidarCUIT(ByVal cuit As String) As Boolean
-    Dim i As Integer
-
-    ValidarCUIT = False
-
-    If Len(cuit) <> 13 Then Exit Function
-    If Mid(cuit, 3, 1) <> "-" Then Exit Function
-    If Mid(cuit, 12, 1) <> "-" Then Exit Function
-
-    For i = 1 To 2
-        If Not IsNumeric(Mid(cuit, i, 1)) Then Exit Function
-    Next
-
-    For i = 4 To 11
-        If Not IsNumeric(Mid(cuit, i, 1)) Then Exit Function
-    Next
-
-    If Not IsNumeric(Mid(cuit, 13, 1)) Then Exit Function
-
-    ValidarCUIT = True
-End Function
-
-Private Function ValidarNumeroFactura(ByVal numero As String) As Boolean
-    Dim i As Integer
-
-    ValidarNumeroFactura = False
-
-    If Len(numero) <> 13 Then Exit Function
-    If Mid(numero, 5, 1) <> "-" Then Exit Function
-
-    For i = 1 To 4
-        If Not IsNumeric(Mid(numero, i, 1)) Then Exit Function
-    Next
-
-    For i = 6 To 13
-        If Not IsNumeric(Mid(numero, i, 1)) Then Exit Function
-    Next
-
-    ValidarNumeroFactura = True
-End Function
 
 ' ------------------------------------------------------------
 ' Recalculo automatico (sin bloquear edicion manual)
@@ -1470,17 +1151,6 @@ End Function
 Private Sub cmdRecalcular_Click()
     RecalcularTodo
 End Sub
-
-Private Function TieneFacturas() As Boolean
-    Dim i As Integer
-    For i = 1 To grdFacturas.Rows - 1
-        If Trim$(grdFacturas.TextMatrix(i, 0)) <> "" Then
-            TieneFacturas = True
-            Exit Function
-        End If
-    Next i
-    TieneFacturas = False
-End Function
 
 Private Sub cmdRestaurarAuto_Click()
          On Error GoTo EH
@@ -1495,13 +1165,13 @@ End Sub
 
 Private Sub cmdImprimir_Click()
     On Error GoTo ErrHandler
-
+    
     Dim y As Single
     Dim xLeft As Single
     Dim xRight As Single
     Dim lineH As Single
     Dim pageBottom As Single
-
+    
     Dim i As Long
     Dim detalle As String
     Dim importe As String
@@ -1509,56 +1179,31 @@ Private Sub cmdImprimir_Click()
     Dim banco As String
     Dim vto As String
     Dim retText As String
-    Dim logoPath As String
-
+    
     Dim deudaRows As Long
     Dim chequeRows As Long
-    Dim transferenciaRows As Long
-    Dim facturasRows As Long
-
+    
     xLeft = 600
     xRight = 7800
     lineH = 240
     pageBottom = 10600
-
+    
     Printer.ScaleMode = vbTwips
     Printer.FontName = "Courier New"
     Printer.FontSize = 10
     Printer.FontBold = False
-    Printer.Copies = 2
-
-    ' Encabezado con logo condicional
-    If TieneFacturas() Then
-        logoPath = App.Path & "\Quilplac2.jpg"
-        If Dir(logoPath) <> "" Then
-            Printer.PaintPicture LoadPicture(logoPath), 600, 200, 7200, 1200
-            y = 1600
-        Else
-            Printer.CurrentX = 120
-            Printer.CurrentY = 520
-            Printer.FontBold = True
-            Printer.FontSize = 14
-            Printer.Print "ORDEN DE PAGO"
-            Printer.FontSize = 10
-            Printer.FontBold = False
-            y = 600
-        End If
-    Else
-        Printer.CurrentX = 120
-        Printer.CurrentY = 520
-        Printer.FontBold = True
-        Printer.FontSize = 14
-        Printer.Print "ORDEN DE PAGO"
-        Printer.FontSize = 10
-        Printer.FontBold = False
-        y = 600
-    End If
-
+    
+    y = 600
+    
+    ' Encabezado
+ '   Printer.FontBold = True
+ '   Printer.Print Tab(2); "ORDEN DE PAGO"
+ '   Printer.FontBold = False
+    
     ' Nro de Orden de Pago visible en encabezado
     Printer.CurrentX = 120
-    Printer.CurrentY = y
+    Printer.CurrentY = 520
     Printer.FontBold = True
-    Printer.FontSize = 10
     Printer.Print "ORDEN DE PAGO Nro: " & Trim$(txtNroOrden.text)
     Printer.FontBold = False
     y = y + lineH * 2
@@ -1672,161 +1317,31 @@ Private Sub cmdImprimir_Click()
     Printer.CurrentY = y
     Printer.Print FormatMoney(ParseCurrency(txtSubCheques.text))
     y = y + lineH * 2
-
-    ' Transferencia
-    transferenciaRows = grdTransferencia.Rows - 1
-    If transferenciaRows >= 1 Then
-        Dim hasTransferenciaData As Boolean
-        hasTransferenciaData = False
-        For i = 1 To transferenciaRows
-            If Len(Trim$(grdTransferencia.TextMatrix(i, 0))) > 0 Or _
-               Len(Trim$(grdTransferencia.TextMatrix(i, 1))) > 0 Or _
-               Len(Trim$(grdTransferencia.TextMatrix(i, 2))) > 0 Or _
-               Len(Trim$(grdTransferencia.TextMatrix(i, 3))) > 0 Then
-                hasTransferenciaData = True
-                Exit For
-            End If
-        Next i
-
-        If hasTransferenciaData Then
-            If y > pageBottom Then
-                Printer.NewPage
-                y = 600
-            End If
-
-            Printer.FontBold = True
-            Printer.CurrentX = xLeft
-            Printer.CurrentY = y
-            Printer.Print "TRANSFERENCIA"
-            Printer.FontBold = False
-            y = y + lineH
-
-            Printer.CurrentX = xLeft
-            Printer.CurrentY = y
-            Printer.Print String$(90, "-")
-            y = y + lineH
-
-            For i = 1 To transferenciaRows
-                banco = Trim$(grdTransferencia.TextMatrix(i, 0))
-                Dim nroCuenta As String
-                Dim cuit As String
-                nroCuenta = Trim$(grdTransferencia.TextMatrix(i, 1))
-                cuit = Trim$(grdTransferencia.TextMatrix(i, 2))
-                importe = Trim$(grdTransferencia.TextMatrix(i, 3))
-
-                If Len(banco) > 0 Or Len(nroCuenta) > 0 Or Len(cuit) > 0 Or Len(importe) > 0 Then
-                    If y > pageBottom Then
-                        Printer.NewPage
-                        y = 600
-                    End If
-
-                    Printer.CurrentX = xLeft
-                    Printer.CurrentY = y
-                    Printer.Print Left$("Banco: " & banco & "  Cuenta: " & nroCuenta & "  CUIT: " & cuit, 85)
-
-                    Printer.CurrentX = xRight
-                    Printer.CurrentY = y
-                    Printer.Print FormatMoney(ParseCurrency(importe))
-
-                    y = y + lineH
-                End If
-            Next i
-
-            y = y + lineH / 2
-            Printer.CurrentX = xLeft
-            Printer.CurrentY = y
-            Printer.Print "Subtotal Transferencia:"
-            Printer.CurrentX = xRight
-            Printer.CurrentY = y
-            Printer.Print FormatMoney(ParseCurrency(txtSubTransferencia.text))
-            y = y + lineH * 2
-        End If
-    End If
-
-    ' Facturas
-    facturasRows = grdFacturas.Rows - 1
-    If facturasRows >= 1 Then
-        Dim hasFacturasData As Boolean
-        hasFacturasData = False
-        For i = 1 To facturasRows
-            If Len(Trim$(grdFacturas.TextMatrix(i, 0))) > 0 Or _
-               Len(Trim$(grdFacturas.TextMatrix(i, 1))) > 0 Or _
-               Len(Trim$(grdFacturas.TextMatrix(i, 2))) > 0 Or _
-               Len(Trim$(grdFacturas.TextMatrix(i, 3))) > 0 Then
-                hasFacturasData = True
-                Exit For
-            End If
-        Next i
-
-        If hasFacturasData Then
-            If y > pageBottom Then
-                Printer.NewPage
-                y = 600
-            End If
-
-            Printer.FontBold = True
-            Printer.CurrentX = xLeft
-            Printer.CurrentY = y
-            Printer.Print "FACTURAS"
-            Printer.FontBold = False
-            y = y + lineH
-
-            Printer.CurrentX = xLeft
-            Printer.CurrentY = y
-            Printer.Print String$(90, "-")
-            y = y + lineH
-
-            For i = 1 To facturasRows
-                Dim numero As String
-                Dim fecha As String
-                Dim descripcion As String
-                numero = Trim$(grdFacturas.TextMatrix(i, 0))
-                fecha = Trim$(grdFacturas.TextMatrix(i, 1))
-                importe = Trim$(grdFacturas.TextMatrix(i, 2))
-                descripcion = Trim$(grdFacturas.TextMatrix(i, 3))
-
-                If Len(numero) > 0 Or Len(fecha) > 0 Or Len(importe) > 0 Or Len(descripcion) > 0 Then
-                    If y > pageBottom Then
-                        Printer.NewPage
-                        y = 600
-                    End If
-
-                    Printer.CurrentX = xLeft
-                    Printer.CurrentY = y
-                    Printer.Print Left$("Nro: " & numero & "  Fecha: " & fecha & "  " & Left$(descripcion, 30), 85)
-
-                    Printer.CurrentX = xRight
-                    Printer.CurrentY = y
-                    Printer.Print FormatMoney(ParseCurrency(importe))
-
-                    y = y + lineH
-                End If
-            Next i
-
-            y = y + lineH / 2
-            Printer.CurrentX = xLeft
-            Printer.CurrentY = y
-            Printer.Print "Subtotal Facturas:"
-            Printer.CurrentX = xRight
-            Printer.CurrentY = y
-            Printer.Print FormatMoney(ParseCurrency(txtSubFacturas.text))
-            y = y + lineH * 2
-        End If
-    End If
-
-    ' Otros (efectivo / subtotal otros)
+    
+    ' Otros (retencion / efectivo / subtotal otros)
     If y > pageBottom Then
         Printer.NewPage
         y = 600
     End If
-
+    
     Printer.FontBold = True
     Printer.CurrentX = xLeft
     Printer.CurrentY = y
     Printer.Print "OTROS"
     Printer.FontBold = False
     y = y + lineH
-
+    
+    retText = Trim$(GetRetIIBBText())
+    If Len(retText) = 0 Then retText = "0"
+    
+    Printer.CurrentX = xLeft
+    Printer.CurrentY = y
+    Printer.Print "Retencion IIBB:"
+    Printer.CurrentX = xRight
+    Printer.CurrentY = y
+    Printer.Print FormatMoney(ParseCurrency(retText))
+    y = y + lineH
+    
     Printer.CurrentX = xLeft
     Printer.CurrentY = y
     Printer.Print "Efectivo:"
@@ -1834,7 +1349,7 @@ Private Sub cmdImprimir_Click()
     Printer.CurrentY = y
     Printer.Print FormatMoney(ParseCurrency(txtEfectivo.text))
     y = y + lineH
-
+    
     Printer.CurrentX = xLeft
     Printer.CurrentY = y
     Printer.Print "Subtotal Otros:"
@@ -1843,87 +1358,27 @@ Private Sub cmdImprimir_Click()
     Printer.Print FormatMoney(ParseCurrency(txtSubOtros.text))
     y = y + lineH * 2
     
-    ' Resumen y Totales
-    If y > pageBottom - (lineH * 12) Then
+    ' Totales
+    If y > pageBottom - (lineH * 6) Then
         Printer.NewPage
         y = 600
     End If
-
+    
     Printer.FontBold = True
     Printer.CurrentX = xLeft
     Printer.CurrentY = y
-    Printer.Print "RESUMEN"
+    Printer.Print "TOTALES"
     Printer.FontBold = False
     y = y + lineH
-
+    
     Printer.CurrentX = xLeft
     Printer.CurrentY = y
-    Printer.Print String$(90, "-")
-    y = y + lineH
-
-    Printer.CurrentX = xLeft
-    Printer.CurrentY = y
-    Printer.Print "Deuda:"
-    Printer.CurrentX = xRight
-    Printer.CurrentY = y
-    Printer.Print FormatMoney(ParseCurrency(txtSubDeuda.text))
-    y = y + lineH
-
-    Printer.CurrentX = xLeft
-    Printer.CurrentY = y
-    Printer.Print "Cheques:"
-    Printer.CurrentX = xRight
-    Printer.CurrentY = y
-    Printer.Print FormatMoney(ParseCurrency(txtSubCheques.text))
-    y = y + lineH
-
-    Printer.CurrentX = xLeft
-    Printer.CurrentY = y
-    Printer.Print "Transferencia:"
-    Printer.CurrentX = xRight
-    Printer.CurrentY = y
-    Printer.Print FormatMoney(ParseCurrency(txtSubTransferencia.text))
-    y = y + lineH
-
-    Printer.CurrentX = xLeft
-    Printer.CurrentY = y
-    Printer.Print "Facturas:"
-    Printer.CurrentX = xRight
-    Printer.CurrentY = y
-    Printer.Print FormatMoney(ParseCurrency(txtSubFacturas.text))
-    y = y + lineH
-
-    Printer.CurrentX = xLeft
-    Printer.CurrentY = y
-    Printer.Print "Otros:"
-    Printer.CurrentX = xRight
-    Printer.CurrentY = y
-    Printer.Print FormatMoney(ParseCurrency(txtSubOtros.text))
-    y = y + lineH
-
-    Printer.CurrentX = xLeft
-    Printer.CurrentY = y
-    Printer.Print "Efectivo:"
-    Printer.CurrentX = xRight
-    Printer.CurrentY = y
-    Printer.Print FormatMoney(ParseCurrency(txtEfectivo.text))
-    y = y + lineH
-
-    Printer.CurrentX = xLeft
-    Printer.CurrentY = y
-    Printer.Print String$(90, "-")
-    y = y + lineH
-
-    Printer.FontBold = True
-    Printer.CurrentX = xLeft
-    Printer.CurrentY = y
-    Printer.Print "TOTAL PAGO:"
+    Printer.Print "Total Pago:"
     Printer.CurrentX = xRight
     Printer.CurrentY = y
     Printer.Print FormatMoney(ParseCurrency(txtTotalPago.text))
-    Printer.FontBold = False
     y = y + lineH
-
+    
     Printer.CurrentX = xLeft
     Printer.CurrentY = y
     Printer.Print "Saldo:"
@@ -2176,7 +1631,7 @@ Private Function EnLetras(numero As String) As String
             If paso = 7 Then
                 'MsgBox (Mid(entero, 1, 1))
                 If Len(entero) = 7 And Mid(entero, 1, 1) = "1" Then
-                    expresion = expresion & "millï¿½n "
+                    expresion = expresion & "millón "
                 Else
                     expresion = expresion & "millones "
                 End If
@@ -2218,8 +1673,6 @@ Private Sub RecalcularTodo()
     Dim subDeuda As Currency
     Dim subCheques As Currency
     Dim subOtros As Currency
-    Dim subTransferencia As Currency
-    Dim subFacturas As Currency
     Dim efectivo As Currency
     Dim retIIBB As Currency
     Dim totalPago As Currency
@@ -2228,21 +1681,17 @@ Private Sub RecalcularTodo()
     subDeuda = SumarColumna(grdDeuda, colDeudaImporte)
     subCheques = SumarColumna(grdCheques, colChequeImporte)
     subOtros = SumarColumna(grdOtros, colOtroImporte)
-    subTransferencia = SumarColumna(grdTransferencia, colTransfImporte)
-    subFacturas = SumarColumna(grdFacturas, colFactImporte)
 
     efectivo = ParseCurrency(txtEfectivo.text)
     retIIBB = ParseCurrency(GetRetIIBBText())
 
-    totalPago = subCheques + subOtros + subTransferencia + subFacturas + efectivo + retIIBB
+    totalPago = subCheques + subOtros + efectivo + retIIBB
     saldo = subDeuda - totalPago
 
     m_Cargando = True
     txtSubDeuda.text = FormatMoney(subDeuda)
     txtSubCheques.text = FormatMoney(subCheques)
     txtSubOtros.text = FormatMoney(subOtros)
-    txtSubTransferencia.text = FormatMoney(subTransferencia)
-    txtSubFacturas.text = FormatMoney(subFacturas)
     txtTotalPago.text = FormatMoney(totalPago)
     txtSaldo.text = FormatMoney(saldo)
     txtImporteLetras.text = EnLetras(CStr(totalPago)) 'NumeroALetrasSimple(totalPago)
@@ -2275,7 +1724,6 @@ Private Sub cmdGuardar_Click()
     Dim nroOrden As Long
     Dim rs As DAO.Recordset
     Dim deudaTxt As String, chequesTxt As String, otrosTxt As String
-    Dim transfTxt As String, factTxt As String
 
     EnsureDatabaseReady
 
@@ -2289,8 +1737,6 @@ Private Sub cmdGuardar_Click()
     deudaTxt = SerializarGrid(grdDeuda)
     chequesTxt = SerializarGrid(grdCheques)
     otrosTxt = SerializarGrid(grdOtros)
-    transfTxt = SerializarGrid(grdTransferencia)
-    factTxt = SerializarGrid(grdFacturas)
 
     Set rs = BaseSPC.OpenRecordset("SELECT * FROM OrdenPago WHERE NroOrden=" & CStr(nroOrden), dbOpenDynaset)
     If rs.EOF Then
@@ -2315,8 +1761,6 @@ Private Sub cmdGuardar_Click()
     rs!DetalleDeuda = deudaTxt
     rs!DetalleCheques = chequesTxt
     rs!DetalleOtros = otrosTxt
-    rs!DetalleTransferencia = transfTxt
-    rs!DetalleFacturas = factTxt
 
     rs!FechaAlta = Now
     rs.Update
@@ -2419,8 +1863,6 @@ Private Sub CargarOrdenPorNumero(ByVal nroOrden As Long)
     DeserializarGrid grdDeuda, NzS(rs!DetalleDeuda)
     DeserializarGrid grdCheques, NzS(rs!DetalleCheques)
     DeserializarGrid grdOtros, NzS(rs!DetalleOtros)
-    DeserializarGrid grdTransferencia, NzS(rs!DetalleTransferencia)
-    DeserializarGrid grdFacturas, NzS(rs!DetalleFacturas)
 
     m_Cargando = False
 
@@ -2629,27 +2071,19 @@ Private Sub EnsureSchemaOrdenPago()
             "NroOrden LONG CONSTRAINT PK_OrdenPago PRIMARY KEY, " & _
             "Fecha DATETIME, " & _
             "Proveedor TEXT(150), " & _
-            "TotalDeuda CURRENCY, " & _
-            "SubtotalCheques CURRENCY, " & _
-            "SubtotalOtros CURRENCY, " & _
+            "SubDeuda CURRENCY, " & _
+            "SubCheques CURRENCY, " & _
+            "SubOtros CURRENCY, " & _
             "Efectivo CURRENCY, " & _
-            "RetencionIIBB CURRENCY, " & _
+            "RetIIBB CURRENCY, " & _
             "TotalPago CURRENCY, " & _
             "Saldo CURRENCY, " & _
-            "MontoLetras MEMO, " & _
+            "ImporteLetras MEMO, " & _
             "DetalleDeuda MEMO, " & _
             "DetalleCheques MEMO, " & _
             "DetalleOtros MEMO, " & _
-            "DetalleTransferencia MEMO, " & _
-            "DetalleFacturas MEMO, " & _
             "FechaAlta DATETIME" & _
             ")"
-    Else
-        ' Migration: add columns if missing
-        On Error Resume Next
-        BaseSPC.Execute "ALTER TABLE OrdenPago ADD COLUMN DetalleTransferencia MEMO"
-        BaseSPC.Execute "ALTER TABLE OrdenPago ADD COLUMN DetalleFacturas MEMO"
-        On Error GoTo EH
     End If
 
     Exit Sub
@@ -2922,60 +2356,4 @@ End Sub
 Private Sub txtTotalPago_LostFocus()
     If m_Cargando Then Exit Sub
     FormatImporteTextBox txtTotalPago
-End Sub
-
-Private Sub txtFecha_LostFocus()
-    On Error GoTo EH
-
-    Dim fechaStr As String
-    Dim fechaVal As Date
-
-    fechaStr = Trim$(txtFecha.text)
-
-    If Len(fechaStr) = 0 Then
-        txtFecha.text = Format$(Date, "dd/mm/yyyy")
-        m_FechaAnterior = txtFecha.text
-        Exit Sub
-    End If
-
-    If Not ValidarFechaDD_MM_YYYY(fechaStr) Then
-        MsgBox "Fecha invalida. Use formato DD/MM/YYYY", vbExclamation, "Validacion"
-        txtFecha.text = m_FechaAnterior
-        txtFecha.SetFocus
-        Exit Sub
-    End If
-
-    fechaVal = ParseDateDD_MM_YYYY(fechaStr)
-
-    If fechaVal > Date Then
-        MsgBox "La fecha no puede ser futura", vbExclamation, "Validacion"
-        txtFecha.text = m_FechaAnterior
-        txtFecha.SetFocus
-        Exit Sub
-    End If
-
-    If Year(fechaVal) < 1900 Then
-        MsgBox "Fecha muy antigua (ano < 1900)", vbExclamation, "Validacion"
-        txtFecha.text = m_FechaAnterior
-        txtFecha.SetFocus
-        Exit Sub
-    End If
-
-    txtFecha.text = Format$(fechaVal, "dd/mm/yyyy")
-    m_FechaAnterior = txtFecha.text
-
-    Exit Sub
-EH:
-    MsgBox "Error validando fecha: " & Err.Description, vbExclamation, "Validacion"
-    txtFecha.text = m_FechaAnterior
-End Sub
-
-Private Sub txtSubTransferencia_LostFocus()
-    If m_Cargando Then Exit Sub
-    FormatImporteTextBox txtSubTransferencia
-End Sub
-
-Private Sub txtSubFacturas_LostFocus()
-    If m_Cargando Then Exit Sub
-    FormatImporteTextBox txtSubFacturas
 End Sub

@@ -793,6 +793,7 @@ Dim rstPagoD As DAO.Recordset
 Dim suma As Double
 Dim numDoc As Long
 Dim tipoDoc As String
+Dim vCorresponde As String
 
 Private Function BuscarCondicionIva(CI As String) As String
     Dim tCondicionIVA As DAO.Recordset
@@ -805,7 +806,11 @@ End Function
 
 Private Sub cmdPrintRecibo_Click()
     If MsgBox("¿Desea imprimir este recibo?", vbYesNo, "Módulo de Pagos") = vbYes Then
-        Call ImprimirReciboE
+        If vCorresponde = "L1" Then
+            Call ImprimirReciboE
+        Else
+            Call ImprimirReciboX
+        End If
     End If
 End Sub
 
@@ -1499,7 +1504,12 @@ Private Sub buscodatos()
     LabelTotalAbonado.Caption = rstPagoC.Fields!TotalAbonado
     TextNumeroPago.text = rstPagoC.Fields!NroPago
     TextFechaPago.text = rstPagoC.Fields!FechaPago
-
+    '*** NUEVO: Cargar campo Corresponde para tipo de recibo
+    If IsNull(rstPagoC.Fields!Corresponde) Then
+        vCorresponde = "L1"
+    Else
+        vCorresponde = rstPagoC.Fields!Corresponde
+    End If
     '*** NUEVO: sucursal persistida
     Dim idSucPago As Long, I As Integer
     If IsNull(rstPagoC.Fields!IdSucursal) Then
@@ -1800,6 +1810,7 @@ Private Sub ImprimirReciboE()
                     If Mid(SegundoTramo, I, 1) = " " Then Exit For
                 Next I
                 Printer.Print StrConv(Mid(SegundoTramo, 1, I), vbUpperCase)
+                 .Font = "Arial": .FontSize = 10
                 .CurrentX = 12: .CurrentY = 268
                 Printer.Print StrConv(Mid(SegundoTramo, (I + 1), (Largo - I)), vbUpperCase)
             End If
@@ -1815,6 +1826,243 @@ Private Sub ImprimirReciboE()
 
 CapturaErrores:
     MsgBox "Error imprimiendo recibo: " & Err.Description, vbCritical, "Impresi?n"
+End Sub
+
+
+Private Sub ImprimirReciboX()
+    '*** RECIBO X - NO OFICIAL (Linea 2) ***
+    On Error GoTo CapturaErroresX
+
+    Dim BaseSPC As DAO.Database
+    Dim tClientes As DAO.Recordset
+    Dim tDomiciliosClientes As DAO.Recordset
+
+    Dim Nrec As String, IdSuc As String
+    Dim Largo As Integer, LargoSuc As Integer
+    Dim I As Integer, Hasta As Integer
+    Dim TotalFac As Variant
+    Dim vEfete As Variant, vCheques As Variant
+    Dim vRetenciones As Variant, vTransf As Variant
+    Dim vImporteEnLetras As String, SegundoTramo As String
+
+    Set BaseSPC = OpenDatabase(App.Path & "\DB_SPC_SI.mdb")
+    Set tClientes = BaseSPC.OpenRecordset("Clientes", dbOpenTable)
+    Set tDomiciliosClientes = BaseSPC.OpenRecordset("DomiciliosClientes", dbOpenTable)
+    tClientes.Index = "PrimaryKey"
+    tDomiciliosClientes.Index = "PrimaryKey"
+
+    Nrec = CStr(TextNumeroPago.text)
+
+    With Printer
+        For I = 0 To Printers.Count - 1
+            If Printers(I).DeviceName = "CutePDF Writer" Then Set Printer = Printers(I)
+        Next I
+
+        .ScaleHeight = 297
+        .ScaleWidth = 210
+
+        'Logo
+    '    Printer.PaintPicture LoadPicture(App.Path & "\Quilplac.JPG"), 10, 9, 40, 10
+
+        .FontItalic = False
+        .DrawWidth = 10
+        Printer.Line (10, 7)-(200, 7)
+
+        '*** CAMBIO: Titulo RECIBO X en lugar de RECIBO OFICIAL ***
+        .CurrentX = 90: .CurrentY = 14
+        .Font = "Arial": .FontSize = 14: .FontBold = True
+        Printer.Print "RECIBO X"
+
+        '*** NUEVO: Leyenda documento no valido ***
+        .CurrentX = 80: .CurrentY = 20
+        .FontSize = 8: .FontBold = False: .FontItalic = True
+        'Printer.Print "Documento no valido como Factura"
+        .FontItalic = False
+
+        .CurrentX = 15: .CurrentY = 2
+        .FontSize = 12: .FontBold = False
+        Printer.Print "ORIGINAL"
+
+        'Numero de recibo
+        .FontSize = 12: .CurrentY = 9: .CurrentX = 150
+
+        Largo = 8 - Len(Nrec)
+        For I = 1 To Largo
+            Nrec = "0" & Nrec
+        Next I
+
+        IdSuc = CStr(Left(cmbSucursal.text, 1))
+        LargoSuc = 4 - Len(IdSuc)
+        For I = 1 To LargoSuc
+            IdSuc = "0" & IdSuc
+        Next I
+
+        Printer.Print IdSuc & "-" & Nrec
+
+        .CurrentX = 150: .CurrentY = .CurrentY + 2
+        .FontSize = 12
+        Printer.Print "Fecha: " & Format(TextFechaPago, "DD/MM/YYYY")
+
+        '*** CAMBIO: Sin datos fiscales para recibo no oficial ***
+        .DrawWidth = 10
+        Printer.Line (10, 42)-(200, 42)
+
+        'Datos empresa (simplificados)
+        .CurrentX = 12: .CurrentY = 25
+        .Font = "Arial": .FontSize = 10: .FontBold = True: .FontUnderline = False
+     '   Printer.Print "QUILPLAC S.A."
+     '   .CurrentX = 12: Printer.Print "Andres Baranda 520 - Quilmes"
+     '   .CurrentX = 12: Printer.Print "Tel. 4257-5875"
+
+        'Recuadro cliente
+        .DrawWidth = 10
+        Printer.Line (10, 47)-(200, 47)
+        Printer.Line (10, 47)-(10, 75)
+        Printer.Line (200, 47)-(200, 75)
+        Printer.Line (10, 75)-(200, 75)
+
+        tClientes.MoveFirst
+        tClientes.Seek "=", TextCodigoCliente.text
+        If Not tClientes.NoMatch Then
+            .CurrentX = 15: .CurrentY = 48: .FontSize = 10: .FontBold = True
+            Printer.Print "Senor(es): "
+            .CurrentX = 35: .CurrentY = 48: .FontBold = False
+            Printer.Print tClientes!RazonSocial
+
+            tDomiciliosClientes.Seek "=", tClientes!IdCliente
+            If Not tDomiciliosClientes.NoMatch Then
+                .CurrentX = 15: .CurrentY = 55: .FontBold = True
+                Printer.Print "Domicilio: "
+                .CurrentX = 35: .CurrentY = 55: .FontBold = False
+                Printer.Print tDomiciliosClientes!Domicilio
+
+                .CurrentX = 15: .CurrentY = 62: .FontBold = True
+                Printer.Print "Localidad: "
+                .CurrentX = 35: .CurrentY = 62: .FontBold = False
+                Printer.Print tDomiciliosClientes!localidad
+
+                .CurrentX = 130: .CurrentY = 62: .FontBold = True
+                Printer.Print "Telefono: "
+                .CurrentX = 150: .CurrentY = 62: .FontBold = False
+                Printer.Print tClientes!Tel
+            End If
+
+            .DrawWidth = 10
+            Printer.Line (10, 78)-(200, 78)
+            Printer.Line (10, 78)-(10, 85)
+            Printer.Line (200, 78)-(200, 85)
+            Printer.Line (10, 85)-(200, 85)
+
+            .CurrentX = 83: .CurrentY = 80: .FontSize = 10: .FontBold = True
+      '      Printer.Print "*** www.quilplac.com ***"
+           '  Printer.Print "Energía del Futuro... Hoy"
+        End If
+
+        'Recuadro detalle
+        .DrawWidth = 10
+        Printer.Line (10, 90)-(200, 90)
+        Printer.Line (10, 240)-(200, 240)
+        Printer.Line (10, 90)-(10, 240)
+        Printer.Line (200, 90)-(200, 240)
+        Printer.Line (10, 97)-(200, 97)
+
+        .FontBold = True
+        .CurrentX = 86: .CurrentY = 92: .FontSize = 10
+        Printer.Print "DETALLE DEL RECIBO"
+
+        'Formas de pago
+        .FontBold = False
+        .CurrentX = 32: .CurrentY = 110: .FontSize = 10
+        vEfete = Val(TextEfectivo.text)
+        Printer.Print "* Efectivo: " & Chr(9) & Chr(9) & Format(vEfete, "Currency")
+
+        .CurrentX = 32: .CurrentY = 120
+        vTransf = Val(TextTransferencia.text)
+        Printer.Print "* Transferencia: " & Chr(9) & Format(vTransf, "Currency")
+
+        .CurrentX = 32: .CurrentY = 130
+        vCheques = Val(TextCheque.text)
+        Printer.Print "* Cheques Varios: " & Chr(9) & Format(vCheques, "Currency")
+
+        .CurrentX = 32: .CurrentY = 140
+        vRetenciones = Val(TextRetencion.text)
+        Printer.Print "* Retenciones: " & Chr(9) & Format(vRetenciones, "Currency")
+
+        'Observaciones
+        If TextObservaciones.text <> "" Then
+            .CurrentX = 20: .CurrentY = 185
+            .Font = "Arial": .FontSize = 10
+            Printer.Print "Obs.: " & StrConv(TextObservaciones.text, vbUpperCase)
+        End If
+
+        'Recuadro total
+        Printer.Line (130, 240)-(130, 262)
+        Printer.Line (200, 240)-(200, 262)
+
+        Printer.Line (130, 262)-(200, 270), vbBlack, BF
+
+        .CurrentX = 135: .CurrentY = 264
+        .Font = "Arial": .FontSize = 12
+        .ForeColor = vbWhite
+        Printer.Print "TOTAL: "
+
+        TotalFac = LabelTotalAbonado.Caption
+        Hasta = CInt(14 - Len(CStr(TotalFac)))
+        For I = 0 To Hasta
+            TotalFac = " " & TotalFac
+        Next I
+
+        .Font = "Arial": .FontSize = 12
+        .CurrentX = 165: .CurrentY = 264
+        Printer.Print Format(TotalFac, "Currency")
+
+        Printer.Line (10, 245)-(55, 250), vbBlack, BF
+        .CurrentX = 12: .CurrentY = 245
+        Printer.Print "RECIBIMOS PESOS:"
+        .ForeColor = vbBlack
+
+        'Importe en letras
+        TotalFac = Format(TotalFac, "Fixed")
+        vImporteEnLetras = EnLetras(CStr(TotalFac))
+
+        .CurrentX = 12: .CurrentY = 253
+        Largo = Len(vImporteEnLetras)
+        I = 0
+
+        If Len(vImporteEnLetras) <= 50 Then
+            Printer.Print StrConv(vImporteEnLetras, vbUpperCase)
+        Else
+            For I = 50 To 1 Step -1
+                If Mid(vImporteEnLetras, I, 1) = " " Then Exit For
+            Next I
+            Printer.Print StrConv(Mid(vImporteEnLetras, 1, I), vbUpperCase)
+
+            If (Largo - I) <= 50 Then
+                .CurrentX = 12: .CurrentY = 258
+                Printer.Print StrConv(Mid(vImporteEnLetras, (I + 1), (Largo - I)), vbUpperCase)
+            Else
+                .CurrentX = 12: .CurrentY = 263
+                SegundoTramo = StrConv(Mid(vImporteEnLetras, (I + 1), (Largo - I)), vbUpperCase)
+                Largo = Len(SegundoTramo)
+                For I = 50 To 1 Step -1
+                    If Mid(SegundoTramo, I, 1) = " " Then Exit For
+                Next I
+                Printer.Print StrConv(Mid(SegundoTramo, 1, I), vbUpperCase)
+                .CurrentX = 12: .CurrentY = 268
+                Printer.Print StrConv(Mid(SegundoTramo, (I + 1), (Largo - I)), vbUpperCase)
+            End If
+        End If
+
+        .EndDoc
+    End With
+
+    tClientes.Close
+    tDomiciliosClientes.Close
+    BaseSPC.Close
+    Exit Sub
+
+CapturaErroresX:
+    MsgBox "Error imprimiendo recibo X: " & Err.Description, vbCritical, "Impresion"
 End Sub
 
 Private Function EnLetras(numero As String) As String

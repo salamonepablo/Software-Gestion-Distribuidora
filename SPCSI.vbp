@@ -96,6 +96,7 @@ Form=FormVerNotaDebitoIntCtaCte.frm
 Form=FormRemitoTemporal.frm
 Form=Form1ActualizarSucPagos.frm
 Form=FormBuscarRecibo.frm
+Form=FormOrdenPago.frm
 IconForm="MenuPrincipal"
 Startup="MenuPrincipal"
 HelpFile=""

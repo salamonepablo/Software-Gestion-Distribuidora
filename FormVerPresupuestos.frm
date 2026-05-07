@@ -637,7 +637,7 @@ Public Sub Imprimir()
     Dim renglon As Single
     Dim Copia As Integer
     Dim LeyendaCopia As String
-    Dim Hasta As Integer, i As Integer
+    Dim Hasta As Integer, I As Integer
 
     Set BaseSPC = OpenDatabase(App.Path & "\DB_SPC_SI.mdb")
     vSQLPC = "SELECT * FROM PresupuestoC WHERE NroPresu=" & TextNumeroPresupuesto.text & " ORDER By NroPresu"
@@ -646,11 +646,11 @@ Public Sub Imprimir()
     With Printer
         .ScaleMode = 6  'mm
 
-        For Copia = 1 To 3
+        For Copia = 1 To 2
             Select Case Copia
                 Case 1: LeyendaCopia = "ORIGINAL"
                 Case 2: LeyendaCopia = "DUPLICADO"
-                Case 3: LeyendaCopia = "TRIPLICADO"
+               ' Case 3: LeyendaCopia = "TRIPLICADO"
             End Select
 
             '=== DIBUJAR FORMULARIO ===
@@ -728,9 +728,9 @@ Public Sub Imprimir()
                 Cant = CDbl(PresuD!cantidad)
                 Cant = Format(Cant, "Standard")
                 Hasta = CInt(6 - Len(Cant))
-                For i = 0 To Hasta
+                For I = 0 To Hasta
                     Cant = " " & Cant
-                Next i
+                Next I
                 Printer.Print Cant
 
                 'Descripcion
@@ -750,9 +750,9 @@ Public Sub Imprimir()
                 PU = CDbl(PresuD!precioUnitario) - (CDbl(PresuD!precioUnitario) * CDbl(PresuD!PorcentajeDescuento) / 100)
                 PU = Format(PU, "Standard")
                 Hasta = CInt(10 - Len(PU))
-                For i = 0 To Hasta
+                For I = 0 To Hasta
                     PU = " " & PU
-                Next i
+                Next I
                 Printer.Print PU
 
                 'Importe
@@ -763,9 +763,9 @@ Public Sub Imprimir()
                 .FontBold = False
                 TL = Format(PresuD!totalLinea, "Standard")
                 Hasta = CInt(14 - Len(TL))
-                For i = 0 To Hasta
+                For I = 0 To Hasta
                     TL = " " & TL
-                Next i
+                Next I
                 Printer.Print TL
 
                 renglon = renglon + 8  '8mm por fila
@@ -780,9 +780,9 @@ Public Sub Imprimir()
             .FontBold = True
             TotalPres = Format(CDbl(PresuC!TotalPresu), "Standard")
             Hasta = CInt(14 - Len(TotalPres))
-            For i = 0 To Hasta
+            For I = 0 To Hasta
                 TotalPres = " " & TotalPres
-            Next i
+            Next I
             Printer.Print TotalPres
 
             PresuC.Close
@@ -890,9 +890,9 @@ Private Sub Imprimir_old()
                             Cant = CDbl(PresuD!cantidad)
                             Cant = Format(Cant, "Standard")
                             Hasta = CInt(6 - Len(Cant))
-                            For i = 0 To Hasta
+                            For I = 0 To Hasta
                                 Cant = " " & Cant
-                            Next i
+                            Next I
                             Printer.Print Cant
                             'Printer.Print PresuD!cantidad
                             
@@ -914,9 +914,9 @@ Private Sub Imprimir_old()
                             PU = CDbl(PresuD!precioUnitario) - (CDbl(PresuD!precioUnitario) * CDbl(PresuD!PorcentajeDescuento) / 100)
                             PU = Format(PU, "Standard")
                             Hasta = CInt(10 - Len(PU))
-                            For i = 0 To Hasta
+                            For I = 0 To Hasta
                                 PU = " " & PU
-                            Next i
+                            Next I
                             Printer.Print PU
                         
                         'Importe
@@ -927,9 +927,9 @@ Private Sub Imprimir_old()
                             .FontBold = False
                             TL = Format(PresuD!totalLinea, "Standard")
                             Hasta = CInt(14 - Len(TL))
-                            For i = 0 To Hasta
+                            For I = 0 To Hasta
                                 TL = " " & TL
-                            Next i
+                            Next I
                             Printer.Print TL
                         
                          renglon = renglon + 5
@@ -946,9 +946,9 @@ Private Sub Imprimir_old()
                 
                 TotalPres = Format(CDbl(PresuC!TotalPresu), "Standard")
                 Hasta = CInt(14 - Len(TotalPres))
-                For i = 0 To Hasta
+                For I = 0 To Hasta
                     TotalPres = " " & TotalPres
-                Next i
+                Next I
                 
                 Printer.Print TotalPres
             
@@ -1130,7 +1130,7 @@ End Sub
 
 Private Sub DibujarFormulario(ByVal Leyenda As String)
 
-    Dim i As Integer
+    Dim I As Integer
     Dim RowY As Single
 
     With Printer
@@ -1242,10 +1242,10 @@ Private Sub DibujarFormulario(ByVal Leyenda As String)
         'Lineas horizontales de filas (22 filas de 8mm) dot
         Printer.DrawWidth = 1
         Printer.DrawStyle = 2 'dot
-        For i = 1 To 22
-            RowY = 80 + (i * 8)
+        For I = 1 To 22
+            RowY = 80 + (I * 8)
             Printer.Line (25, RowY)-(200, RowY)
-        Next i
+        Next I
 
         ' ===== FILA TOTAL =====
         Printer.DrawWidth = 10
