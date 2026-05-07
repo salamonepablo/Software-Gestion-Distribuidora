@@ -1311,7 +1311,9 @@ Private Sub cmdImprimir_Click()
             Printer.FontBold = False
         End If
     Else
-        Printer.CurrentX = 120
+        Y = 500
+        
+        Printer.CurrentX = xLeft
         Printer.CurrentY = 520
         Printer.FontBold = True
         Printer.Print "ORDEN DE PAGO"
@@ -1331,7 +1333,8 @@ Private Sub cmdImprimir_Click()
 
     Printer.CurrentX = xLeft
     Printer.CurrentY = Y
-    Printer.Print "Proveedor: " & Trim$(txtProveedor.text)
+    Printer.Print "Proveedor: " & Trim$(txtProveedor.text) + Chr(13)
+    Y = Y + lineH
     Y = Y + lineH
 
     ' Deuda
@@ -1374,6 +1377,7 @@ Private Sub cmdImprimir_Click()
     Printer.CurrentX = xRight
     Printer.CurrentY = Y
     Printer.Print FormatMoney(ParseCurrency(txtSubDeuda.text))
+    Y = Y + lineH
     Y = Y + lineH
 
     ' Cheques
@@ -1424,6 +1428,7 @@ Private Sub cmdImprimir_Click()
     Printer.CurrentY = Y
     Printer.Print FormatMoney(ParseCurrency(txtSubCheques.text))
     Y = Y + lineH
+    Y = Y + lineH
 
     ' Transferencia
     transfRows = grdTransferencia.Rows - 1
@@ -1471,6 +1476,7 @@ Private Sub cmdImprimir_Click()
         Printer.CurrentX = xRight
         Printer.CurrentY = Y
         Printer.Print FormatMoney(ParseCurrency(txtSubTransferencia.text))
+        Y = Y + lineH
         Y = Y + lineH
     End If
 
@@ -1521,6 +1527,7 @@ Private Sub cmdImprimir_Click()
         Printer.CurrentY = Y
         Printer.Print FormatMoney(ParseCurrency(txtSubFacturas.text))
         Y = Y + lineH
+        Y = Y + lineH
     End If
 
     ' Otros (sin Retencion IIBB)
@@ -1570,6 +1577,7 @@ Private Sub cmdImprimir_Click()
     Printer.CurrentY = Y
     Printer.Print FormatMoney(ParseCurrency(txtSubOtros.text))
     Y = Y + lineH
+    Y = Y + lineH
 
     ' Efectivo
     If Y > pageBottom Then
@@ -1590,6 +1598,7 @@ Private Sub cmdImprimir_Click()
     Printer.CurrentX = xRight
     Printer.CurrentY = Y
     Printer.Print FormatMoney(ParseCurrency(txtEfectivo.text))
+    Y = Y + lineH
     Y = Y + lineH
 
     ' RESUMEN - SIN RetIIBB
@@ -1692,7 +1701,7 @@ Private Sub cmdImprimir_Click()
     End If
 
     Printer.CurrentX = xLeft
-    Printer.CurrentY = Y
+    Printer.CurrentY = Y + 100
     Printer.Print String$(35, "_")
     Y = Y + lineH
     Printer.CurrentX = xLeft
