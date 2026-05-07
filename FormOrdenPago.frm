@@ -1256,58 +1256,79 @@ End Sub
 
 Private Sub cmdImprimir_Click()
     On Error GoTo ErrHandler
-    
+
     Dim y As Single
     Dim xLeft As Single
     Dim xRight As Single
     Dim lineH As Single
     Dim pageBottom As Single
-    
-    Dim i As Long
+    Dim logoPath As String
+    Dim I As Long
     Dim detalle As String
-    Dim importe As String
+    Dim Importe As String
     Dim nroCheque As String
     Dim banco As String
     Dim vto As String
-    Dim retText As String
-    
+    Dim cuenta As String
+    Dim cuit As String
+    Dim numero As String
+    Dim fecha As String
+    Dim descripcion As String
     Dim deudaRows As Long
     Dim chequeRows As Long
-    
+    Dim transfRows As Long
+    Dim factRows As Long
+
     xLeft = 600
     xRight = 7800
     lineH = 240
     pageBottom = 10600
-    
+
     Printer.ScaleMode = vbTwips
     Printer.FontName = "Courier New"
     Printer.FontSize = 10
     Printer.FontBold = False
-    
+    Printer.Copies = 2
+
     y = 600
-    
-    ' Encabezado
- '   Printer.FontBold = True
- '   Printer.Print Tab(2); "ORDEN DE PAGO"
- '   Printer.FontBold = False
-    
-    ' Nro de Orden de Pago visible en encabezado
-    Printer.CurrentX = 120
-    Printer.CurrentY = 520
-    Printer.FontBold = True
-    Printer.Print "ORDEN DE PAGO Nro: " & Trim$(txtNroOrden.text)
-    Printer.FontBold = False
+
+    ' Encabezado - Logo condicional si hay facturas
+    If TieneFacturas Then
+        logoPath = App.Path & "\Quilplac2.jpg"
+        If Dir(logoPath) <> "" Then
+            Printer.PaintPicture LoadPicture(logoPath), 600, 200, 7200, 1200
+            y = 1600
+        Else
+            Printer.CurrentX = 120
+            Printer.CurrentY = 520
+            Printer.FontBold = True
+            Printer.Print "ORDEN DE PAGO"
+            Printer.FontBold = False
+        End If
+    Else
+        Printer.CurrentX = 120
+        Printer.CurrentY = 520
+        Printer.FontBold = True
+        Printer.Print "ORDEN DE PAGO"
+        Printer.FontBold = False
+    End If
+
     y = y + lineH * 2
-    
+
+    ' Nro de Orden, Fecha, Proveedor
     Printer.CurrentX = xLeft
     Printer.CurrentY = y
-    Printer.Print "Proveedor: " & Trim$(txtProveedor.text)
-    
+    Printer.Print "Nro: " & Trim$(txtNroOrden.text)
     Printer.CurrentX = xRight
     Printer.CurrentY = y
     Printer.Print "Fecha: " & Trim$(txtFecha.text)
+    y = y + lineH
+
+    Printer.CurrentX = xLeft
+    Printer.CurrentY = y
+    Printer.Print "Proveedor: " & Trim$(txtProveedor.text)
     y = y + lineH * 2
-    
+
     ' Deuda
     Printer.FontBold = True
     Printer.CurrentX = xLeft
@@ -1315,37 +1336,33 @@ Private Sub cmdImprimir_Click()
     Printer.Print "DEUDA"
     Printer.FontBold = False
     y = y + lineH
-    
+
     Printer.CurrentX = xLeft
     Printer.CurrentY = y
     Printer.Print String$(90, "-")
     y = y + lineH
-    
+
     deudaRows = grdDeuda.Rows - 1
     If deudaRows >= 1 Then
-        For i = 1 To deudaRows
-            detalle = Trim$(grdDeuda.TextMatrix(i, 0))
-            importe = Trim$(grdDeuda.TextMatrix(i, 1))
-            
-            If Len(detalle) > 0 Or Len(importe) > 0 Then
+        For I = 1 To deudaRows
+            detalle = Trim$(grdDeuda.TextMatrix(I, 0))
+            Importe = Trim$(grdDeuda.TextMatrix(I, 1))
+            If Len(detalle) > 0 Or Len(Importe) > 0 Then
                 If y > pageBottom Then
                     Printer.NewPage
                     y = 600
                 End If
-                
                 Printer.CurrentX = xLeft
                 Printer.CurrentY = y
                 Printer.Print Left$(detalle, 55)
-                
                 Printer.CurrentX = xRight
                 Printer.CurrentY = y
-                Printer.Print FormatMoney(ParseCurrency(importe))
-                
+                Printer.Print FormatMoney(ParseCurrency(Importe))
                 y = y + lineH
             End If
-        Next i
+        Next I
     End If
-    
+
     y = y + lineH / 2
     Printer.CurrentX = xLeft
     Printer.CurrentY = y
@@ -1354,52 +1371,48 @@ Private Sub cmdImprimir_Click()
     Printer.CurrentY = y
     Printer.Print FormatMoney(ParseCurrency(txtSubDeuda.text))
     y = y + lineH * 2
-    
+
     ' Cheques
     If y > pageBottom Then
         Printer.NewPage
         y = 600
     End If
-    
+
     Printer.FontBold = True
     Printer.CurrentX = xLeft
     Printer.CurrentY = y
     Printer.Print "CHEQUES"
     Printer.FontBold = False
     y = y + lineH
-    
+
     Printer.CurrentX = xLeft
     Printer.CurrentY = y
     Printer.Print String$(90, "-")
     y = y + lineH
-    
+
     chequeRows = grdCheques.Rows - 1
     If chequeRows >= 1 Then
-        For i = 1 To chequeRows
-            banco = Trim$(grdCheques.TextMatrix(i, 0))
-            nroCheque = Trim$(grdCheques.TextMatrix(i, 1))
-            vto = Trim$(grdCheques.TextMatrix(i, 2))
-            importe = Trim$(grdCheques.TextMatrix(i, 3))
-            
-            If Len(banco) > 0 Or Len(nroCheque) > 0 Or Len(vto) > 0 Or Len(importe) > 0 Then
+        For I = 1 To chequeRows
+            banco = Trim$(grdCheques.TextMatrix(I, 0))
+            nroCheque = Trim$(grdCheques.TextMatrix(I, 1))
+            vto = Trim$(grdCheques.TextMatrix(I, 2))
+            Importe = Trim$(grdCheques.TextMatrix(I, 3))
+            If Len(banco) > 0 Or Len(nroCheque) > 0 Or Len(vto) > 0 Or Len(Importe) > 0 Then
                 If y > pageBottom Then
                     Printer.NewPage
                     y = 600
                 End If
-                
                 Printer.CurrentX = xLeft
                 Printer.CurrentY = y
                 Printer.Print Left$("Nro: " & nroCheque & "  Banco: " & banco & "  Vto: " & vto, 85)
-                
                 Printer.CurrentX = xRight
                 Printer.CurrentY = y
-                Printer.Print FormatMoney(ParseCurrency(importe))
-                
+                Printer.Print FormatMoney(ParseCurrency(Importe))
                 y = y + lineH
             End If
-        Next i
+        Next I
     End If
-    
+
     y = y + lineH / 2
     Printer.CurrentX = xLeft
     Printer.CurrentY = y
@@ -1408,31 +1421,120 @@ Private Sub cmdImprimir_Click()
     Printer.CurrentY = y
     Printer.Print FormatMoney(ParseCurrency(txtSubCheques.text))
     y = y + lineH * 2
-    
-    ' Otros (retencion / efectivo / subtotal otros)
+
+    ' Transferencia
+    transfRows = grdTransferencia.Rows - 1
+    If transfRows >= 1 And FilaTieneDatos(grdTransferencia, 1) Then
+        If y > pageBottom Then
+            Printer.NewPage
+            y = 600
+        End If
+
+        Printer.FontBold = True
+        Printer.CurrentX = xLeft
+        Printer.CurrentY = y
+        Printer.Print "TRANSFERENCIA"
+        Printer.FontBold = False
+        y = y + lineH
+
+        Printer.CurrentX = xLeft
+        Printer.CurrentY = y
+        Printer.Print String$(90, "-")
+        y = y + lineH
+
+        For I = 1 To transfRows
+            banco = Trim$(grdTransferencia.TextMatrix(I, 0))
+            cuenta = Trim$(grdTransferencia.TextMatrix(I, 1))
+            cuit = Trim$(grdTransferencia.TextMatrix(I, 2))
+            Importe = Trim$(grdTransferencia.TextMatrix(I, 3))
+            If Len(banco) > 0 Or Len(cuenta) > 0 Or Len(cuit) > 0 Or Len(Importe) > 0 Then
+                If y > pageBottom Then
+                    Printer.NewPage
+                    y = 600
+                End If
+                Printer.CurrentX = xLeft
+                Printer.CurrentY = y
+                Printer.Print Left$(banco & " " & cuenta & " " & cuit, 55)
+                Printer.CurrentX = xRight
+                Printer.CurrentY = y
+                Printer.Print FormatMoney(ParseCurrency(Importe))
+                y = y + lineH
+            End If
+        Next I
+
+        y = y + lineH / 2
+        Printer.CurrentX = xLeft
+        Printer.CurrentY = y
+        Printer.Print "Subtotal Transferencia:"
+        Printer.CurrentX = xRight
+        Printer.CurrentY = y
+        Printer.Print FormatMoney(ParseCurrency(txtSubTransferencia.text))
+        y = y + lineH * 2
+    End If
+
+    ' Facturas
+    factRows = grdFacturas.Rows - 1
+    If factRows >= 1 And FilaTieneDatos(grdFacturas, 1) Then
+        If y > pageBottom Then
+            Printer.NewPage
+            y = 600
+        End If
+
+        Printer.FontBold = True
+        Printer.CurrentX = xLeft
+        Printer.CurrentY = y
+        Printer.Print "FACTURAS"
+        Printer.FontBold = False
+        y = y + lineH
+
+        Printer.CurrentX = xLeft
+        Printer.CurrentY = y
+        Printer.Print String$(90, "-")
+        y = y + lineH
+
+        For I = 1 To factRows
+            numero = Trim$(grdFacturas.TextMatrix(I, 0))
+            fecha = Trim$(grdFacturas.TextMatrix(I, 1))
+            Importe = Trim$(grdFacturas.TextMatrix(I, 2))
+            descripcion = Trim$(grdFacturas.TextMatrix(I, 3))
+            If Len(numero) > 0 Or Len(fecha) > 0 Or Len(Importe) > 0 Then
+                If y > pageBottom Then
+                    Printer.NewPage
+                    y = 600
+                End If
+                Printer.CurrentX = xLeft
+                Printer.CurrentY = y
+                Printer.Print Left$(numero & " " & fecha & " " & Left$(descripcion, 30), 55)
+                Printer.CurrentX = xRight
+                Printer.CurrentY = y
+                Printer.Print FormatMoney(ParseCurrency(Importe))
+                y = y + lineH
+            End If
+        Next I
+
+        y = y + lineH / 2
+        Printer.CurrentX = xLeft
+        Printer.CurrentY = y
+        Printer.Print "Subtotal Facturas:"
+        Printer.CurrentX = xRight
+        Printer.CurrentY = y
+        Printer.Print FormatMoney(ParseCurrency(txtSubFacturas.text))
+        y = y + lineH * 2
+    End If
+
+    ' Otros (sin Retencion IIBB)
     If y > pageBottom Then
         Printer.NewPage
         y = 600
     End If
-    
+
     Printer.FontBold = True
     Printer.CurrentX = xLeft
     Printer.CurrentY = y
     Printer.Print "OTROS"
     Printer.FontBold = False
     y = y + lineH
-    
-    retText = Trim$(GetRetIIBBText())
-    If Len(retText) = 0 Then retText = "0"
-    
-    Printer.CurrentX = xLeft
-    Printer.CurrentY = y
-    Printer.Print "Retencion IIBB:"
-    Printer.CurrentX = xRight
-    Printer.CurrentY = y
-    Printer.Print FormatMoney(ParseCurrency(retText))
-    y = y + lineH
-    
+
     Printer.CurrentX = xLeft
     Printer.CurrentY = y
     Printer.Print "Efectivo:"
@@ -1440,7 +1542,7 @@ Private Sub cmdImprimir_Click()
     Printer.CurrentY = y
     Printer.Print FormatMoney(ParseCurrency(txtEfectivo.text))
     y = y + lineH
-    
+
     Printer.CurrentX = xLeft
     Printer.CurrentY = y
     Printer.Print "Subtotal Otros:"
@@ -1448,28 +1550,83 @@ Private Sub cmdImprimir_Click()
     Printer.CurrentY = y
     Printer.Print FormatMoney(ParseCurrency(txtSubOtros.text))
     y = y + lineH * 2
-    
-    ' Totales
-    If y > pageBottom - (lineH * 6) Then
+
+    ' RESUMEN - SIN RetIIBB
+    If y > pageBottom - (lineH * 10) Then
         Printer.NewPage
         y = 600
     End If
-    
+
     Printer.FontBold = True
     Printer.CurrentX = xLeft
     Printer.CurrentY = y
-    Printer.Print "TOTALES"
+    Printer.Print "RESUMEN"
     Printer.FontBold = False
     y = y + lineH
-    
+
     Printer.CurrentX = xLeft
     Printer.CurrentY = y
-    Printer.Print "Total Pago:"
+    Printer.Print "Deuda:"
+    Printer.CurrentX = xRight
+    Printer.CurrentY = y
+    Printer.Print FormatMoney(ParseCurrency(txtSubDeuda.text))
+    y = y + lineH
+
+    Printer.CurrentX = xLeft
+    Printer.CurrentY = y
+    Printer.Print "Cheques:"
+    Printer.CurrentX = xRight
+    Printer.CurrentY = y
+    Printer.Print FormatMoney(ParseCurrency(txtSubCheques.text))
+    y = y + lineH
+
+    Printer.CurrentX = xLeft
+    Printer.CurrentY = y
+    Printer.Print "Transferencia:"
+    Printer.CurrentX = xRight
+    Printer.CurrentY = y
+    Printer.Print FormatMoney(ParseCurrency(txtSubTransferencia.text))
+    y = y + lineH
+
+    Printer.CurrentX = xLeft
+    Printer.CurrentY = y
+    Printer.Print "Facturas:"
+    Printer.CurrentX = xRight
+    Printer.CurrentY = y
+    Printer.Print FormatMoney(ParseCurrency(txtSubFacturas.text))
+    y = y + lineH
+
+    Printer.CurrentX = xLeft
+    Printer.CurrentY = y
+    Printer.Print "Otros:"
+    Printer.CurrentX = xRight
+    Printer.CurrentY = y
+    Printer.Print FormatMoney(ParseCurrency(txtSubOtros.text))
+    y = y + lineH
+
+    Printer.CurrentX = xLeft
+    Printer.CurrentY = y
+    Printer.Print "Efectivo:"
+    Printer.CurrentX = xRight
+    Printer.CurrentY = y
+    Printer.Print FormatMoney(ParseCurrency(txtEfectivo.text))
+    y = y + lineH * 1.5
+
+    Printer.CurrentX = xLeft
+    Printer.CurrentY = y
+    Printer.Print String$(70, "-")
+    y = y + lineH
+
+    Printer.FontBold = True
+    Printer.CurrentX = xLeft
+    Printer.CurrentY = y
+    Printer.Print "TOTAL PAGO:"
     Printer.CurrentX = xRight
     Printer.CurrentY = y
     Printer.Print FormatMoney(ParseCurrency(txtTotalPago.text))
+    Printer.FontBold = False
     y = y + lineH
-    
+
     Printer.CurrentX = xLeft
     Printer.CurrentY = y
     Printer.Print "Saldo:"
@@ -1477,7 +1634,7 @@ Private Sub cmdImprimir_Click()
     Printer.CurrentY = y
     Printer.Print FormatMoney(ParseCurrency(txtSaldo.text))
     y = y + lineH * 2
-    
+
     Printer.CurrentX = xLeft
     Printer.CurrentY = y
     Printer.Print "Importe en letras:"
@@ -1486,13 +1643,13 @@ Private Sub cmdImprimir_Click()
     Printer.CurrentY = y
     Printer.Print Trim$(txtImporteLetras.text)
     y = y + lineH * 4
-    
+
     ' Firma
     If y > pageBottom Then
         Printer.NewPage
         y = 600
     End If
-    
+
     Printer.CurrentX = xLeft
     Printer.CurrentY = y
     Printer.Print String$(35, "_")
@@ -1500,13 +1657,24 @@ Private Sub cmdImprimir_Click()
     Printer.CurrentX = xLeft
     Printer.CurrentY = y
     Printer.Print "Firma / Aclaracion"
-    
+
     Printer.EndDoc
     Exit Sub
 
 ErrHandler:
     MsgBox "Error al imprimir la orden de pago: " & Err.Description, vbExclamation, "Impresion"
 End Sub
+
+Private Function TieneFacturas() As Boolean
+    Dim I As Integer
+    For I = 1 To grdFacturas.Rows - 1
+        If FilaTieneDatos(grdFacturas, I) Then
+            TieneFacturas = True
+            Exit Function
+        End If
+    Next I
+    TieneFacturas = False
+End Function
 Private Function EnLetras(numero As String) As String
     
     Dim b, paso As Integer
@@ -1769,7 +1937,7 @@ Private Sub RecalcularTodo()
     Dim efectivo As Currency
     Dim retIIBB As Currency
     Dim totalPago As Currency
-    Dim saldo As Currency
+    Dim Saldo As Currency
 
     subDeuda = SumarColumna(grdDeuda, colDeudaImporte)
     subCheques = SumarColumna(grdCheques, colChequeImporte)
@@ -1781,7 +1949,7 @@ Private Sub RecalcularTodo()
     retIIBB = ParseCurrency(GetRetIIBBText())
 
     totalPago = subCheques + subOtros + subTransferencia + subFacturas + efectivo + retIIBB
-    saldo = subDeuda - totalPago
+    Saldo = subDeuda - totalPago
 
     m_Cargando = True
     txtSubDeuda.text = FormatMoney(subDeuda)
@@ -1790,7 +1958,7 @@ Private Sub RecalcularTodo()
     txtSubTransferencia.text = FormatMoney(subTransferencia)
     txtSubFacturas.text = FormatMoney(subFacturas)
     txtTotalPago.text = FormatMoney(totalPago)
-    txtSaldo.text = FormatMoney(saldo)
+    txtSaldo.text = FormatMoney(Saldo)
     txtImporteLetras.text = EnLetras(CStr(totalPago)) 'NumeroALetrasSimple(totalPago)
     m_Cargando = False
 
@@ -1816,7 +1984,7 @@ End Function
 ' Guardado
 ' ------------------------------------------------------------
 Private Sub cmdGuardar_Click()
-    On Error GoTo EH
+'    On Error GoTo EH
 
     Dim nroOrden As Long
     Dim rs As DAO.Recordset
@@ -1855,9 +2023,9 @@ Private Sub cmdGuardar_Click()
     rs!SubtotalTransferencia = ParseCurrency(txtSubTransferencia.text)
     rs!SubtotalFacturas = ParseCurrency(txtSubFacturas.text)
     rs!efectivo = ParseCurrency(txtEfectivo.text)
-    rs!RetencionIIBB = ParseCurrency(GetRetIIBBText())
+'   rs!RetencionIIBB = ParseCurrency(GetRetIIBBText())
     rs!totalPago = ParseCurrency(txtTotalPago.text)
-    rs!saldo = ParseCurrency(txtSaldo.text)
+    rs!Saldo = ParseCurrency(txtSaldo.text)
     rs!MontoLetras = NzS(txtImporteLetras.text)
 
     rs!DetalleDeuda = deudaTxt
@@ -1893,7 +2061,7 @@ Private Sub CargarComboReimpresion()
     On Error GoTo EH
 
     Dim rs As DAO.Recordset
-    Dim texto As String
+    Dim Texto As String
 
     EnsureDatabaseReady
 
@@ -1901,8 +2069,8 @@ Private Sub CargarComboReimpresion()
 
     Set rs = BaseSPC.OpenRecordset("SELECT NroOrden, Fecha, Proveedor FROM OrdenPago ORDER BY NroOrden DESC", dbOpenSnapshot)
     Do While Not rs.EOF
-        texto = CStr(NzL(rs!nroOrden)) & " - " & Format$(NzD(rs!Fecha), "dd/mm/yyyy") & " - " & NzS(rs!Proveedor)
-        cboBuscarOrden.AddItem texto
+        Texto = CStr(NzL(rs!nroOrden)) & " - " & Format$(NzD(rs!Fecha), "dd/mm/yyyy") & " - " & NzS(rs!Proveedor)
+        cboBuscarOrden.AddItem Texto
         cboBuscarOrden.ItemData(cboBuscarOrden.NewIndex) = CLng(NzL(rs!nroOrden))
         rs.MoveNext
     Loop
@@ -1963,7 +2131,7 @@ Private Sub CargarOrdenPorNumero(ByVal nroOrden As Long)
     txtEfectivo.text = FormatMoney(NzC(rs!efectivo))
     SetRetIIBBText FormatMoney(NzC(rs!RetencionIIBB))
     txtTotalPago.text = FormatMoney(NzC(rs!totalPago))
-    txtSaldo.text = FormatMoney(NzC(rs!saldo))
+    txtSaldo.text = FormatMoney(NzC(rs!Saldo))
     txtImporteLetras.text = NzS(rs!MontoLetras)
 
     DeserializarGrid grdDeuda, NzS(rs!DetalleDeuda)
@@ -1997,23 +2165,23 @@ End Sub
 Private Function GetSiguienteNumeroOrden() As Long
     On Error GoTo EH
 
-    Dim idSucursal As Long
+    Dim IdSucursal As Long
     Dim rs As DAO.Recordset
     Dim sql As String
     Dim ultimo As Long
 
     EnsureDatabaseReady
 
-    idSucursal = GetIdSucursalActual()
+    IdSucursal = GetIdSucursalActual()
 
-    sql = "SELECT UltimoNumero FROM UltimosNumeros WHERE IdSucursal=" & CStr(idSucursal) & _
+    sql = "SELECT UltimoNumero FROM UltimosNumeros WHERE IdSucursal=" & CStr(IdSucursal) & _
           " AND IDTabla='" & ID_TABLA_ORDENPAGO & "'"
 
     Set rs = BaseSPC.OpenRecordset(sql, dbOpenDynaset)
 
     If rs.EOF Then
         rs.AddNew
-        rs!idSucursal = idSucursal
+        rs!IdSucursal = IdSucursal
         rs!IDTabla = ID_TABLA_ORDENPAGO
         rs!UltimoNumero = 0
         rs.Update
@@ -2037,21 +2205,21 @@ End Function
 Private Sub ActualizarCorrelativoOrden(ByVal nroOrden As Long)
     On Error GoTo EH
 
-    Dim idSucursal As Long
+    Dim IdSucursal As Long
     Dim rs As DAO.Recordset
     Dim sql As String
 
     EnsureDatabaseReady
 
-    idSucursal = GetIdSucursalActual()
-    sql = "SELECT * FROM UltimosNumeros WHERE IdSucursal=" & CStr(idSucursal) & _
+    IdSucursal = GetIdSucursalActual()
+    sql = "SELECT * FROM UltimosNumeros WHERE IdSucursal=" & CStr(IdSucursal) & _
           " AND IDTabla='" & ID_TABLA_ORDENPAGO & "'"
 
     Set rs = BaseSPC.OpenRecordset(sql, dbOpenDynaset)
 
     If rs.EOF Then
         rs.AddNew
-        rs!idSucursal = idSucursal
+        rs!IdSucursal = IdSucursal
         rs!IDTabla = ID_TABLA_ORDENPAGO
         rs!UltimoNumero = nroOrden
     Else
@@ -2297,19 +2465,19 @@ Private Function ParseCurrency(ByVal s As String) As Currency
 End Function
 
 Private Function GroupThousands(ByVal digits As String) As String
-    Dim i As Long, out As String, cnt As Long
+    Dim I As Long, out As String, cnt As Long
     
     out = ""
     cnt = 0
     
-    For i = Len(digits) To 1 Step -1
-        out = Mid$(digits, i, 1) & out
+    For I = Len(digits) To 1 Step -1
+        out = Mid$(digits, I, 1) & out
         cnt = cnt + 1
-        If cnt = 3 And i > 1 Then
+        If cnt = 3 And I > 1 Then
             out = "." & out
             cnt = 0
         End If
-    Next i
+    Next I
     
     GroupThousands = out
 End Function
@@ -2382,8 +2550,8 @@ EH:
     ParseDateOrToday = Date
 End Function
 
-Private Function NumeroALetrasSimple(ByVal importe As Currency) As String
-    NumeroALetrasSimple = "SON PESOS " & FormatMoney(importe)
+Private Function NumeroALetrasSimple(ByVal Importe As Currency) As String
+    NumeroALetrasSimple = "SON PESOS " & FormatMoney(Importe)
 End Function
 
 ' ------------------------------------------------------------
