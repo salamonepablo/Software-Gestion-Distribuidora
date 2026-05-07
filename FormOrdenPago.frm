@@ -18,7 +18,7 @@ Begin VB.Form FormOrdenPago
       Top             =   0
       Width           =   16215
       Begin VB.Frame Frame6 
-         Caption         =   "Reimpresión"
+         Caption         =   "Reimpresi?n"
          Height          =   2415
          Left            =   8400
          TabIndex        =   58
@@ -864,6 +864,20 @@ Private Enum eColOtros
     colOtroImporte = 1
 End Enum
 
+Private Enum eColTransferencia
+    colTransfBanco = 0
+    colTransfCuenta = 1
+    colTransfCUIT = 2
+    colTransfImporte = 3
+End Enum
+
+Private Enum eColFacturas
+    colFactNumero = 0
+    colFactFecha = 1
+    colFactImporte = 2
+    colFactDescripcion = 3
+End Enum
+
 Private Sub Form_KeyDown(KeyCode As Integer, Shift As Integer)
          If KeyCode = vbKeyReturn Then
              Dim c As Control
@@ -901,6 +915,21 @@ Private Sub grdDeuda_KeyDown(KeyCode As Integer, Shift As Integer)
              EditarCeldaGrid grdOtros
          End If
      End Sub
+
+     Private Sub grdTransferencia_KeyDown(KeyCode As Integer, Shift As Integer)
+         If KeyCode = vbKeyReturn Then
+             KeyCode = 0
+             EditarCeldaGrid grdTransferencia
+         End If
+     End Sub
+
+     Private Sub grdFacturas_KeyDown(KeyCode As Integer, Shift As Integer)
+         If KeyCode = vbKeyReturn Then
+             KeyCode = 0
+             EditarCeldaGrid grdFacturas
+         End If
+     End Sub
+
 Private Sub Form_Load()
     On Error GoTo EH
 
@@ -989,6 +1018,38 @@ Private Sub InitGrids()
         .ColWidth(colOtroImporte) = 1500
     End With
 
+    ' Transferencia
+    With grdTransferencia
+        .Rows = 2
+        .Cols = 4
+        .FixedRows = 1
+        .FixedCols = 0
+        .TextMatrix(0, colTransfBanco) = "Banco"
+        .TextMatrix(0, colTransfCuenta) = "Nro. Cuenta"
+        .TextMatrix(0, colTransfCUIT) = "CUIT"
+        .TextMatrix(0, colTransfImporte) = "Importe"
+        .ColWidth(colTransfBanco) = 2000
+        .ColWidth(colTransfCuenta) = 1800
+        .ColWidth(colTransfCUIT) = 1500
+        .ColWidth(colTransfImporte) = 1400
+    End With
+
+    ' Facturas
+    With grdFacturas
+        .Rows = 2
+        .Cols = 4
+        .FixedRows = 1
+        .FixedCols = 0
+        .TextMatrix(0, colFactNumero) = "Numero"
+        .TextMatrix(0, colFactFecha) = "Fecha"
+        .TextMatrix(0, colFactImporte) = "Importe"
+        .TextMatrix(0, colFactDescripcion) = "Descripcion"
+        .ColWidth(colFactNumero) = 1600
+        .ColWidth(colFactFecha) = 1200
+        .ColWidth(colFactImporte) = 1400
+        .ColWidth(colFactDescripcion) = 3000
+    End With
+
     Exit Sub
 EH:
     MsgBox "Error inicializando grillas: " & Err.Description, vbExclamation, "Orden de Pago"
@@ -1007,6 +1068,8 @@ Private Sub LimpiarFormulario(ByVal nuevoNumero As Boolean)
     txtSubDeuda.text = "0,00"
     txtSubCheques.text = "0,00"
     txtSubOtros.text = "0,00"
+    txtSubTransferencia.text = "0,00"
+    txtSubFacturas.text = "0,00"
     txtTotalPago.text = "0,00"
     txtSaldo.text = "0,00"
     txtImporteLetras.text = ""
@@ -1014,6 +1077,8 @@ Private Sub LimpiarFormulario(ByVal nuevoNumero As Boolean)
     ResetGridRows grdDeuda
     ResetGridRows grdCheques
     ResetGridRows grdOtros
+    ResetGridRows grdTransferencia
+    ResetGridRows grdFacturas
 
     If nuevoNumero Then
         txtNroOrden.text = CStr(GetSiguienteNumeroOrden())
@@ -1071,6 +1136,24 @@ Private Sub cmdDelOtro_Click()
     RecalcularTodo
 End Sub
 
+Private Sub cmdAddTransferencia_Click()
+    AddRow grdTransferencia
+End Sub
+
+Private Sub cmdDelTransferencia_Click()
+    DelCurrentRow grdTransferencia
+    RecalcularTodo
+End Sub
+
+Private Sub cmdAddFacturas_Click()
+    AddRow grdFacturas
+End Sub
+
+Private Sub cmdDelFacturas_Click()
+    DelCurrentRow grdFacturas
+    RecalcularTodo
+End Sub
+
 Private Sub AddRow(ByRef g As MSFlexGrid)
     On Error GoTo EH
     g.Rows = g.Rows + 1
@@ -1112,6 +1195,14 @@ End Sub
 
 Private Sub grdOtros_DblClick()
     EditarCeldaGrid grdOtros
+End Sub
+
+Private Sub grdTransferencia_DblClick()
+    EditarCeldaGrid grdTransferencia
+End Sub
+
+Private Sub grdFacturas_DblClick()
+    EditarCeldaGrid grdFacturas
 End Sub
 
 Private Sub EditarCeldaGrid(ByRef g As MSFlexGrid)
@@ -1631,7 +1722,7 @@ Private Function EnLetras(numero As String) As String
             If paso = 7 Then
                 'MsgBox (Mid(entero, 1, 1))
                 If Len(entero) = 7 And Mid(entero, 1, 1) = "1" Then
-                    expresion = expresion & "millón "
+                    expresion = expresion & "mill?n "
                 Else
                     expresion = expresion & "millones "
                 End If
@@ -1673,6 +1764,8 @@ Private Sub RecalcularTodo()
     Dim subDeuda As Currency
     Dim subCheques As Currency
     Dim subOtros As Currency
+    Dim subTransferencia As Currency
+    Dim subFacturas As Currency
     Dim efectivo As Currency
     Dim retIIBB As Currency
     Dim totalPago As Currency
@@ -1681,17 +1774,21 @@ Private Sub RecalcularTodo()
     subDeuda = SumarColumna(grdDeuda, colDeudaImporte)
     subCheques = SumarColumna(grdCheques, colChequeImporte)
     subOtros = SumarColumna(grdOtros, colOtroImporte)
+    subTransferencia = SumarColumna(grdTransferencia, colTransfImporte)
+    subFacturas = SumarColumna(grdFacturas, colFactImporte)
 
     efectivo = ParseCurrency(txtEfectivo.text)
     retIIBB = ParseCurrency(GetRetIIBBText())
 
-    totalPago = subCheques + subOtros + efectivo + retIIBB
+    totalPago = subCheques + subOtros + subTransferencia + subFacturas + efectivo + retIIBB
     saldo = subDeuda - totalPago
 
     m_Cargando = True
     txtSubDeuda.text = FormatMoney(subDeuda)
     txtSubCheques.text = FormatMoney(subCheques)
     txtSubOtros.text = FormatMoney(subOtros)
+    txtSubTransferencia.text = FormatMoney(subTransferencia)
+    txtSubFacturas.text = FormatMoney(subFacturas)
     txtTotalPago.text = FormatMoney(totalPago)
     txtSaldo.text = FormatMoney(saldo)
     txtImporteLetras.text = EnLetras(CStr(totalPago)) 'NumeroALetrasSimple(totalPago)
@@ -1724,6 +1821,7 @@ Private Sub cmdGuardar_Click()
     Dim nroOrden As Long
     Dim rs As DAO.Recordset
     Dim deudaTxt As String, chequesTxt As String, otrosTxt As String
+    Dim transfTxt As String, factTxt As String
 
     EnsureDatabaseReady
 
@@ -1737,6 +1835,8 @@ Private Sub cmdGuardar_Click()
     deudaTxt = SerializarGrid(grdDeuda)
     chequesTxt = SerializarGrid(grdCheques)
     otrosTxt = SerializarGrid(grdOtros)
+    transfTxt = SerializarGrid(grdTransferencia)
+    factTxt = SerializarGrid(grdFacturas)
 
     Set rs = BaseSPC.OpenRecordset("SELECT * FROM OrdenPago WHERE NroOrden=" & CStr(nroOrden), dbOpenDynaset)
     If rs.EOF Then
@@ -1752,6 +1852,8 @@ Private Sub cmdGuardar_Click()
     rs!TotalDeuda = ParseCurrency(txtSubDeuda.text)
     rs!SubtotalCheques = ParseCurrency(txtSubCheques.text)
     rs!SubtotalOtros = ParseCurrency(txtSubOtros.text)
+    rs!SubtotalTransferencia = ParseCurrency(txtSubTransferencia.text)
+    rs!SubtotalFacturas = ParseCurrency(txtSubFacturas.text)
     rs!efectivo = ParseCurrency(txtEfectivo.text)
     rs!RetencionIIBB = ParseCurrency(GetRetIIBBText())
     rs!totalPago = ParseCurrency(txtTotalPago.text)
@@ -1761,6 +1863,8 @@ Private Sub cmdGuardar_Click()
     rs!DetalleDeuda = deudaTxt
     rs!DetalleCheques = chequesTxt
     rs!DetalleOtros = otrosTxt
+    rs!DetalleTransferencia = transfTxt
+    rs!DetalleFacturas = factTxt
 
     rs!FechaAlta = Now
     rs.Update
@@ -1854,6 +1958,8 @@ Private Sub CargarOrdenPorNumero(ByVal nroOrden As Long)
     txtSubDeuda.text = FormatMoney(NzC(rs!TotalDeuda))
     txtSubCheques.text = FormatMoney(NzC(rs!SubtotalCheques))
     txtSubOtros.text = FormatMoney(NzC(rs!SubtotalOtros))
+    txtSubTransferencia.text = FormatMoney(NzC(rs!SubtotalTransferencia))
+    txtSubFacturas.text = FormatMoney(NzC(rs!SubtotalFacturas))
     txtEfectivo.text = FormatMoney(NzC(rs!efectivo))
     SetRetIIBBText FormatMoney(NzC(rs!RetencionIIBB))
     txtTotalPago.text = FormatMoney(NzC(rs!totalPago))
@@ -1863,6 +1969,8 @@ Private Sub CargarOrdenPorNumero(ByVal nroOrden As Long)
     DeserializarGrid grdDeuda, NzS(rs!DetalleDeuda)
     DeserializarGrid grdCheques, NzS(rs!DetalleCheques)
     DeserializarGrid grdOtros, NzS(rs!DetalleOtros)
+    DeserializarGrid grdTransferencia, NzS(rs!DetalleTransferencia)
+    DeserializarGrid grdFacturas, NzS(rs!DetalleFacturas)
 
     m_Cargando = False
 
