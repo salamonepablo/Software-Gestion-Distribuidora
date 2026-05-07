@@ -1286,23 +1286,23 @@ Private Sub cmdImprimir_Click()
 
     xLeft = 600
     xRight = 7800
-    lineH = 240
+    lineH = 180
     pageBottom = 10600
 
     Printer.ScaleMode = vbTwips
     Printer.FontName = "Courier New"
     Printer.FontSize = 10
     Printer.FontBold = False
-    Printer.Copies = 2
+    Printer.Copies = 1
 
-    Y = 600
+    Y = 400
 
     ' Encabezado - Logo condicional si hay facturas
     If TieneFacturas Then
         logoPath = App.Path & "\Quilplac2.jpg"
         If Dir(logoPath) <> "" Then
-            Printer.PaintPicture LoadPicture(logoPath), 600, 200, 3600, 600
-            Y = 1600
+            Printer.PaintPicture LoadPicture(logoPath), 600, 200, 2775, 810
+            Y = 1100
         Else
             Printer.CurrentX = 120
             Printer.CurrentY = 520
@@ -1318,7 +1318,7 @@ Private Sub cmdImprimir_Click()
         Printer.FontBold = False
     End If
 
-    Y = Y + lineH * 2
+    Y = Y + lineH
 
     ' Nro de Orden, Fecha, Proveedor
     Printer.CurrentX = xLeft
@@ -1332,7 +1332,7 @@ Private Sub cmdImprimir_Click()
     Printer.CurrentX = xLeft
     Printer.CurrentY = Y
     Printer.Print "Proveedor: " & Trim$(txtProveedor.text)
-    Y = Y + lineH * 2
+    Y = Y + lineH
 
     ' Deuda
     Printer.FontBold = True
@@ -1344,7 +1344,7 @@ Private Sub cmdImprimir_Click()
 
     Printer.CurrentX = xLeft
     Printer.CurrentY = Y
-    Printer.Print String$(90, "-")
+    Printer.Print String$(65, "-")
     Y = Y + lineH
 
     deudaRows = grdDeuda.Rows - 1
@@ -1368,14 +1368,13 @@ Private Sub cmdImprimir_Click()
         Next I
     End If
 
-    Y = Y + lineH / 2
     Printer.CurrentX = xLeft
     Printer.CurrentY = Y
     Printer.Print "Subtotal Deuda:"
     Printer.CurrentX = xRight
     Printer.CurrentY = Y
     Printer.Print FormatMoney(ParseCurrency(txtSubDeuda.text))
-    Y = Y + lineH * 2
+    Y = Y + lineH
 
     ' Cheques
     If Y > pageBottom Then
@@ -1392,7 +1391,7 @@ Private Sub cmdImprimir_Click()
 
     Printer.CurrentX = xLeft
     Printer.CurrentY = Y
-    Printer.Print String$(90, "-")
+    Printer.Print String$(65, "-")
     Y = Y + lineH
 
     chequeRows = grdCheques.Rows - 1
@@ -1418,14 +1417,13 @@ Private Sub cmdImprimir_Click()
         Next I
     End If
 
-    Y = Y + lineH / 2
     Printer.CurrentX = xLeft
     Printer.CurrentY = Y
     Printer.Print "Subtotal Cheques:"
     Printer.CurrentX = xRight
     Printer.CurrentY = Y
     Printer.Print FormatMoney(ParseCurrency(txtSubCheques.text))
-    Y = Y + lineH * 2
+    Y = Y + lineH
 
     ' Transferencia
     transfRows = grdTransferencia.Rows - 1
@@ -1444,7 +1442,7 @@ Private Sub cmdImprimir_Click()
 
         Printer.CurrentX = xLeft
         Printer.CurrentY = Y
-        Printer.Print String$(90, "-")
+        Printer.Print String$(65, "-")
         Y = Y + lineH
 
         For I = 1 To transfRows
@@ -1467,14 +1465,13 @@ Private Sub cmdImprimir_Click()
             End If
         Next I
 
-        Y = Y + lineH / 2
         Printer.CurrentX = xLeft
         Printer.CurrentY = Y
         Printer.Print "Subtotal Transferencia:"
         Printer.CurrentX = xRight
         Printer.CurrentY = Y
         Printer.Print FormatMoney(ParseCurrency(txtSubTransferencia.text))
-        Y = Y + lineH * 2
+        Y = Y + lineH
     End If
 
     ' Facturas
@@ -1494,7 +1491,7 @@ Private Sub cmdImprimir_Click()
 
         Printer.CurrentX = xLeft
         Printer.CurrentY = Y
-        Printer.Print String$(90, "-")
+        Printer.Print String$(65, "-")
         Y = Y + lineH
 
         For I = 1 To factRows
@@ -1517,14 +1514,13 @@ Private Sub cmdImprimir_Click()
             End If
         Next I
 
-        Y = Y + lineH / 2
         Printer.CurrentX = xLeft
         Printer.CurrentY = Y
         Printer.Print "Subtotal Facturas:"
         Printer.CurrentX = xRight
         Printer.CurrentY = Y
         Printer.Print FormatMoney(ParseCurrency(txtSubFacturas.text))
-        Y = Y + lineH * 2
+        Y = Y + lineH
     End If
 
     ' Otros (sin Retencion IIBB)
@@ -1542,7 +1538,7 @@ Private Sub cmdImprimir_Click()
 
     Printer.CurrentX = xLeft
     Printer.CurrentY = Y
-    Printer.Print String$(90, "-")
+    Printer.Print String$(65, "-")
     Y = Y + lineH
 
     Dim otrosRows As Long
@@ -1567,14 +1563,13 @@ Private Sub cmdImprimir_Click()
         Next I
     End If
 
-    Y = Y + lineH / 2
     Printer.CurrentX = xLeft
     Printer.CurrentY = Y
     Printer.Print "Subtotal Otros:"
     Printer.CurrentX = xRight
     Printer.CurrentY = Y
     Printer.Print FormatMoney(ParseCurrency(txtSubOtros.text))
-    Y = Y + lineH * 2
+    Y = Y + lineH
 
     ' Efectivo
     If Y > pageBottom Then
@@ -1595,7 +1590,7 @@ Private Sub cmdImprimir_Click()
     Printer.CurrentX = xRight
     Printer.CurrentY = Y
     Printer.Print FormatMoney(ParseCurrency(txtEfectivo.text))
-    Y = Y + lineH * 2
+    Y = Y + lineH
 
     ' RESUMEN - SIN RetIIBB
     If Y > pageBottom - (lineH * 10) Then
@@ -1656,11 +1651,11 @@ Private Sub cmdImprimir_Click()
     Printer.CurrentX = xRight
     Printer.CurrentY = Y
     Printer.Print FormatMoney(ParseCurrency(txtEfectivo.text))
-    Y = Y + lineH * 1.5
+    Y = Y + lineH
 
     Printer.CurrentX = xLeft
     Printer.CurrentY = Y
-    Printer.Print String$(70, "-")
+    Printer.Print String$(50, "-")
     Y = Y + lineH
 
     Printer.FontBold = True
@@ -1679,7 +1674,7 @@ Private Sub cmdImprimir_Click()
     Printer.CurrentX = xRight
     Printer.CurrentY = Y
     Printer.Print FormatMoney(ParseCurrency(txtSaldo.text))
-    Y = Y + lineH * 2
+    Y = Y + lineH
 
     Printer.CurrentX = xLeft
     Printer.CurrentY = Y
@@ -1688,7 +1683,7 @@ Private Sub cmdImprimir_Click()
     Printer.CurrentX = xLeft
     Printer.CurrentY = Y
     Printer.Print Trim$(txtImporteLetras.text)
-    Y = Y + lineH * 4
+    Y = Y + lineH * 2
 
     ' Firma
     If Y > pageBottom Then
