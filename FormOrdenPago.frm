@@ -11,24 +11,24 @@ Begin VB.Form FormOrdenPago
    ScaleHeight     =   10620
    ScaleWidth      =   16470
    StartUpPosition =   3  'Windows Default
-   Begin VB.Frame Frame1 
+   Begin VB.Frame Fr_Base 
       Height          =   10455
       Left            =   120
-      TabIndex        =   30
+      TabIndex        =   35
       Top             =   0
       Width           =   16215
-      Begin VB.Frame Frame6 
-         Caption         =   "Reimpresi?n"
+      Begin VB.Frame FrReimpresion 
+         Caption         =   "Reimpresi�n"
          Height          =   2415
          Left            =   8400
-         TabIndex        =   58
+         TabIndex        =   63
          Top             =   6240
          Width           =   7455
          Begin VB.ComboBox cboBuscarOrden 
             Height          =   315
             Left            =   360
             Style           =   2  'Dropdown List
-            TabIndex        =   29
+            TabIndex        =   34
             Top             =   720
             Width           =   2415
          End
@@ -45,7 +45,7 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   615
             Left            =   600
-            TabIndex        =   59
+            TabIndex        =   64
             Top             =   1200
             Width           =   1815
          End
@@ -63,7 +63,7 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   195
             Left            =   240
-            TabIndex        =   60
+            TabIndex        =   65
             Top             =   360
             Width           =   1290
          End
@@ -76,13 +76,22 @@ Begin VB.Form FormOrdenPago
             Width           =   2775
          End
       End
-      Begin VB.Frame Frame8 
+      Begin VB.Frame FrTransferencia 
          Caption         =   "Detalle de Transferencia"
-         Height          =   2415
+         Height          =   2535
          Left            =   8400
-         TabIndex        =   54
-         Top             =   3720
+         TabIndex        =   59
+         Top             =   3600
          Width           =   7455
+         Begin VB.TextBox txtGE_Transferencia 
+            Height          =   315
+            Left            =   0
+            TabIndex        =   15
+            TabStop         =   0   'False
+            Top             =   960
+            Visible         =   0   'False
+            Width           =   1215
+         End
          Begin VB.CommandButton cmdAddTransferencia 
             Caption         =   "Agregar"
             BeginProperty Font 
@@ -96,7 +105,7 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   495
             Left            =   6360
-            TabIndex        =   16
+            TabIndex        =   17
             Top             =   480
             Width           =   855
          End
@@ -113,7 +122,7 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   495
             Left            =   6360
-            TabIndex        =   17
+            TabIndex        =   18
             Top             =   1080
             Width           =   855
          End
@@ -130,7 +139,7 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   495
             Left            =   13080
-            TabIndex        =   56
+            TabIndex        =   61
             Top             =   600
             Width           =   1215
          End
@@ -147,25 +156,25 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   495
             Left            =   13080
-            TabIndex        =   55
+            TabIndex        =   60
             Top             =   1200
             Width           =   1215
          End
          Begin VB.TextBox txtSubTransferencia 
             Height          =   285
             Left            =   1440
-            TabIndex        =   18
-            Top             =   1800
+            TabIndex        =   31
+            Top             =   2040
             Width           =   1695
          End
          Begin MSFlexGridLib.MSFlexGrid grdTransferencia 
-            Height          =   1455
-            Left            =   480
-            TabIndex        =   15
-            Top             =   240
+            Height          =   1575
+            Left            =   240
+            TabIndex        =   16
+            Top             =   360
             Width           =   5775
             _ExtentX        =   10186
-            _ExtentY        =   2566
+            _ExtentY        =   2778
             _Version        =   393216
             FixedCols       =   0
          End
@@ -183,18 +192,27 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   195
             Left            =   480
-            TabIndex        =   57
-            Top             =   1800
+            TabIndex        =   62
+            Top             =   2040
             Width           =   900
          End
       End
-      Begin VB.Frame Frame7 
+      Begin VB.Frame FrFacturas 
          Caption         =   "Detalle de Facturas"
          Height          =   2415
          Left            =   8400
-         TabIndex        =   50
+         TabIndex        =   55
          Top             =   1080
          Width           =   7455
+         Begin VB.TextBox txtGE_Facturas 
+            Height          =   315
+            Left            =   0
+            TabIndex        =   7
+            TabStop         =   0   'False
+            Top             =   480
+            Visible         =   0   'False
+            Width           =   1215
+         End
          Begin VB.CommandButton cmdAddFacturas 
             Caption         =   "Agregar"
             BeginProperty Font 
@@ -208,7 +226,7 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   495
             Left            =   6360
-            TabIndex        =   8
+            TabIndex        =   9
             Top             =   360
             Width           =   855
          End
@@ -225,7 +243,7 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   495
             Left            =   6360
-            TabIndex        =   9
+            TabIndex        =   10
             Top             =   960
             Width           =   855
          End
@@ -242,7 +260,7 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   495
             Left            =   13080
-            TabIndex        =   52
+            TabIndex        =   57
             Top             =   600
             Width           =   1215
          End
@@ -259,21 +277,21 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   495
             Left            =   13080
-            TabIndex        =   51
+            TabIndex        =   56
             Top             =   1200
             Width           =   1215
          End
          Begin VB.TextBox txtSubFacturas 
             Height          =   285
             Left            =   1440
-            TabIndex        =   10
+            TabIndex        =   29
             Top             =   1800
             Width           =   1695
          End
          Begin MSFlexGridLib.MSFlexGrid grdFacturas 
             Height          =   1455
             Left            =   480
-            TabIndex        =   7
+            TabIndex        =   8
             Top             =   240
             Width           =   5775
             _ExtentX        =   10186
@@ -295,16 +313,16 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   195
             Left            =   480
-            TabIndex        =   53
+            TabIndex        =   58
             Top             =   1800
             Width           =   900
          End
       End
-      Begin VB.Frame Frame5 
+      Begin VB.Frame FrTotales 
          Caption         =   "Totales"
          Height          =   1335
          Left            =   600
-         TabIndex        =   43
+         TabIndex        =   48
          Top             =   8760
          Width           =   15375
          Begin VB.CommandButton cmdImprimir 
@@ -320,7 +338,7 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   375
             Left            =   12720
-            TabIndex        =   49
+            TabIndex        =   54
             Top             =   840
             Width           =   1455
          End
@@ -354,7 +372,7 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   375
             Left            =   4800
-            TabIndex        =   28
+            TabIndex        =   33
             Top             =   840
             Width           =   1455
          End
@@ -371,7 +389,7 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   375
             Left            =   1200
-            TabIndex        =   48
+            TabIndex        =   53
             Top             =   840
             Width           =   1455
          End
@@ -384,7 +402,7 @@ Begin VB.Form FormOrdenPago
          End
          Begin VB.TextBox txtSaldo 
             Height          =   375
-            Left            =   4800
+            Left            =   4920
             TabIndex        =   25
             Top             =   360
             Width           =   1695
@@ -417,7 +435,7 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   195
             Left            =   7080
-            TabIndex        =   47
+            TabIndex        =   52
             Top             =   120
             Width           =   1500
          End
@@ -434,8 +452,8 @@ Begin VB.Form FormOrdenPago
                Strikethrough   =   0   'False
             EndProperty
             Height          =   195
-            Left            =   4920
-            TabIndex        =   46
+            Left            =   5040
+            TabIndex        =   51
             Top             =   120
             Width           =   495
          End
@@ -453,7 +471,7 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   195
             Left            =   3000
-            TabIndex        =   45
+            TabIndex        =   50
             Top             =   120
             Width           =   945
          End
@@ -471,18 +489,27 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   195
             Left            =   1080
-            TabIndex        =   44
+            TabIndex        =   49
             Top             =   120
             Width           =   720
          End
       End
-      Begin VB.Frame fraOtros 
+      Begin VB.Frame FrOtros 
          Caption         =   "Detalle de Otros"
          Height          =   2415
          Left            =   600
-         TabIndex        =   39
+         TabIndex        =   44
          Top             =   6240
          Width           =   7455
+         Begin VB.TextBox txtGE_Otros 
+            Height          =   315
+            Left            =   240
+            TabIndex        =   19
+            TabStop         =   0   'False
+            Top             =   840
+            Visible         =   0   'False
+            Width           =   1215
+         End
          Begin VB.CommandButton cmdDelOtros 
             Caption         =   "Eliminar"
             BeginProperty Font 
@@ -496,7 +523,7 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   495
             Left            =   6360
-            TabIndex        =   21
+            TabIndex        =   22
             Top             =   960
             Width           =   855
          End
@@ -513,14 +540,14 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   495
             Left            =   6360
-            TabIndex        =   20
+            TabIndex        =   21
             Top             =   360
             Width           =   855
          End
          Begin VB.TextBox txtSubOtros 
             Height          =   285
             Left            =   1440
-            TabIndex        =   22
+            TabIndex        =   32
             Top             =   1800
             Width           =   1695
          End
@@ -537,7 +564,7 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   495
             Left            =   13080
-            TabIndex        =   41
+            TabIndex        =   46
             Top             =   1200
             Width           =   1215
          End
@@ -554,14 +581,14 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   495
             Left            =   13080
-            TabIndex        =   40
+            TabIndex        =   45
             Top             =   600
             Width           =   1215
          End
          Begin MSFlexGridLib.MSFlexGrid grdOtros 
             Height          =   1455
             Left            =   480
-            TabIndex        =   19
+            TabIndex        =   20
             Top             =   240
             Width           =   5775
             _ExtentX        =   10186
@@ -583,18 +610,27 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   195
             Left            =   480
-            TabIndex        =   42
+            TabIndex        =   47
             Top             =   1800
             Width           =   900
          End
       End
-      Begin VB.Frame Frame4 
+      Begin VB.Frame FrCheques 
          Caption         =   "Detalle de Cheques"
          Height          =   2535
          Left            =   600
-         TabIndex        =   37
+         TabIndex        =   42
          Top             =   3600
          Width           =   7455
+         Begin VB.TextBox txtGE_Cheques 
+            Height          =   315
+            Left            =   0
+            TabIndex        =   11
+            TabStop         =   0   'False
+            Top             =   480
+            Visible         =   0   'False
+            Width           =   1215
+         End
          Begin VB.CommandButton cmdAddCheque 
             Caption         =   "Agregar"
             BeginProperty Font 
@@ -608,7 +644,7 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   495
             Left            =   6360
-            TabIndex        =   12
+            TabIndex        =   13
             Top             =   600
             Width           =   855
          End
@@ -625,21 +661,21 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   495
             Left            =   6360
-            TabIndex        =   13
+            TabIndex        =   14
             Top             =   1200
             Width           =   855
          End
          Begin VB.TextBox txtSubCheques 
             Height          =   285
             Left            =   1440
-            TabIndex        =   14
+            TabIndex        =   30
             Top             =   2040
             Width           =   1695
          End
          Begin MSFlexGridLib.MSFlexGrid grdCheques 
             Height          =   1575
             Left            =   480
-            TabIndex        =   11
+            TabIndex        =   12
             Top             =   360
             Width           =   5775
             _ExtentX        =   10186
@@ -662,22 +698,31 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   195
             Left            =   480
-            TabIndex        =   38
+            TabIndex        =   43
             Top             =   2040
             Width           =   900
          End
       End
-      Begin VB.Frame Frame3 
+      Begin VB.Frame FrDeuda 
          Caption         =   "Detalle de Deuda"
          Height          =   2415
          Left            =   600
-         TabIndex        =   35
+         TabIndex        =   40
          Top             =   1080
          Width           =   7455
+         Begin VB.TextBox txtGE_Deuda 
+            Height          =   315
+            Left            =   0
+            TabIndex        =   3
+            TabStop         =   0   'False
+            Top             =   720
+            Visible         =   0   'False
+            Width           =   1215
+         End
          Begin VB.TextBox txtSubDeuda 
             Height          =   285
             Left            =   1440
-            TabIndex        =   6
+            TabIndex        =   28
             Top             =   1920
             Width           =   1695
          End
@@ -694,7 +739,7 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   495
             Left            =   6360
-            TabIndex        =   5
+            TabIndex        =   6
             Top             =   1080
             Width           =   855
          End
@@ -711,14 +756,14 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   495
             Left            =   6360
-            TabIndex        =   4
+            TabIndex        =   5
             Top             =   480
             Width           =   855
          End
          Begin MSFlexGridLib.MSFlexGrid grdDeuda 
             Height          =   1575
             Left            =   480
-            TabIndex        =   3
+            TabIndex        =   4
             Top             =   240
             Width           =   5775
             _ExtentX        =   10186
@@ -740,15 +785,15 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   195
             Left            =   480
-            TabIndex        =   36
+            TabIndex        =   41
             Top             =   1920
             Width           =   900
          End
       End
-      Begin VB.Frame Frame2 
+      Begin VB.Frame FrEncabezado 
          Height          =   855
          Left            =   600
-         TabIndex        =   31
+         TabIndex        =   36
          Top             =   120
          Width           =   15255
          Begin VB.TextBox txtProveedor 
@@ -786,7 +831,7 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   195
             Left            =   4080
-            TabIndex        =   34
+            TabIndex        =   39
             Top             =   120
             Width           =   885
          End
@@ -804,7 +849,7 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   195
             Left            =   2280
-            TabIndex        =   33
+            TabIndex        =   38
             Top             =   120
             Width           =   540
          End
@@ -822,7 +867,7 @@ Begin VB.Form FormOrdenPago
             EndProperty
             Height          =   195
             Left            =   480
-            TabIndex        =   32
+            TabIndex        =   37
             Top             =   120
             Width           =   945
          End
@@ -845,6 +890,19 @@ Private Const SEP_COL As String = "|"
 Private Const SEP_ROW As String = vbCrLf
 
 Private m_Cargando As Boolean
+
+' ============================================================
+' NEW: Inline editing support (Phase 7)
+' ============================================================
+Private m_EditGrid As MSFlexGrid
+Private m_EditRow As Integer
+Private m_EditCol As Integer
+Private m_EditingActive As Boolean
+Private m_ValorAnterior As String
+Private m_ActiveEditorTextBox As TextBox
+Private m_SuppressEditorLostFocusCommit As Boolean
+Private m_EditGridName As String
+Private m_EditEditorName As String
 
 ' Columnas grillas (0-based)
 Private Enum eColDeuda
@@ -879,20 +937,27 @@ Private Enum eColFacturas
 End Enum
 
 Private Sub Form_KeyDown(KeyCode As Integer, Shift As Integer)
-         If KeyCode = vbKeyReturn Then
-             Dim c As Control
-             Set c = Me.ActiveControl
-                                                                                                                                       
-             If Not c Is Nothing Then
-                 Select Case TypeName(c)
-                     Case "MSFlexGrid", "MshFlexGrid", "VSFlexGrid"
-                         ' En grilla se maneja aparte
-                     Case Else
-                         KeyCode = 0
-                         Sendkeys "{TAB}"
-                 End Select
-             End If
-         End If
+         If KeyCode <> vbKeyReturn Then Exit Sub
+
+         Dim c As Control
+         Set c = Me.ActiveControl
+
+         If c Is Nothing Then Exit Sub
+
+         Select Case TypeName(c)
+             Case "MSFlexGrid", "MshFlexGrid", "VSFlexGrid"
+                 ' En grilla se maneja aparte
+             Case "TextBox"
+                 If m_EditingActive Then
+                     ' Durante edición inline, Enter/Tab se resuelve en ManejadorTextBoxKeyDown.
+                     Exit Sub
+                 End If
+                 KeyCode = 0
+                 Sendkeys "{TAB}"
+             Case Else
+                 KeyCode = 0
+                 Sendkeys "{TAB}"
+         End Select
 End Sub
 
 Private Sub grdDeuda_KeyDown(KeyCode As Integer, Shift As Integer)
@@ -936,9 +1001,7 @@ Private Sub Form_Load()
     FormOrdenPago.Width = 16710
     FormOrdenPago.Height = 11200
     FormOrdenPago.Top = 0
-    
-    
-    
+
     m_Cargando = True
 
     EnsureDatabaseReady
@@ -1158,7 +1221,7 @@ Private Sub AddRow(ByRef g As MSFlexGrid)
     On Error GoTo EH
     g.Rows = g.Rows + 1
     g.Row = g.Rows - 1
-    g.Col = 0
+    g.col = 0
     Exit Sub
 EH:
     MsgBox "Error agregando fila: " & Err.Description, vbExclamation, "Orden de Pago"
@@ -1205,41 +1268,601 @@ Private Sub grdFacturas_DblClick()
     EditarCeldaGrid grdFacturas
 End Sub
 
+' ============================================================
+' NEW: Inline editing system (Phase 7 - replaces InputBox)
+' ============================================================
+
+' Buscar recursivamente el Frame que contiene un grid (busca en Frames anidados)
+Private Function FindParentFrame(ByRef grid As MSFlexGrid) As Frame
+    On Error Resume Next
+
+    If TypeName(grid.Container) = "Frame" Then
+        Set FindParentFrame = grid.Container
+    Else
+        Set FindParentFrame = Nothing
+    End If
+End Function
+
+
 Private Sub EditarCeldaGrid(ByRef g As MSFlexGrid)
     On Error GoTo EH
 
     Dim r As Integer, c As Integer
-    Dim v As String
+    Dim leftPos As Long, topPos As Long, wid As Long, hgt As Long
+    Dim parentFr As Frame
 
     r = g.Row
-    c = g.Col
+    c = g.col
 
-    If r < 1 Then Exit Sub
+    If r < 1 Or c < 0 Then Exit Sub
 
-    v = InputBox$("Editar valor:", "Editar celda", g.TextMatrix(r, c))
-    v = Trim$(v)
+    ' Guardar estado
+    Set m_EditGrid = g
+    m_EditRow = r
+    m_EditCol = c
+    m_ValorAnterior = g.TextMatrix(r, c)
+    m_EditingActive = True
+    m_EditGridName = g.Name
+    m_EditEditorName = ""
 
-    ' Formatear importes segun el grid y columna
-    If g.Name = "grdDeuda" And c = colDeudaImporte Then
-        g.TextMatrix(r, c) = FormatMoney(ParseCurrency(v))
-    ElseIf g.Name = "grdCheques" And c = colChequeImporte Then
-        g.TextMatrix(r, c) = FormatMoney(ParseCurrency(v))
-    ElseIf g.Name = "grdOtros" And c = colOtroImporte Then
-        g.TextMatrix(r, c) = FormatMoney(ParseCurrency(v))
-    ElseIf g.Name = "grdTransferencia" And c = colTransfImporte Then
-        g.TextMatrix(r, c) = FormatMoney(ParseCurrency(v))
-    ElseIf g.Name = "grdFacturas" And c = colFactImporte Then
-        g.TextMatrix(r, c) = FormatMoney(ParseCurrency(v))
-    Else
-        g.TextMatrix(r, c) = v
+    ' Calcular posición de la celda respecto del contenedor del grid
+    leftPos = g.Left + g.CellLeft
+    topPos = g.Top + g.CellTop
+
+    wid = g.ColWidth(c)
+    hgt = g.RowHeight(r)
+
+    ' Margen
+    Const MARGIN As Long = 2
+    leftPos = leftPos + MARGIN
+    topPos = topPos + MARGIN
+    wid = wid - (MARGIN * 2)
+    hgt = hgt - (MARGIN * 2)
+
+    Set parentFr = FindParentFrame(g)
+    If parentFr Is Nothing Then Exit Sub
+
+    ' Posicionar TextBox en el mismo contenedor que el grid
+    Select Case g.Name
+        Case "grdDeuda"
+            Set m_ActiveEditorTextBox = txtGE_Deuda
+            m_EditEditorName = txtGE_Deuda.Name
+            With txtGE_Deuda
+                .Move leftPos, topPos, wid, hgt
+                .text = g.TextMatrix(r, c)
+                .Visible = True
+                .SetFocus
+                .SelStart = 0
+                .SelLength = Len(.text)
+            End With
+
+        Case "grdCheques"
+            Set m_ActiveEditorTextBox = txtGE_Cheques
+            m_EditEditorName = txtGE_Cheques.Name
+            With txtGE_Cheques
+                .Move leftPos, topPos, wid, hgt
+                .text = g.TextMatrix(r, c)
+                .Visible = True
+                .SetFocus
+                .SelStart = 0
+                .SelLength = Len(.text)
+            End With
+
+        Case "grdOtros"
+            Set m_ActiveEditorTextBox = txtGE_Otros
+            m_EditEditorName = txtGE_Otros.Name
+            With txtGE_Otros
+                .Move leftPos, topPos, wid, hgt
+                .text = g.TextMatrix(r, c)
+                .Visible = True
+                .SetFocus
+                .SelStart = 0
+                .SelLength = Len(.text)
+            End With
+
+        Case "grdTransferencia"
+            Set m_ActiveEditorTextBox = txtGE_Transferencia
+            m_EditEditorName = txtGE_Transferencia.Name
+            With txtGE_Transferencia
+                .Move leftPos, topPos, wid, hgt
+                .text = g.TextMatrix(r, c)
+                .Visible = True
+                .SetFocus
+                .SelStart = 0
+                .SelLength = Len(.text)
+            End With
+
+        Case "grdFacturas"
+            Set m_ActiveEditorTextBox = txtGE_Facturas
+            m_EditEditorName = txtGE_Facturas.Name
+            With txtGE_Facturas
+                .Move leftPos, topPos, wid, hgt
+                .text = g.TextMatrix(r, c)
+                .Visible = True
+                .SetFocus
+                .SelStart = 0
+                .SelLength = Len(.text)
+            End With
+    End Select
+
+    Exit Sub
+EH:
+    MsgBox "Error en EditarCeldaGrid: " & Err.Description, vbExclamation
+End Sub
+
+Private Function GetGridNameFromEditor(ByRef txt As TextBox) As String
+    If txt Is Nothing Then Exit Function
+
+    Select Case txt.Name
+        Case "txtGE_Deuda": GetGridNameFromEditor = "grdDeuda"
+        Case "txtGE_Cheques": GetGridNameFromEditor = "grdCheques"
+        Case "txtGE_Otros": GetGridNameFromEditor = "grdOtros"
+        Case "txtGE_Transferencia": GetGridNameFromEditor = "grdTransferencia"
+        Case "txtGE_Facturas": GetGridNameFromEditor = "grdFacturas"
+        Case Else: GetGridNameFromEditor = ""
+    End Select
+End Function
+
+Private Function GetAddButtonByGridName(ByVal gridName As String) As CommandButton
+    Select Case gridName
+        Case "grdDeuda": Set GetAddButtonByGridName = cmdAddDeuda
+        Case "grdCheques": Set GetAddButtonByGridName = cmdAddCheque
+        Case "grdOtros": Set GetAddButtonByGridName = cmdAddOtro
+        Case "grdTransferencia": Set GetAddButtonByGridName = cmdAddTransferencia
+        Case "grdFacturas": Set GetAddButtonByGridName = cmdAddFacturas
+        Case Else: Set GetAddButtonByGridName = Nothing
+    End Select
+End Function
+
+Private Function ResolveGridByName(ByVal gridName As String) As MSFlexGrid
+    Select Case gridName
+        Case "grdDeuda": Set ResolveGridByName = grdDeuda
+        Case "grdCheques": Set ResolveGridByName = grdCheques
+        Case "grdOtros": Set ResolveGridByName = grdOtros
+        Case "grdTransferencia": Set ResolveGridByName = grdTransferencia
+        Case "grdFacturas": Set ResolveGridByName = grdFacturas
+        Case Else: Set ResolveGridByName = Nothing
+    End Select
+End Function
+
+Private Function IsEditorBoundToGrid(ByRef txt As TextBox, ByVal gridName As String) As Boolean
+    If txt Is Nothing Then Exit Function
+    IsEditorBoundToGrid = (StrComp(GetGridNameFromEditor(txt), gridName, vbTextCompare) = 0)
+End Function
+
+Private Sub ResetEditContext()
+    Set m_EditGrid = Nothing
+    Set m_ActiveEditorTextBox = Nothing
+    m_EditingActive = False
+    m_SuppressEditorLostFocusCommit = False
+    m_EditGridName = ""
+    m_EditEditorName = ""
+    m_EditRow = 0
+    m_EditCol = 0
+    m_ValorAnterior = ""
+End Sub
+
+Private Sub txtGE_Deuda_KeyDown(KeyCode As Integer, Shift As Integer)
+    ManejadorTextBoxKeyDown KeyCode, Shift
+End Sub
+
+Private Sub txtGE_Deuda_LostFocus()
+    ManejadorTextBoxLostFocus
+End Sub
+
+Private Sub txtGE_Cheques_KeyDown(KeyCode As Integer, Shift As Integer)
+    ManejadorTextBoxKeyDown KeyCode, Shift
+End Sub
+
+Private Sub txtGE_Cheques_LostFocus()
+    ManejadorTextBoxLostFocus
+End Sub
+
+Private Sub txtGE_Otros_KeyDown(KeyCode As Integer, Shift As Integer)
+    ManejadorTextBoxKeyDown KeyCode, Shift
+End Sub
+
+Private Sub txtGE_Otros_LostFocus()
+    ManejadorTextBoxLostFocus
+End Sub
+
+Private Sub txtGE_Transferencia_KeyDown(KeyCode As Integer, Shift As Integer)
+    ManejadorTextBoxKeyDown KeyCode, Shift
+End Sub
+
+Private Sub txtGE_Transferencia_LostFocus()
+    ManejadorTextBoxLostFocus
+End Sub
+
+Private Sub txtGE_Facturas_KeyDown(KeyCode As Integer, Shift As Integer)
+    ManejadorTextBoxKeyDown KeyCode, Shift
+End Sub
+
+Private Sub txtGE_Facturas_LostFocus()
+    ManejadorTextBoxLostFocus
+End Sub
+
+' ============================================================
+' txtGridEditor event handlers (Phase 7)
+' ============================================================
+' Event handlers para los TextBox de edición
+' Se vinculan dinámicamente en Form_Load
+Private Sub ManejadorTextBoxChange()
+    On Error Resume Next
+
+    If Not m_EditingActive Or m_ActiveEditorTextBox Is Nothing Then Exit Sub
+
+    ' Solo formatear si es columna de importe
+    If m_EditCol <> colDeudaImporte And m_EditCol <> colChequeImporte And _
+       m_EditCol <> colOtroImporte And m_EditCol <> colTransfImporte And _
+       m_EditCol <> colFactImporte Then
+        Exit Sub
     End If
 
-    RecalcularTodo
-    Exit Sub
+    Dim inputText As String
+    Dim parsed As Currency
+    Dim formatted As String
 
-EH:
-    MsgBox "Error editando celda: " & Err.Description, vbExclamation, "Orden de Pago"
+    inputText = m_ActiveEditorTextBox.text
+
+    ' Si está vacío, no hacer nada
+    If Len(inputText) = 0 Then Exit Sub
+
+    ' Intentar parsear
+    parsed = ParseCurrency(inputText)
+
+    ' Si parseó OK, formatear y mostrar en grid
+    If Err.Number = 0 Then
+        formatted = FormatMoney(parsed)
+        ' Mostrar preview en grid detrás del TextBox
+        m_EditGrid.TextMatrix(m_EditRow, m_EditCol) = formatted
+    End If
+
+    On Error GoTo 0
 End Sub
+
+Private Sub ManejadorTextBoxKeyDown(KeyCode As Integer, Shift As Integer)
+    If Not m_EditingActive Then Exit Sub
+
+    If KeyCode = vbKeyReturn Then
+        KeyCode = 0
+        Shift = 0
+        Sendkeys "{TAB}"
+    ElseIf KeyCode = vbKeyTab Then
+        KeyCode = 0
+        Shift = 0
+        m_SuppressEditorLostFocusCommit = True
+        FinalizarEdicion True, True
+    ElseIf KeyCode = vbKeyEscape Then
+        KeyCode = 0
+        FinalizarEdicion False
+    End If
+End Sub
+
+Private Sub ManejadorTextBoxLostFocus()
+    If m_SuppressEditorLostFocusCommit Then
+        m_SuppressEditorLostFocusCommit = False
+        Exit Sub
+    End If
+
+    If m_EditingActive Then
+        FinalizarEdicion True
+    End If
+End Sub
+
+Private Sub FinalizarEdicion(ByVal guardar As Boolean, Optional ByVal navegarSiguiente As Boolean = False)
+    On Error GoTo EH
+
+    If Not m_EditingActive Then Exit Sub
+
+    Dim valorNuevo As String
+    Dim valorFinal As String
+    Dim g As MSFlexGrid
+    Dim r As Integer
+    Dim c As Integer
+    Dim capturedGridName As String
+    Dim editorGridName As String
+    Dim navGrid As MSFlexGrid
+
+    Set g = m_EditGrid
+    r = m_EditRow
+    c = m_EditCol
+    capturedGridName = m_EditGridName
+
+    If m_ActiveEditorTextBox Is Nothing Then
+        ResetEditContext
+        Exit Sub
+    End If
+
+    If Len(m_EditEditorName) > 0 Then
+        If StrComp(m_ActiveEditorTextBox.Name, m_EditEditorName, vbTextCompare) <> 0 Then
+            EnfocarBotonAddPorGridName GetGridNameFromEditor(m_ActiveEditorTextBox)
+            ResetEditContext
+            Exit Sub
+        End If
+    End If
+
+    editorGridName = GetGridNameFromEditor(m_ActiveEditorTextBox)
+    If Len(editorGridName) = 0 Then
+        If Len(capturedGridName) > 0 Then EnfocarBotonAddPorGridName capturedGridName
+        ResetEditContext
+        Exit Sub
+    End If
+
+    If Len(capturedGridName) = 0 Then capturedGridName = editorGridName
+
+    If Not IsEditorBoundToGrid(m_ActiveEditorTextBox, capturedGridName) Then
+        EnfocarBotonAddPorGridName editorGridName
+        ResetEditContext
+        Exit Sub
+    End If
+
+    If g Is Nothing Then
+        Set g = ResolveGridByName(capturedGridName)
+    End If
+    If g Is Nothing Then
+        EnfocarBotonAddPorGridName capturedGridName
+        ResetEditContext
+        Exit Sub
+    End If
+
+    Set navGrid = g
+
+    If guardar Then
+        valorNuevo = Trim$(m_ActiveEditorTextBox.text)
+
+        ' Apply column-specific validation and formatting
+        If Not ValidarYFormatearCelda(m_EditGrid, m_EditRow, m_EditCol, valorNuevo, valorFinal) Then
+            ' Validation failed - keep editor open
+            m_SuppressEditorLostFocusCommit = False
+            Exit Sub
+        End If
+
+        ' Save to grid
+        m_EditGrid.TextMatrix(m_EditRow, m_EditCol) = valorFinal
+
+        ' Recalculate if importe column
+        If Not m_Cargando Then
+            RecalcularTodo
+        End If
+    End If
+
+    ' Hide editor
+    If Not m_ActiveEditorTextBox Is Nothing Then m_ActiveEditorTextBox.Visible = False
+    ResetEditContext
+
+    If guardar And navegarSiguiente Then
+        NavegarPostCommit navGrid, r, c, capturedGridName
+    End If
+
+    Exit Sub
+EH:
+    MsgBox "Error finalizando edicion: " & Err.Description, vbExclamation, "Orden de Pago"
+    If Not m_ActiveEditorTextBox Is Nothing Then m_ActiveEditorTextBox.Visible = False
+    ResetEditContext
+End Sub
+
+Private Sub NavegarPostCommit(ByRef g As MSFlexGrid, ByVal r As Integer, ByVal c As Integer, ByVal gridName As String)
+    On Error GoTo EH
+
+    If g Is Nothing Then
+        If Len(gridName) = 0 Then Exit Sub
+        EnfocarBotonAddPorGridName gridName
+        Exit Sub
+    End If
+
+    If Len(gridName) > 0 Then
+        If StrComp(g.Name, gridName, vbTextCompare) <> 0 Then
+            EnfocarBotonAddPorGridName gridName
+            Exit Sub
+        End If
+    Else
+        gridName = g.Name
+    End If
+
+    Dim nextCol As Integer
+    nextCol = BuscarSiguienteColumnaEditable(g, c)
+
+    If nextCol >= 0 Then
+        g.Row = r
+        g.col = nextCol
+        EditarCeldaGrid g
+    Else
+        EnfocarBotonAddPorGridName gridName
+    End If
+
+    Exit Sub
+EH:
+    EnfocarBotonAddPorGridName gridName
+End Sub
+
+Private Function BuscarSiguienteColumnaEditable(ByRef g As MSFlexGrid, ByVal currentCol As Integer) As Integer
+    Dim I As Integer
+
+    BuscarSiguienteColumnaEditable = -1
+
+    For I = currentCol + 1 To g.Cols - 1
+        If EsColumnaEditable(g, I) Then
+            BuscarSiguienteColumnaEditable = I
+            Exit Function
+        End If
+    Next I
+End Function
+
+Private Function EsColumnaEditable(ByRef g As MSFlexGrid, ByVal col As Integer) As Boolean
+    EsColumnaEditable = False
+
+    If col < g.FixedCols Then Exit Function
+    If g.ColWidth(col) <= 0 Then Exit Function
+
+    EsColumnaEditable = True
+End Function
+
+Private Sub EnfocarBotonAddPorGrid(ByRef g As MSFlexGrid)
+    On Error Resume Next
+
+    If g Is Nothing Then Exit Sub
+
+    EnfocarBotonAddPorGridName g.Name
+End Sub
+
+Private Sub EnfocarBotonAddPorGridName(ByVal gridName As String)
+    On Error Resume Next
+
+    Dim cmd As CommandButton
+    Set cmd = GetAddButtonByGridName(gridName)
+    If cmd Is Nothing Then Exit Sub
+    cmd.SetFocus
+End Sub
+
+Private Function ValidarYFormatearCelda(ByRef g As MSFlexGrid, ByVal r As Integer, ByVal c As Integer, ByVal valorNuevo As String, ByRef valorFinal As String) As Boolean
+    On Error GoTo EH
+
+    ValidarYFormatearCelda = False
+    valorFinal = valorNuevo
+
+    ' Identify grid and column type
+    Select Case True
+        ' --------------------------------------------------------
+        ' grdDeuda
+        ' --------------------------------------------------------
+        Case g.Name = "grdDeuda" And c = colDeudaImporte
+            valorFinal = FormatMoney(ParseCurrency(valorNuevo))
+            ValidarYFormatearCelda = True
+
+        ' --------------------------------------------------------
+        ' grdCheques
+        ' --------------------------------------------------------
+        Case g.Name = "grdCheques" And c = colChequeImporte
+            valorFinal = FormatMoney(ParseCurrency(valorNuevo))
+            ValidarYFormatearCelda = True
+
+        Case g.Name = "grdCheques" And c = colChequeFecha
+            If Len(valorNuevo) > 0 And Not ValidarFechaDD_MM_YYYY(valorNuevo) Then
+                MsgBox "Fecha invalida. Use formato DD/MM/YYYY", vbExclamation, "Validacion"
+                m_ActiveEditorTextBox.SelStart = 0
+                m_ActiveEditorTextBox.SelLength = Len(m_ActiveEditorTextBox.text)
+                Exit Function
+            End If
+            ValidarYFormatearCelda = True
+
+        ' --------------------------------------------------------
+        ' grdOtros
+        ' --------------------------------------------------------
+        Case g.Name = "grdOtros" And c = colOtroImporte
+            valorFinal = FormatMoney(ParseCurrency(valorNuevo))
+            ValidarYFormatearCelda = True
+
+        ' --------------------------------------------------------
+        ' NEW: grdTransferencia
+        ' --------------------------------------------------------
+        Case g.Name = "grdTransferencia" And c = colTransfImporte
+            valorFinal = FormatMoney(ParseCurrency(valorNuevo))
+            ValidarYFormatearCelda = True
+
+        Case g.Name = "grdTransferencia" And c = colTransfCUIT
+            If Len(valorNuevo) > 0 And Not ValidarCUIT(valorNuevo) Then
+                MsgBox "CUIT invalido. Use formato XX-XXXXXXXX-X (ej: 20-12345678-9)", vbExclamation, "Validacion"
+                m_ActiveEditorTextBox.SelStart = 0
+                m_ActiveEditorTextBox.SelLength = Len(m_ActiveEditorTextBox.text)
+                Exit Function
+            End If
+            ValidarYFormatearCelda = True
+
+        ' --------------------------------------------------------
+        ' NEW: grdFacturas
+        ' --------------------------------------------------------
+        Case g.Name = "grdFacturas" And c = colFactImporte
+            valorFinal = FormatMoney(ParseCurrency(valorNuevo))
+            ValidarYFormatearCelda = True
+
+        Case g.Name = "grdFacturas" And c = colFactNumero
+            ' Accept any text as invoice number - no validation
+            valorFinal = valorNuevo
+            ValidarYFormatearCelda = True
+
+        Case g.Name = "grdFacturas" And c = colFactFecha
+            If Len(valorNuevo) > 0 And Not ValidarFechaDD_MM_YYYY(valorNuevo) Then
+                MsgBox "Fecha invalida. Use formato DD/MM/YYYY", vbExclamation, "Validacion"
+                m_ActiveEditorTextBox.SelStart = 0
+                m_ActiveEditorTextBox.SelLength = Len(m_ActiveEditorTextBox.text)
+                Exit Function
+            End If
+            ValidarYFormatearCelda = True
+
+        ' Default: text columns (no formatting)
+        Case Else
+            ValidarYFormatearCelda = True
+    End Select
+
+    Exit Function
+EH:
+    MsgBox "Error en validacion: " & Err.Description, vbExclamation, "Validacion"
+    ValidarYFormatearCelda = False
+End Function
+
+' ============================================================
+' NEW: Validation helper functions (Phase 7)
+' ============================================================
+Private Function ValidarFechaDD_MM_YYYY(ByVal fechaStr As String) As Boolean
+    On Error GoTo EH
+
+    Dim partes() As String
+    Dim Dia As Integer, Mes As Integer, anno As Integer
+
+    ValidarFechaDD_MM_YYYY = False
+
+    If Len(fechaStr) <> 10 Then Exit Function
+    If Mid(fechaStr, 3, 1) <> "/" Or Mid(fechaStr, 6, 1) <> "/" Then Exit Function
+
+    partes = Split(fechaStr, "/")
+    If UBound(partes) <> 2 Then Exit Function
+
+    Dia = CInt(partes(0))
+    Mes = CInt(partes(1))
+    anno = CInt(partes(2))
+
+    ' Basic range checks
+    If Mes < 1 Or Mes > 12 Then Exit Function
+    If Dia < 1 Or Dia > 31 Then Exit Function
+    If anno < 1900 Or anno > 2100 Then Exit Function
+
+    ' Try to create date (will fail if invalid like 31/02/2026)
+    Dim testDate As Date
+    testDate = DateSerial(anno, Mes, Dia)
+
+    ValidarFechaDD_MM_YYYY = True
+    Exit Function
+EH:
+    ValidarFechaDD_MM_YYYY = False
+End Function
+
+Private Function ValidarCUIT(ByVal CUIT As String) As Boolean
+    Dim I As Integer
+
+    ValidarCUIT = False
+
+    If Len(CUIT) <> 13 Then Exit Function
+    If Mid(CUIT, 3, 1) <> "-" Then Exit Function
+    If Mid(CUIT, 12, 1) <> "-" Then Exit Function
+
+    ' Check first 2 digits
+    For I = 1 To 2
+        If Not IsNumeric(Mid(CUIT, I, 1)) Then Exit Function
+    Next
+
+    ' Check middle 8 digits
+    For I = 4 To 11
+        If Not IsNumeric(Mid(CUIT, I, 1)) Then Exit Function
+    Next
+
+    ' Check last digit
+    If Not IsNumeric(Mid(CUIT, 13, 1)) Then Exit Function
+
+    ValidarCUIT = True
+End Function
+
+' ValidarNumeroFactura removed - invoice numbers now accept any format
 
 ' ------------------------------------------------------------
 ' Recalculo automatico (sin bloquear edicion manual)
@@ -1298,27 +1921,27 @@ Private Sub cmdImprimir_Click()
     Y = 400
 
     ' Encabezado - Logo condicional si hay facturas
-    If TieneFacturas Then
+  '  If TieneFacturas Then
         logoPath = App.Path & "\Quilplac2.jpg"
-        If Dir(logoPath) <> "" Then
+      '  If Dir(logoPath) <> "" Then
             Printer.PaintPicture LoadPicture(logoPath), 600, 200, 2775, 810
             Y = 1100
-        Else
-            Printer.CurrentX = 120
-            Printer.CurrentY = 520
-            Printer.FontBold = True
-            Printer.Print "ORDEN DE PAGO"
-            Printer.FontBold = False
-        End If
-    Else
-        Y = 500
+     '   Else
+       '     Printer.CurrentX = 120
+        '    Printer.CurrentY = 520
+        '    Printer.FontBold = True
+        '    Printer.Print "ORDEN DE PAGO"
+        '    Printer.FontBold = False
+    '    End If
+   ' Else
+        'Y = 500
         
         Printer.CurrentX = xLeft
-        Printer.CurrentY = 520
+        Printer.CurrentY = Y - 50
         Printer.FontBold = True
         Printer.Print "ORDEN DE PAGO"
         Printer.FontBold = False
-    End If
+  '  End If
 
     Y = Y + lineH
 
@@ -2440,16 +3063,17 @@ Private Function ParseCurrency(ByVal s As String) As Currency
     Dim pDot As Long, pCom As Long, decSep As String
     Dim intPart As String, decPart As String
     Dim sign As Double
-    
+    Dim result As Double
+
     t = Trim$(s)
     If Len(t) = 0 Then
         ParseCurrency = 0
         Exit Function
     End If
-    
+
     t = Replace$(t, " ", "")
     t = Replace$(t, "$", "")
-    
+
     sign = 1
     If Left$(t, 1) = "-" Then
         sign = -1
@@ -2457,10 +3081,10 @@ Private Function ParseCurrency(ByVal s As String) As Currency
     ElseIf Left$(t, 1) = "+" Then
         t = Mid$(t, 2)
     End If
-    
+
     pDot = InStrRev(t, ".")
     pCom = InStrRev(t, ",")
-    
+
     If pDot > 0 And pCom > 0 Then
         If pDot > pCom Then
             decSep = "."
@@ -2482,15 +3106,21 @@ Private Function ParseCurrency(ByVal s As String) As Currency
     Else
         decSep = ""
     End If
-    
+
     If decSep = "" Then
         t = Replace$(t, ".", "")
         t = Replace$(t, ",", "")
         If Len(t) = 0 Then t = "0"
-        ParseCurrency = CCur(sign * Val(t))
+        result = sign * Val(t)
+        ' Validate range for Currency type (VB6 Currency max: 922,337,203,685.4775)
+        If Abs(result) > 922337203685.478 Then
+            ParseCurrency = 922337203685.478 * Sgn(result)
+        Else
+            ParseCurrency = CCur(result)
+        End If
         Exit Function
     End If
-    
+
     If decSep = "." Then
         intPart = Left$(t, InStrRev(t, ".") - 1)
         decPart = Mid$(t, InStrRev(t, ".") + 1)
@@ -2498,11 +3128,11 @@ Private Function ParseCurrency(ByVal s As String) As Currency
         intPart = Left$(t, InStrRev(t, ",") - 1)
         decPart = Mid$(t, InStrRev(t, ",") + 1)
     End If
-    
+
     intPart = Replace$(intPart, ".", "")
     intPart = Replace$(intPart, ",", "")
     If Len(intPart) = 0 Then intPart = "0"
-    
+
     If Len(decPart) = 0 Then
         decPart = "00"
     ElseIf Len(decPart) = 1 Then
@@ -2510,8 +3140,14 @@ Private Function ParseCurrency(ByVal s As String) As Currency
     ElseIf Len(decPart) > 2 Then
         decPart = Left$(decPart, 2)
     End If
-    
-    ParseCurrency = CCur(sign * Val(intPart & "." & decPart))
+
+    result = sign * Val(intPart & "." & decPart)
+    ' Validate range for Currency type
+    If Abs(result) > 922337203685.478 Then
+        ParseCurrency = 922337203685.478 * Sgn(result)
+    Else
+        ParseCurrency = CCur(result)
+    End If
 End Function
 
 Private Function GroupThousands(ByVal digits As String) As String
@@ -2535,20 +3171,19 @@ End Function
 Private Function FormatMoney(ByVal v As Currency) As String
     Dim isNeg As Boolean
     Dim absV As Currency
-    Dim cents As Long
-    Dim intPart As Long
+    Dim intPart As Currency
     Dim decPart As Long
     Dim intTxt As String
-    
+
     isNeg = (v < 0)
     absV = Abs(v)
-    
-    cents = CLng((absV * 100) + 0.5)
-    intPart = cents \ 100
-    decPart = cents Mod 100
-    
-    intTxt = GroupThousands(CStr(intPart))
-    
+
+    ' Separar parte entera y decimal sin multiplicar (evita overflow)
+    intPart = Fix(absV)
+    decPart = CLng((absV - intPart) * 100)
+
+    intTxt = GroupThousands(CStr(CLng(intPart)))
+
     If isNeg Then
         FormatMoney = "-" & intTxt & "," & Right$("0" & CStr(decPart), 2)
     Else
