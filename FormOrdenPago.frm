@@ -18,7 +18,7 @@ Begin VB.Form FormOrdenPago
       Top             =   0
       Width           =   16215
       Begin VB.Frame FrReimpresion 
-         Caption         =   "Reimpresi�n"
+         Caption         =   "Reimpresi�n"
          Height          =   2415
          Left            =   8400
          TabIndex        =   63
@@ -903,6 +903,7 @@ Private m_ActiveEditorTextBox As TextBox
 Private m_SuppressEditorLostFocusCommit As Boolean
 Private m_EditGridName As String
 Private m_EditEditorName As String
+Private m_FormattingEditorChange As Boolean
 
 ' Columnas grillas (0-based)
 Private Enum eColDeuda
@@ -1199,6 +1200,14 @@ Private Sub cmdDelOtro_Click()
     RecalcularTodo
 End Sub
 
+Private Sub cmdAddOtros_Click()
+    cmdAddOtro_Click
+End Sub
+
+Private Sub cmdDelOtros_Click()
+    cmdDelOtro_Click
+End Sub
+
 Private Sub cmdAddTransferencia_Click()
     AddRow grdTransferencia
 End Sub
@@ -1407,7 +1416,7 @@ Private Function GetAddButtonByGridName(ByVal gridName As String) As CommandButt
     Select Case gridName
         Case "grdDeuda": Set GetAddButtonByGridName = cmdAddDeuda
         Case "grdCheques": Set GetAddButtonByGridName = cmdAddCheque
-        Case "grdOtros": Set GetAddButtonByGridName = cmdAddOtro
+        Case "grdOtros": Set GetAddButtonByGridName = cmdAddOtros
         Case "grdTransferencia": Set GetAddButtonByGridName = cmdAddTransferencia
         Case "grdFacturas": Set GetAddButtonByGridName = cmdAddFacturas
         Case Else: Set GetAddButtonByGridName = Nothing
@@ -1446,12 +1455,20 @@ Private Sub txtGE_Deuda_KeyDown(KeyCode As Integer, Shift As Integer)
     ManejadorTextBoxKeyDown KeyCode, Shift
 End Sub
 
+Private Sub txtGE_Deuda_Change()
+    ManejadorTextBoxChange
+End Sub
+
 Private Sub txtGE_Deuda_LostFocus()
     ManejadorTextBoxLostFocus
 End Sub
 
 Private Sub txtGE_Cheques_KeyDown(KeyCode As Integer, Shift As Integer)
     ManejadorTextBoxKeyDown KeyCode, Shift
+End Sub
+
+Private Sub txtGE_Cheques_Change()
+    ManejadorTextBoxChange
 End Sub
 
 Private Sub txtGE_Cheques_LostFocus()
@@ -1462,6 +1479,10 @@ Private Sub txtGE_Otros_KeyDown(KeyCode As Integer, Shift As Integer)
     ManejadorTextBoxKeyDown KeyCode, Shift
 End Sub
 
+Private Sub txtGE_Otros_Change()
+    ManejadorTextBoxChange
+End Sub
+
 Private Sub txtGE_Otros_LostFocus()
     ManejadorTextBoxLostFocus
 End Sub
@@ -1470,12 +1491,20 @@ Private Sub txtGE_Transferencia_KeyDown(KeyCode As Integer, Shift As Integer)
     ManejadorTextBoxKeyDown KeyCode, Shift
 End Sub
 
+Private Sub txtGE_Transferencia_Change()
+    ManejadorTextBoxChange
+End Sub
+
 Private Sub txtGE_Transferencia_LostFocus()
     ManejadorTextBoxLostFocus
 End Sub
 
 Private Sub txtGE_Facturas_KeyDown(KeyCode As Integer, Shift As Integer)
     ManejadorTextBoxKeyDown KeyCode, Shift
+End Sub
+
+Private Sub txtGE_Facturas_Change()
+    ManejadorTextBoxChange
 End Sub
 
 Private Sub txtGE_Facturas_LostFocus()
@@ -1488,38 +1517,158 @@ End Sub
 ' Event handlers para los TextBox de edición
 ' Se vinculan dinámicamente en Form_Load
 Private Sub ManejadorTextBoxChange()
-    On Error Resume Next
+    On Error GoTo EH
 
+    If m_FormattingEditorChange Then Exit Sub
     If Not m_EditingActive Or m_ActiveEditorTextBox Is Nothing Then Exit Sub
-
-    ' Solo formatear si es columna de importe
-    If m_EditCol <> colDeudaImporte And m_EditCol <> colChequeImporte And _
-       m_EditCol <> colOtroImporte And m_EditCol <> colTransfImporte And _
-       m_EditCol <> colFactImporte Then
-        Exit Sub
-    End If
+    If Not EsColumnaImporteEnEdicion() Then Exit Sub
 
     Dim inputText As String
-    Dim parsed As Currency
     Dim formatted As String
+    Dim oldSelStart As Long
+    Dim newSelStart As Long
+    Dim previewValue As String
 
     inputText = m_ActiveEditorTextBox.text
+    oldSelStart = m_ActiveEditorTextBox.SelStart
 
-    ' Si está vacío, no hacer nada
-    If Len(inputText) = 0 Then Exit Sub
+    formatted = FormatearImporteEnVivo(inputText, oldSelStart, newSelStart)
 
-    ' Intentar parsear
-    parsed = ParseCurrency(inputText)
-
-    ' Si parseó OK, formatear y mostrar en grid
-    If Err.Number = 0 Then
-        formatted = FormatMoney(parsed)
-        ' Mostrar preview en grid detrás del TextBox
-        m_EditGrid.TextMatrix(m_EditRow, m_EditCol) = formatted
+    If StrComp(formatted, inputText, vbBinaryCompare) <> 0 Then
+        m_FormattingEditorChange = True
+        m_ActiveEditorTextBox.text = formatted
+        m_ActiveEditorTextBox.SelStart = newSelStart
+        m_FormattingEditorChange = False
     End If
 
-    On Error GoTo 0
+    previewValue = ObtenerPreviewImporte(inputText, formatted)
+    If Not m_EditGrid Is Nothing Then
+        m_EditGrid.TextMatrix(m_EditRow, m_EditCol) = previewValue
+    End If
+
+    Exit Sub
+EH:
+    m_FormattingEditorChange = False
 End Sub
+
+Private Function EsColumnaImporteEnEdicion() As Boolean
+    If Not m_EditGrid Is Nothing Then
+        EsColumnaImporteEnEdicion = EsColumnaImportePorGrid(m_EditGrid.Name, m_EditCol)
+    ElseIf Len(m_EditGridName) > 0 Then
+        EsColumnaImporteEnEdicion = EsColumnaImportePorGrid(m_EditGridName, m_EditCol)
+    End If
+End Function
+
+Private Function EsColumnaImportePorGrid(ByVal gridName As String, ByVal col As Integer) As Boolean
+    Select Case gridName
+        Case "grdDeuda"
+            EsColumnaImportePorGrid = (col = colDeudaImporte)
+        Case "grdCheques"
+            EsColumnaImportePorGrid = (col = colChequeImporte)
+        Case "grdOtros"
+            EsColumnaImportePorGrid = (col = colOtroImporte)
+        Case "grdTransferencia"
+            EsColumnaImportePorGrid = (col = colTransfImporte)
+        Case "grdFacturas"
+            EsColumnaImportePorGrid = (col = colFactImporte)
+    End Select
+End Function
+
+Private Function EsColumnaFechaPorGrid(ByVal gridName As String, ByVal col As Integer) As Boolean
+    Select Case gridName
+        Case "grdCheques"
+            EsColumnaFechaPorGrid = (col = colChequeFecha)
+        Case "grdFacturas"
+            EsColumnaFechaPorGrid = (col = colFactFecha)
+    End Select
+End Function
+
+Private Function FormatearImporteEnVivo(ByVal rawText As String, ByVal caretPos As Long, ByRef newCaretPos As Long) As String
+    Dim I As Long
+    Dim ch As String
+    Dim digits As String
+    Dim intDigits As String
+    Dim decDigits As String
+    Dim hadComma As Boolean
+    Dim commaPos As Long
+    Dim digitsLeftOfCaret As Long
+    Dim outText As String
+
+    If caretPos < 0 Then caretPos = 0
+    If caretPos > Len(rawText) Then caretPos = Len(rawText)
+
+    For I = 1 To Len(rawText)
+        ch = Mid$(rawText, I, 1)
+
+        If ch >= "0" And ch <= "9" Then
+            digits = digits & ch
+            If I <= caretPos Then digitsLeftOfCaret = digitsLeftOfCaret + 1
+        ElseIf ch = "," And Not hadComma Then
+            hadComma = True
+            commaPos = Len(digits)
+        End If
+    Next I
+
+    If Len(digits) = 0 Then
+        FormatearImporteEnVivo = ""
+        newCaretPos = 0
+        Exit Function
+    End If
+
+    If hadComma Then
+        intDigits = Left$(digits, commaPos)
+        decDigits = Mid$(digits, commaPos + 1)
+
+        If Len(intDigits) = 0 Then intDigits = "0"
+        If Len(decDigits) > 2 Then decDigits = Left$(decDigits, 2)
+
+        outText = GroupThousands(intDigits)
+        If commaPos >= 0 Then outText = outText & "," & decDigits
+    Else
+        outText = GroupThousands(digits)
+    End If
+
+    FormatearImporteEnVivo = outText
+    newCaretPos = PosicionCursorPorDigitos(outText, digitsLeftOfCaret)
+End Function
+
+Private Function PosicionCursorPorDigitos(ByVal formattedText As String, ByVal digitsToLeft As Long) As Long
+    Dim I As Long
+    Dim seenDigits As Long
+    Dim ch As String
+
+    If digitsToLeft <= 0 Then
+        PosicionCursorPorDigitos = 0
+        Exit Function
+    End If
+
+    For I = 1 To Len(formattedText)
+        ch = Mid$(formattedText, I, 1)
+        If ch >= "0" And ch <= "9" Then
+            seenDigits = seenDigits + 1
+            If seenDigits >= digitsToLeft Then
+                PosicionCursorPorDigitos = I
+                Exit Function
+            End If
+        End If
+    Next I
+
+    PosicionCursorPorDigitos = Len(formattedText)
+End Function
+
+Private Function ObtenerPreviewImporte(ByVal originalText As String, ByVal formattedText As String) As String
+    On Error GoTo EH
+
+    If Len(formattedText) = 0 Then
+        ObtenerPreviewImporte = ""
+        Exit Function
+    End If
+
+    ObtenerPreviewImporte = FormatMoney(ParseCurrency(formattedText))
+    Exit Function
+EH:
+    ObtenerPreviewImporte = formattedText
+End Function
 
 Private Sub ManejadorTextBoxKeyDown(KeyCode As Integer, Shift As Integer)
     If Not m_EditingActive Then Exit Sub
@@ -1721,79 +1870,26 @@ Private Function ValidarYFormatearCelda(ByRef g As MSFlexGrid, ByVal r As Intege
     ValidarYFormatearCelda = False
     valorFinal = valorNuevo
 
-    ' Identify grid and column type
-    Select Case True
-        ' --------------------------------------------------------
-        ' grdDeuda
-        ' --------------------------------------------------------
-        Case g.Name = "grdDeuda" And c = colDeudaImporte
-            valorFinal = FormatMoney(ParseCurrency(valorNuevo))
-            ValidarYFormatearCelda = True
+    If EsColumnaImportePorGrid(g.Name, c) Then
+        valorFinal = FormatMoney(ParseCurrency(valorNuevo))
+        ValidarYFormatearCelda = True
+        Exit Function
+    End If
 
-        ' --------------------------------------------------------
-        ' grdCheques
-        ' --------------------------------------------------------
-        Case g.Name = "grdCheques" And c = colChequeImporte
-            valorFinal = FormatMoney(ParseCurrency(valorNuevo))
-            ValidarYFormatearCelda = True
-
-        Case g.Name = "grdCheques" And c = colChequeFecha
-            If Len(valorNuevo) > 0 And Not ValidarFechaDD_MM_YYYY(valorNuevo) Then
-                MsgBox "Fecha invalida. Use formato DD/MM/YYYY", vbExclamation, "Validacion"
+    If EsColumnaFechaPorGrid(g.Name, c) Then
+        If Len(valorNuevo) > 0 Then
+            If Not TryNormalizarFecha(valorNuevo, valorFinal) Then
+                MsgBox "Fecha invalida. Use formato DD/MM/YYYY o una fecha reconocible.", vbExclamation, "Validacion"
                 m_ActiveEditorTextBox.SelStart = 0
                 m_ActiveEditorTextBox.SelLength = Len(m_ActiveEditorTextBox.text)
                 Exit Function
             End If
-            ValidarYFormatearCelda = True
+        End If
+        ValidarYFormatearCelda = True
+        Exit Function
+    End If
 
-        ' --------------------------------------------------------
-        ' grdOtros
-        ' --------------------------------------------------------
-        Case g.Name = "grdOtros" And c = colOtroImporte
-            valorFinal = FormatMoney(ParseCurrency(valorNuevo))
-            ValidarYFormatearCelda = True
-
-        ' --------------------------------------------------------
-        ' NEW: grdTransferencia
-        ' --------------------------------------------------------
-        Case g.Name = "grdTransferencia" And c = colTransfImporte
-            valorFinal = FormatMoney(ParseCurrency(valorNuevo))
-            ValidarYFormatearCelda = True
-
-        Case g.Name = "grdTransferencia" And c = colTransfCUIT
-            If Len(valorNuevo) > 0 And Not ValidarCUIT(valorNuevo) Then
-                MsgBox "CUIT invalido. Use formato XX-XXXXXXXX-X (ej: 20-12345678-9)", vbExclamation, "Validacion"
-                m_ActiveEditorTextBox.SelStart = 0
-                m_ActiveEditorTextBox.SelLength = Len(m_ActiveEditorTextBox.text)
-                Exit Function
-            End If
-            ValidarYFormatearCelda = True
-
-        ' --------------------------------------------------------
-        ' NEW: grdFacturas
-        ' --------------------------------------------------------
-        Case g.Name = "grdFacturas" And c = colFactImporte
-            valorFinal = FormatMoney(ParseCurrency(valorNuevo))
-            ValidarYFormatearCelda = True
-
-        Case g.Name = "grdFacturas" And c = colFactNumero
-            ' Accept any text as invoice number - no validation
-            valorFinal = valorNuevo
-            ValidarYFormatearCelda = True
-
-        Case g.Name = "grdFacturas" And c = colFactFecha
-            If Len(valorNuevo) > 0 And Not ValidarFechaDD_MM_YYYY(valorNuevo) Then
-                MsgBox "Fecha invalida. Use formato DD/MM/YYYY", vbExclamation, "Validacion"
-                m_ActiveEditorTextBox.SelStart = 0
-                m_ActiveEditorTextBox.SelLength = Len(m_ActiveEditorTextBox.text)
-                Exit Function
-            End If
-            ValidarYFormatearCelda = True
-
-        ' Default: text columns (no formatting)
-        Case Else
-            ValidarYFormatearCelda = True
-    End Select
+    ValidarYFormatearCelda = True
 
     Exit Function
 EH:
@@ -1804,6 +1900,37 @@ End Function
 ' ============================================================
 ' NEW: Validation helper functions (Phase 7)
 ' ============================================================
+Private Function TryNormalizarFecha(ByVal fechaInput As String, ByRef fechaFormateada As String) As Boolean
+    On Error GoTo EH
+
+    Dim fechaLimpia As String
+    Dim fechaValor As Date
+
+    TryNormalizarFecha = False
+    fechaFormateada = Trim$(fechaInput)
+    fechaLimpia = Trim$(fechaInput)
+    If Len(fechaLimpia) = 0 Then
+        TryNormalizarFecha = True
+        Exit Function
+    End If
+
+    If ValidarFechaDD_MM_YYYY(fechaLimpia) Then
+        fechaValor = DateSerial(CInt(Mid$(fechaLimpia, 7, 4)), CInt(Mid$(fechaLimpia, 4, 2)), CInt(Mid$(fechaLimpia, 1, 2)))
+        fechaFormateada = Format$(fechaValor, "dd/mm/yyyy")
+        TryNormalizarFecha = True
+        Exit Function
+    End If
+
+    If IsDate(fechaLimpia) Then
+        fechaValor = CDate(fechaLimpia)
+        fechaFormateada = Format$(fechaValor, "dd/mm/yyyy")
+        TryNormalizarFecha = True
+    End If
+    Exit Function
+EH:
+    TryNormalizarFecha = False
+End Function
+
 Private Function ValidarFechaDD_MM_YYYY(ByVal fechaStr As String) As Boolean
     On Error GoTo EH
 
@@ -1837,31 +1964,6 @@ EH:
     ValidarFechaDD_MM_YYYY = False
 End Function
 
-Private Function ValidarCUIT(ByVal CUIT As String) As Boolean
-    Dim I As Integer
-
-    ValidarCUIT = False
-
-    If Len(CUIT) <> 13 Then Exit Function
-    If Mid(CUIT, 3, 1) <> "-" Then Exit Function
-    If Mid(CUIT, 12, 1) <> "-" Then Exit Function
-
-    ' Check first 2 digits
-    For I = 1 To 2
-        If Not IsNumeric(Mid(CUIT, I, 1)) Then Exit Function
-    Next
-
-    ' Check middle 8 digits
-    For I = 4 To 11
-        If Not IsNumeric(Mid(CUIT, I, 1)) Then Exit Function
-    Next
-
-    ' Check last digit
-    If Not IsNumeric(Mid(CUIT, 13, 1)) Then Exit Function
-
-    ValidarCUIT = True
-End Function
-
 ' ValidarNumeroFactura removed - invoice numbers now accept any format
 
 ' ------------------------------------------------------------
@@ -1886,456 +1988,249 @@ Private Sub cmdImprimir_Click()
     On Error GoTo ErrHandler
 
     Dim Y As Single
-    Dim xLeft As Single
-    Dim xRight As Single
+    Const MM_TO_TWIPS As Single = 56.7
+    Const EXTRA_LEFT_MM As Single = 10
+    Const EXTRA_BOX_HEIGHT_MM As Single = 1.25
+    Const EXTRA_LEFT_TWIPS As Single = EXTRA_LEFT_MM * MM_TO_TWIPS
+    Const EXTRA_BOX_HEIGHT_TWIPS As Single = EXTRA_BOX_HEIGHT_MM * MM_TO_TWIPS
+    Const EXTRA_BOX_TEXT_Y_TWIPS As Single = EXTRA_BOX_HEIGHT_TWIPS / 2
+    Const PRINT_X_OFFSET As Single = 660 + EXTRA_LEFT_TWIPS
+    Dim xOffset As Single
+    Dim xLeft As Single, xRight As Single
+    Dim BoxLeft As Single, boxRight As Single
     Dim lineH As Single
-    Dim pageBottom As Single
     Dim logoPath As String
     Dim I As Long
     Dim detalle As String
     Dim Importe As String
-    Dim nroCheque As String
-    Dim banco As String
-    Dim vto As String
-    Dim cuenta As String
-    Dim CUIT As String
-    Dim numero As String
-    Dim Fecha As String
-    Dim Descripcion As String
-    Dim deudaRows As Long
-    Dim chequeRows As Long
-    Dim transfRows As Long
-    Dim factRows As Long
+    Dim deudaMax As Long
+    Dim sepY As Single
+    Dim headerBandTop As Single
+    Dim headerBandBottom As Single
+    Dim titleY As Single
 
-    xLeft = 600
-    xRight = 7800
-    lineH = 180
-    pageBottom = 10600
+    xOffset = PRINT_X_OFFSET
+    xLeft = 240 + xOffset
+    xRight = 7200 + xOffset
+    BoxLeft = 180 + xOffset
+    boxRight = 9300 + xOffset
+    lineH = 320
 
     Printer.ScaleMode = vbTwips
-    Printer.FontName = "Courier New"
-    Printer.FontSize = 8
+    Printer.FontName = "Arial"
+    Printer.FontSize = 10
     Printer.FontBold = False
     Printer.Copies = 1
 
-    Y = 400
+    Y = 220
 
-    ' Encabezado - Logo condicional si hay facturas
-  '  If TieneFacturas Then
-        logoPath = App.Path & "\Quilplac2.jpg"
-      '  If Dir(logoPath) <> "" Then
-            Printer.PaintPicture LoadPicture(logoPath), 600, 200, 2775, 810
-            Y = 1100
-     '   Else
-       '     Printer.CurrentX = 120
-        '    Printer.CurrentY = 520
-        '    Printer.FontBold = True
-        '    Printer.Print "ORDEN DE PAGO"
-        '    Printer.FontBold = False
-    '    End If
-   ' Else
-        'Y = 500
-        
-        Printer.CurrentX = xLeft
-        Printer.CurrentY = Y - 50
-        Printer.FontBold = True
-        Printer.Print "ORDEN DE PAGO"
-        Printer.FontBold = False
-  '  End If
+    logoPath = App.Path & "\Quilplac2.jpg"
+    If Dir$(logoPath) <> "" Then
+        Printer.PaintPicture LoadPicture(logoPath), xLeft, Y, 2600, 900
+    End If
 
-    Y = Y + lineH
+    Printer.FontSize = 14
+    Printer.FontBold = True
+    Printer.CurrentX = xLeft
+    Printer.CurrentY = Y + 980
+    Printer.Print "ORDEN DE PAGO"
+    Printer.FontBold = False
+    Printer.FontSize = 11
 
-    ' Nro de Orden, Fecha, Proveedor
+    Printer.CurrentX = 6200 + xOffset
+    Printer.CurrentY = Y + 980
+    Printer.Print "FECHA:"
+    Printer.CurrentX = 7700 + xOffset
+    Printer.CurrentY = Y + 980
+    Printer.Print Trim$(txtFecha.text)
+
+    Y = Y + 1600
     Printer.CurrentX = xLeft
     Printer.CurrentY = Y
     Printer.Print "Nro: " & Trim$(txtNroOrden.text)
-    Printer.CurrentX = xRight
-    Printer.CurrentY = Y
-    Printer.Print "Fecha: " & Trim$(txtFecha.text)
-    Y = Y + lineH
 
+    Y = Y + 520
     Printer.CurrentX = xLeft
     Printer.CurrentY = Y
-    Printer.Print "Proveedor: " & Trim$(txtProveedor.text) + Chr(13)
-    Y = Y + lineH
-    Y = Y + lineH
+    Printer.Print "PROVEEDOR:"
+    DrawBoxConBordeGrueso 2500 + xOffset, Y - 60, boxRight, Y + 360 + EXTRA_BOX_HEIGHT_TWIPS, 30
+    Printer.CurrentX = 5200 + xOffset
+    Printer.CurrentY = Y + 10 + EXTRA_BOX_TEXT_Y_TWIPS
+    Printer.Print UCase$(Trim$(txtProveedor.text))
 
-    ' Deuda
+    Y = Y + 900
+    DrawBoxConBordeGrueso BoxLeft, Y, boxRight, Y + 340 + EXTRA_BOX_HEIGHT_TWIPS, 30
     Printer.FontBold = True
-    Printer.CurrentX = xLeft
-    Printer.CurrentY = Y
-    Printer.Print "DEUDA"
+    headerBandTop = Y + 48
+    headerBandBottom = Y + 236 + EXTRA_BOX_TEXT_Y_TWIPS
+    
+    titleY = Y + 64 + EXTRA_BOX_TEXT_Y_TWIPS
+    PrintBoxHeaderTitle "DEUDA", BoxLeft, boxRight, headerBandTop, headerBandBottom, titleY
     Printer.FontBold = False
-    Y = Y + lineH
 
-    Printer.CurrentX = xLeft
-    Printer.CurrentY = Y
-    Printer.Print String$(65, "-")
-    Y = Y + lineH
+    Y = Y + 700 + EXTRA_BOX_HEIGHT_TWIPS
+    sepY = Y + 120
+    Printer.Line (xLeft, sepY)-(boxRight - 180, sepY), vbBlack
+    Y = Y + 360
 
-    deudaRows = grdDeuda.Rows - 1
-    If deudaRows >= 1 Then
-        For I = 1 To deudaRows
-            detalle = Trim$(grdDeuda.TextMatrix(I, 0))
-            Importe = Trim$(grdDeuda.TextMatrix(I, 1))
-            If Len(detalle) > 0 Or Len(Importe) > 0 Then
-                If Y > pageBottom Then
-                    Printer.NewPage
-                    Y = 600
-                End If
-                Printer.CurrentX = xLeft
-                Printer.CurrentY = Y
-                Printer.Print Left$(detalle, 55)
-                Printer.CurrentX = xRight
-                Printer.CurrentY = Y
-                Printer.Print FormatMoney(ParseCurrency(Importe))
-                Y = Y + lineH
-            End If
-        Next I
-    End If
+    deudaMax = grdDeuda.Rows - 1
+    If deudaMax > 4 Then deudaMax = 4
 
-    Printer.CurrentX = xLeft
-    Printer.CurrentY = Y
-    Printer.Print "Subtotal Deuda:"
-    Printer.CurrentX = xRight
-    Printer.CurrentY = Y
-    Printer.Print FormatMoney(ParseCurrency(txtSubDeuda.text))
-    Y = Y + lineH
-    Y = Y + lineH
-
-    ' Cheques
-    If Y > pageBottom Then
-        Printer.NewPage
-        Y = 600
-    End If
-
-    Printer.FontBold = True
-    Printer.CurrentX = xLeft
-    Printer.CurrentY = Y
-    Printer.Print "CHEQUES"
-    Printer.FontBold = False
-    Y = Y + lineH
-
-    Printer.CurrentX = xLeft
-    Printer.CurrentY = Y
-    Printer.Print String$(65, "-")
-    Y = Y + lineH
-
-    chequeRows = grdCheques.Rows - 1
-    If chequeRows >= 1 Then
-        For I = 1 To chequeRows
-            banco = Trim$(grdCheques.TextMatrix(I, 0))
-            nroCheque = Trim$(grdCheques.TextMatrix(I, 1))
-            vto = Trim$(grdCheques.TextMatrix(I, 2))
-            Importe = Trim$(grdCheques.TextMatrix(I, 3))
-            If Len(banco) > 0 Or Len(nroCheque) > 0 Or Len(vto) > 0 Or Len(Importe) > 0 Then
-                If Y > pageBottom Then
-                    Printer.NewPage
-                    Y = 600
-                End If
-                Printer.CurrentX = xLeft
-                Printer.CurrentY = Y
-                Printer.Print Left$("Nro: " & nroCheque & "  Banco: " & banco & "  Vto: " & vto, 85)
-                Printer.CurrentX = xRight
-                Printer.CurrentY = Y
-                Printer.Print FormatMoney(ParseCurrency(Importe))
-                Y = Y + lineH
-            End If
-        Next I
-    End If
-
-    Printer.CurrentX = xLeft
-    Printer.CurrentY = Y
-    Printer.Print "Subtotal Cheques:"
-    Printer.CurrentX = xRight
-    Printer.CurrentY = Y
-    Printer.Print FormatMoney(ParseCurrency(txtSubCheques.text))
-    Y = Y + lineH
-    Y = Y + lineH
-
-    ' Transferencia
-    transfRows = grdTransferencia.Rows - 1
-    If transfRows >= 1 And FilaTieneDatos(grdTransferencia, 1) Then
-        If Y > pageBottom Then
-            Printer.NewPage
-            Y = 600
+    For I = 1 To deudaMax
+        detalle = Trim$(grdDeuda.TextMatrix(I, 0))
+        Importe = Trim$(grdDeuda.TextMatrix(I, 1))
+        If Len(detalle) > 0 Then
+            Printer.CurrentX = xLeft
+            Printer.CurrentY = Y
+            Printer.Print Left$(UCase$(detalle), 45)
         End If
-
-        Printer.FontBold = True
-        Printer.CurrentX = xLeft
-        Printer.CurrentY = Y
-        Printer.Print "TRANSFERENCIA"
-        Printer.FontBold = False
-        Y = Y + lineH
-
-        Printer.CurrentX = xLeft
-        Printer.CurrentY = Y
-        Printer.Print String$(65, "-")
-        Y = Y + lineH
-
-        For I = 1 To transfRows
-            banco = Trim$(grdTransferencia.TextMatrix(I, 0))
-            cuenta = Trim$(grdTransferencia.TextMatrix(I, 1))
-            CUIT = Trim$(grdTransferencia.TextMatrix(I, 2))
-            Importe = Trim$(grdTransferencia.TextMatrix(I, 3))
-            If Len(banco) > 0 Or Len(cuenta) > 0 Or Len(CUIT) > 0 Or Len(Importe) > 0 Then
-                If Y > pageBottom Then
-                    Printer.NewPage
-                    Y = 600
-                End If
-                Printer.CurrentX = xLeft
-                Printer.CurrentY = Y
-                Printer.Print Left$(banco & " " & cuenta & " " & CUIT, 55)
-                Printer.CurrentX = xRight
-                Printer.CurrentY = Y
-                Printer.Print FormatMoney(ParseCurrency(Importe))
-                Y = Y + lineH
-            End If
-        Next I
-
-        Printer.CurrentX = xLeft
-        Printer.CurrentY = Y
-        Printer.Print "Subtotal Transferencia:"
-        Printer.CurrentX = xRight
-        Printer.CurrentY = Y
-        Printer.Print FormatMoney(ParseCurrency(txtSubTransferencia.text))
-        Y = Y + lineH
-        Y = Y + lineH
-    End If
-
-    ' Facturas
-    factRows = grdFacturas.Rows - 1
-    If factRows >= 1 And FilaTieneDatos(grdFacturas, 1) Then
-        If Y > pageBottom Then
-            Printer.NewPage
-            Y = 600
+        If Len(Importe) > 0 Then
+            Printer.CurrentX = xRight
+            Printer.CurrentY = Y
+            Printer.Print "$" & FormatMoney(ParseCurrency(Importe))
         End If
-
-        Printer.FontBold = True
-        Printer.CurrentX = xLeft
-        Printer.CurrentY = Y
-        Printer.Print "FACTURAS"
-        Printer.FontBold = False
         Y = Y + lineH
+    Next I
 
-        Printer.CurrentX = xLeft
-        Printer.CurrentY = Y
-        Printer.Print String$(65, "-")
-        Y = Y + lineH
-
-        For I = 1 To factRows
-            numero = Trim$(grdFacturas.TextMatrix(I, 0))
-            Fecha = Trim$(grdFacturas.TextMatrix(I, 1))
-            Importe = Trim$(grdFacturas.TextMatrix(I, 2))
-            Descripcion = Trim$(grdFacturas.TextMatrix(I, 3))
-            If Len(numero) > 0 Or Len(Fecha) > 0 Or Len(Importe) > 0 Then
-                If Y > pageBottom Then
-                    Printer.NewPage
-                    Y = 600
-                End If
-                Printer.CurrentX = xLeft
-                Printer.CurrentY = Y
-                Printer.Print Left$(numero & " " & Fecha & " " & Left$(Descripcion, 30), 55)
-                Printer.CurrentX = xRight
-                Printer.CurrentY = Y
-                Printer.Print FormatMoney(ParseCurrency(Importe))
-                Y = Y + lineH
-            End If
-        Next I
-
-        Printer.CurrentX = xLeft
-        Printer.CurrentY = Y
-        Printer.Print "Subtotal Facturas:"
-        Printer.CurrentX = xRight
-        Printer.CurrentY = Y
-        Printer.Print FormatMoney(ParseCurrency(txtSubFacturas.text))
-        Y = Y + lineH
-        Y = Y + lineH
-    End If
-
-    ' Otros (sin Retencion IIBB)
-    If Y > pageBottom Then
-        Printer.NewPage
-        Y = 600
-    End If
-
+    Printer.CurrentX = xLeft
+    Printer.CurrentY = Y + 120
     Printer.FontBold = True
-    Printer.CurrentX = xLeft
-    Printer.CurrentY = Y
-    Printer.Print "OTROS"
-    Printer.FontBold = False
-    Y = Y + lineH
-
-    Printer.CurrentX = xLeft
-    Printer.CurrentY = Y
-    Printer.Print String$(65, "-")
-    Y = Y + lineH
-
-    Dim otrosRows As Long
-    otrosRows = grdOtros.Rows - 1
-    If otrosRows >= 1 Then
-        For I = 1 To otrosRows
-            detalle = Trim$(grdOtros.TextMatrix(I, 0))
-            Importe = Trim$(grdOtros.TextMatrix(I, 1))
-            If Len(detalle) > 0 Or Len(Importe) > 0 Then
-                If Y > pageBottom Then
-                    Printer.NewPage
-                    Y = 600
-                End If
-                Printer.CurrentX = xLeft
-                Printer.CurrentY = Y
-                Printer.Print Left$(detalle, 55)
-                Printer.CurrentX = xRight
-                Printer.CurrentY = Y
-                Printer.Print FormatMoney(ParseCurrency(Importe))
-                Y = Y + lineH
-            End If
-        Next I
-    End If
-
-    Printer.CurrentX = xLeft
-    Printer.CurrentY = Y
-    Printer.Print "Subtotal Otros:"
+    Printer.Print "TOTAL DEUDA:"
     Printer.CurrentX = xRight
-    Printer.CurrentY = Y
-    Printer.Print FormatMoney(ParseCurrency(txtSubOtros.text))
-    Y = Y + lineH
-    Y = Y + lineH
+    Printer.CurrentY = Y + 120
+    Printer.Print "$" & FormatMoney(ParseCurrency(txtSubDeuda.text))
+    Printer.FontBold = False
 
-    ' Efectivo
-    If Y > pageBottom Then
-        Printer.NewPage
-        Y = 600
-    End If
-
+    Y = Y + 760
+    DrawBoxConBordeGrueso BoxLeft, Y, boxRight, Y + 340 + EXTRA_BOX_HEIGHT_TWIPS, 30
     Printer.FontBold = True
-    Printer.CurrentX = xLeft
-    Printer.CurrentY = Y
-    Printer.Print "EFECTIVO"
+    headerBandTop = Y + 48
+    headerBandBottom = Y + 236 + EXTRA_BOX_TEXT_Y_TWIPS
+    
+    titleY = Y + 64 + EXTRA_BOX_TEXT_Y_TWIPS
+    PrintBoxHeaderTitle "PAGO", BoxLeft, boxRight, headerBandTop, headerBandBottom, titleY
     Printer.FontBold = False
-    Y = Y + lineH
 
-    Printer.CurrentX = xLeft
-    Printer.CurrentY = Y
-    Printer.Print "Subtotal Efectivo:"
-    Printer.CurrentX = xRight
-    Printer.CurrentY = Y
-    Printer.Print FormatMoney(ParseCurrency(txtEfectivo.text))
-    Y = Y + lineH
-    Y = Y + lineH
+    Y = Y + 700 + EXTRA_BOX_HEIGHT_TWIPS
+    sepY = Y + 120
+    Printer.Line (xLeft, sepY)-(boxRight - 180, sepY), vbBlack
 
-    ' RESUMEN - SIN RetIIBB
-    If Y > pageBottom - (lineH * 10) Then
-        Printer.NewPage
-        Y = 600
-    End If
+    Y = Y + 420
+    Printer.CurrentX = xLeft: Printer.CurrentY = Y: Printer.Print "CHEQUES:"
+    Printer.CurrentX = xRight: Printer.CurrentY = Y: Printer.Print "$" & FormatMoney(ParseCurrency(txtSubCheques.text))
+    Y = Y + 520
 
-    Printer.FontBold = True
-    Printer.CurrentX = xLeft
-    Printer.CurrentY = Y
-    Printer.Print "RESUMEN"
-    Printer.FontBold = False
-    Y = Y + lineH
+    Printer.CurrentX = xLeft: Printer.CurrentY = Y: Printer.Print "EFECTIVO:"
+    Printer.CurrentX = xRight: Printer.CurrentY = Y: Printer.Print "$" & FormatMoney(ParseCurrency(txtEfectivo.text))
+    Y = Y + 520
 
-    Printer.CurrentX = xLeft
-    Printer.CurrentY = Y
-    Printer.Print "Deuda:"
-    Printer.CurrentX = xRight
-    Printer.CurrentY = Y
-    Printer.Print FormatMoney(ParseCurrency(txtSubDeuda.text))
-    Y = Y + lineH
+    Printer.CurrentX = xLeft: Printer.CurrentY = Y: Printer.Print "TRANSFERENCIA:"
+    Printer.CurrentX = xRight: Printer.CurrentY = Y: Printer.Print "$" & FormatMoney(ParseCurrency(txtSubTransferencia.text))
+    Y = Y + 520
 
-    Printer.CurrentX = xLeft
-    Printer.CurrentY = Y
-    Printer.Print "Cheques:"
-    Printer.CurrentX = xRight
-    Printer.CurrentY = Y
-    Printer.Print FormatMoney(ParseCurrency(txtSubCheques.text))
-    Y = Y + lineH
+    Printer.CurrentX = xLeft: Printer.CurrentY = Y: Printer.Print "FACTURAS:"
+    Printer.CurrentX = xRight: Printer.CurrentY = Y: Printer.Print "$" & FormatMoney(ParseCurrency(txtSubFacturas.text))
+    Y = Y + 520
 
-    Printer.CurrentX = xLeft
-    Printer.CurrentY = Y
-    Printer.Print "Transferencia:"
-    Printer.CurrentX = xRight
-    Printer.CurrentY = Y
-    Printer.Print FormatMoney(ParseCurrency(txtSubTransferencia.text))
-    Y = Y + lineH
+    Printer.CurrentX = xLeft: Printer.CurrentY = Y: Printer.Print "OTROS:"
+    Printer.CurrentX = xRight: Printer.CurrentY = Y: Printer.Print "$" & FormatMoney(ParseCurrency(txtSubOtros.text))
 
-    Printer.CurrentX = xLeft
-    Printer.CurrentY = Y
-    Printer.Print "Facturas:"
-    Printer.CurrentX = xRight
-    Printer.CurrentY = Y
-    Printer.Print FormatMoney(ParseCurrency(txtSubFacturas.text))
-    Y = Y + lineH
+    Y = Y + 700
+    sepY = Y + 120
+    Printer.Line (xLeft, sepY)-(boxRight - 180, sepY), vbBlack
 
-    Printer.CurrentX = xLeft
-    Printer.CurrentY = Y
-    Printer.Print "Otros:"
-    Printer.CurrentX = xRight
-    Printer.CurrentY = Y
-    Printer.Print FormatMoney(ParseCurrency(txtSubOtros.text))
-    Y = Y + lineH
-
-    Printer.CurrentX = xLeft
-    Printer.CurrentY = Y
-    Printer.Print "Efectivo:"
-    Printer.CurrentX = xRight
-    Printer.CurrentY = Y
-    Printer.Print FormatMoney(ParseCurrency(txtEfectivo.text))
-    Y = Y + lineH
-
-    Printer.CurrentX = xLeft
-    Printer.CurrentY = Y
-    Printer.Print String$(50, "-")
-    Y = Y + lineH
-
+    Y = Y + 420
     Printer.FontBold = True
     Printer.CurrentX = xLeft
     Printer.CurrentY = Y
     Printer.Print "TOTAL PAGO:"
     Printer.CurrentX = xRight
     Printer.CurrentY = Y
-    Printer.Print FormatMoney(ParseCurrency(txtTotalPago.text))
-    Printer.FontBold = False
-    Y = Y + lineH
+    Printer.Print "$" & FormatMoney(ParseCurrency(txtTotalPago.text))
 
+    Y = Y + 440
     Printer.CurrentX = xLeft
     Printer.CurrentY = Y
-    Printer.Print "Saldo:"
+    Printer.Print "SALDO:"
     Printer.CurrentX = xRight
     Printer.CurrentY = Y
-    Printer.Print FormatMoney(ParseCurrency(txtSaldo.text))
-    Y = Y + lineH
+    Printer.Print "$" & FormatMoney(ParseCurrency(txtSaldo.text))
+    Printer.FontBold = False
 
+    Y = Y + 560
+    Printer.FontSize = 10
     Printer.CurrentX = xLeft
     Printer.CurrentY = Y
-    Printer.Print "Importe en letras:"
-    Y = Y + lineH
+    Printer.Print "IMPORTE EN LETRAS: " & UCase$(Trim$(txtImporteLetras.text))
+
+    Y = Y + 1200
     Printer.CurrentX = xLeft
     Printer.CurrentY = Y
-    Printer.Print Trim$(txtImporteLetras.text)
-    Y = Y + lineH * 2
-
-    ' Firma
-    If Y > pageBottom Then
-        Printer.NewPage
-        Y = 600
-    End If
-
-    Printer.CurrentX = xLeft
-    Printer.CurrentY = Y + 100
-    Printer.Print String$(35, "_")
-    Y = Y + lineH
-    Printer.CurrentX = xLeft
-    Printer.CurrentY = Y
-    Printer.Print "Firma / Aclaracion"
+    Printer.Print "Firma/Aclaracion:"
 
     Printer.EndDoc
     Exit Sub
 
 ErrHandler:
     MsgBox "Error al imprimir la orden de pago: " & Err.Description, vbExclamation, "Impresion"
+End Sub
+
+Private Sub PrintBoxHeaderTitle(ByVal titleText As String, ByVal BoxLeft As Single, ByVal boxRight As Single, ByVal bandTop As Single, ByVal bandBottom As Single, ByVal titleY As Single)
+    Dim fillStyleAnterior As Integer
+    Dim fillColorAnterior As Long
+    Dim textW As Single
+    Dim titleX As Single
+    Dim clearLeft As Single
+    Dim clearRight As Single
+
+    fillStyleAnterior = Printer.FillStyle
+    fillColorAnterior = Printer.FillColor
+
+    textW = Printer.TextWidth(titleText)
+    titleX = ((BoxLeft + boxRight) - textW) / 2
+
+    clearLeft = titleX - 120
+    clearRight = titleX + textW + 120
+    If clearLeft < (BoxLeft + 20) Then clearLeft = BoxLeft + 20
+    If clearRight > (boxRight - 20) Then clearRight = boxRight - 20
+
+    Printer.FillStyle = vbFSSolid
+    Printer.FillColor = vbWhite
+    Printer.Line (clearLeft, bandTop)-(clearRight, bandBottom), vbWhite, BF
+
+    Printer.CurrentX = titleX
+    Printer.CurrentY = titleY
+    Printer.Print titleText
+
+    Printer.FillStyle = fillStyleAnterior
+    Printer.FillColor = fillColorAnterior
+End Sub
+
+Private Sub DrawBoxConBordeGrueso(ByVal x1 As Single, ByVal y1 As Single, ByVal x2 As Single, ByVal y2 As Single, Optional ByVal grosor As Integer = 10)
+    Dim grosorBorde As Single
+    Dim fillStyleAnterior As Integer
+    Dim fillColorAnterior As Long
+
+    grosorBorde = grosor
+    If grosorBorde < 12 Then grosorBorde = 12
+
+    fillStyleAnterior = Printer.FillStyle
+    fillColorAnterior = Printer.FillColor
+
+    Printer.FillStyle = vbFSSolid
+    Printer.FillColor = vbBlack
+
+    ' Borde superior
+    Printer.Line (x1, y1)-(x2, y1 + grosorBorde), vbBlack, BF
+    ' Borde inferior
+    Printer.Line (x1, y2 - grosorBorde)-(x2, y2), vbBlack, BF
+    ' Borde izquierdo
+    Printer.Line (x1, y1)-(x1 + grosorBorde, y2), vbBlack, BF
+    ' Borde derecho
+    Printer.Line (x2 - grosorBorde, y1)-(x2, y2), vbBlack, BF
+
+    Printer.FillStyle = fillStyleAnterior
+    Printer.FillColor = fillColorAnterior
 End Sub
 
 Private Function TieneFacturas() As Boolean
