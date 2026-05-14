@@ -325,6 +325,23 @@ Begin VB.Form FormOrdenPago
          TabIndex        =   48
          Top             =   8760
          Width           =   15375
+         Begin VB.CommandButton cmdSalir 
+            Caption         =   "&Salir"
+            BeginProperty Font 
+               Name            =   "MS Sans Serif"
+               Size            =   8.25
+               Charset         =   0
+               Weight          =   700
+               Underline       =   0   'False
+               Italic          =   0   'False
+               Strikethrough   =   0   'False
+            EndProperty
+            Height          =   375
+            Left            =   12480
+            TabIndex        =   66
+            Top             =   840
+            Width           =   1455
+         End
          Begin VB.CommandButton cmdImprimir 
             Caption         =   "&Imprimir"
             BeginProperty Font 
@@ -337,7 +354,7 @@ Begin VB.Form FormOrdenPago
                Strikethrough   =   0   'False
             EndProperty
             Height          =   375
-            Left            =   12720
+            Left            =   9480
             TabIndex        =   54
             Top             =   840
             Width           =   1455
@@ -354,7 +371,7 @@ Begin VB.Form FormOrdenPago
                Strikethrough   =   0   'False
             EndProperty
             Height          =   375
-            Left            =   9240
+            Left            =   6720
             TabIndex        =   27
             Top             =   840
             Width           =   1455
@@ -371,7 +388,7 @@ Begin VB.Form FormOrdenPago
                Strikethrough   =   0   'False
             EndProperty
             Height          =   375
-            Left            =   4800
+            Left            =   3720
             TabIndex        =   33
             Top             =   840
             Width           =   1455
@@ -936,6 +953,13 @@ Private Enum eColFacturas
     colFactImporte = 2
     colFactDescripcion = 3
 End Enum
+
+Private Sub cmdSalir_Click()
+
+    Unload Me
+
+End Sub
+
 
 Private Sub Form_KeyDown(KeyCode As Integer, Shift As Integer)
          If KeyCode <> vbKeyReturn Then Exit Sub
@@ -2020,7 +2044,7 @@ Private Sub cmdImprimir_Click()
     Printer.FontName = "Arial"
     Printer.FontSize = 10
     Printer.FontBold = False
-    Printer.Copies = 1
+    Printer.Copies = 2
 
     Y = 220
 
@@ -2054,7 +2078,7 @@ Private Sub cmdImprimir_Click()
     Printer.CurrentY = Y
     Printer.Print "PROVEEDOR:"
     DrawBoxConBordeGrueso 2500 + xOffset, Y - 60, boxRight, Y + 360 + EXTRA_BOX_HEIGHT_TWIPS, 30
-    Printer.CurrentX = 5200 + xOffset
+    Printer.CurrentX = 2560 + xOffset
     Printer.CurrentY = Y + 10 + EXTRA_BOX_TEXT_Y_TWIPS
     Printer.Print UCase$(Trim$(txtProveedor.text))
 
@@ -2120,6 +2144,30 @@ Private Sub cmdImprimir_Click()
     Printer.CurrentX = xRight: Printer.CurrentY = Y: Printer.Print "$" & FormatMoney(ParseCurrency(txtSubCheques.text))
     Y = Y + 520
 
+    ' Imprimir detalle de cheques si existen
+    Dim chequesCount As Long
+    chequesCount = grdCheques.Rows - 1
+    If chequesCount > 0 And Len(Trim$(grdCheques.TextMatrix(1, colChequeBanco))) > 0 Then
+        Dim oldFontSize As Integer
+        oldFontSize = Printer.FontSize
+        Printer.FontSize = 8
+        Dim chqIdx As Long
+        Dim chqBanco As String, chqNumero As String, chqFecha As String
+        For chqIdx = 1 To chequesCount
+            chqBanco = Trim$(grdCheques.TextMatrix(chqIdx, colChequeBanco))
+            chqNumero = Trim$(grdCheques.TextMatrix(chqIdx, colChequeNumero))
+            chqFecha = Trim$(grdCheques.TextMatrix(chqIdx, colChequeFecha))
+            If Len(chqBanco) > 0 Or Len(chqNumero) > 0 Then
+                Printer.CurrentX = xLeft + 240
+                Printer.CurrentY = Y
+                Printer.Print "  " & Left$(chqBanco, 20) & " | Nro: " & chqNumero & " | " & chqFecha
+                Y = Y + 300
+            End If
+        Next chqIdx
+        Printer.FontSize = oldFontSize
+        Y = Y + 220
+    End If
+
     Printer.CurrentX = xLeft: Printer.CurrentY = Y: Printer.Print "EFECTIVO:"
     Printer.CurrentX = xRight: Printer.CurrentY = Y: Printer.Print "$" & FormatMoney(ParseCurrency(txtEfectivo.text))
     Y = Y + 520
@@ -2158,7 +2206,7 @@ Private Sub cmdImprimir_Click()
     Printer.FontBold = False
 
     Y = Y + 560
-    Printer.FontSize = 10
+    Printer.FontSize = 8
     Printer.CurrentX = xLeft
     Printer.CurrentY = Y
     Printer.Print "IMPORTE EN LETRAS: " & UCase$(Trim$(txtImporteLetras.text))
@@ -2448,9 +2496,22 @@ Private Function EnLetras(numero As String) As String
                 End Select
             End Select
             If paso = 4 Then
-                If Mid(entero, 6, 1) <> "0" Or Mid(entero, 5, 1) <> "0" Or Mid(entero, 4, 1) <> "0" Or _
-                  (Mid(entero, 6, 1) = "0" And Mid(entero, 5, 1) = "0" And Mid(entero, 4, 1) = "0" And _
-                   Len(entero) <= 6) Then
+                ' Add "mil" if any thousands digit is non-zero, OR if this is the highest group (number <= 999,999)
+                Dim posHundredsThousands As Integer
+                Dim posTensThousands As Integer
+                Dim posUnitsThousands As Integer
+                posUnitsThousands = Len(entero) - 3
+                posTensThousands = Len(entero) - 4
+                posHundredsThousands = Len(entero) - 5
+
+                Dim hasThousands As Boolean
+                hasThousands = False
+                If posUnitsThousands > 0 And Mid(entero, posUnitsThousands, 1) <> "0" Then hasThousands = True
+                If posTensThousands > 0 And Mid(entero, posTensThousands, 1) <> "0" Then hasThousands = True
+                If posHundredsThousands > 0 And Mid(entero, posHundredsThousands, 1) <> "0" Then hasThousands = True
+
+                ' Also add "mil" if number is in thousands range (4-6 digits) even if all thousand digits are zero
+                If hasThousands Or (Len(entero) >= 4 And Len(entero) <= 6) Then
                     expresion = expresion & "mil "
                 End If
             End If
@@ -2458,7 +2519,7 @@ Private Function EnLetras(numero As String) As String
             If paso = 7 Then
                 'MsgBox (Mid(entero, 1, 1))
                 If Len(entero) = 7 And Mid(entero, 1, 1) = "1" Then
-                    expresion = expresion & "mill?n "
+                    expresion = expresion & "millon "
                 Else
                     expresion = expresion & "millones "
                 End If
