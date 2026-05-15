@@ -3266,6 +3266,54 @@ Private Sub FormatImporteTextBox(ByRef txt As TextBox)
     txt.text = FormatMoney(ParseCurrency(txt.text))
 End Sub
 
+Private Sub FormatImporteTextBoxDynamic(ByRef txt As TextBox)
+    ' Formatea el importe dinámicamente preservando la posición del cursor
+    Dim oldText As String
+    Dim newText As String
+    Dim oldPos As Long
+    Dim newPos As Long
+    Dim oldDigitsBeforeCursor As Long
+    Dim newDigitsBeforeCursor As Long
+    Dim I As Long
+
+    oldText = txt.text
+    oldPos = txt.SelStart
+
+    ' Contar dígitos antes del cursor en el texto original
+    oldDigitsBeforeCursor = 0
+    For I = 1 To oldPos
+        If Mid$(oldText, I, 1) >= "0" And Mid$(oldText, I, 1) <= "9" Then
+            oldDigitsBeforeCursor = oldDigitsBeforeCursor + 1
+        End If
+    Next I
+
+    ' Formatear el texto
+    newText = FormatMoney(ParseCurrency(oldText))
+
+    ' Solo actualizar si cambió
+    If newText <> oldText Then
+        txt.text = newText
+
+        ' Encontrar la nueva posición del cursor contando la misma cantidad de dígitos
+        newDigitsBeforeCursor = 0
+        newPos = 0
+        For I = 1 To Len(newText)
+            If Mid$(newText, I, 1) >= "0" And Mid$(newText, I, 1) <= "9" Then
+                newDigitsBeforeCursor = newDigitsBeforeCursor + 1
+            End If
+            If newDigitsBeforeCursor >= oldDigitsBeforeCursor Then
+                newPos = I
+                Exit For
+            End If
+        Next I
+
+        ' Si no encontramos suficientes dígitos, poner al final
+        If newPos = 0 Then newPos = Len(newText)
+
+        txt.SelStart = newPos
+    End If
+End Sub
+
 Private Function NzS(ByVal v As Variant) As String
     If IsNull(v) Then
         NzS = ""
@@ -3357,6 +3405,11 @@ Private Sub txtEfectivo_LostFocus()
     If m_Cargando Then Exit Sub
     FormatImporteTextBox txtEfectivo
     RecalcularTodo
+End Sub
+
+Private Sub txtEfectivo_KeyUp(KeyCode As Integer, Shift As Integer)
+    If m_Cargando Then Exit Sub
+    FormatImporteTextBoxDynamic txtEfectivo
 End Sub
 
 Private Sub txtSaldo_LostFocus()
