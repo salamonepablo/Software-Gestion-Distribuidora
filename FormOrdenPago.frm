@@ -2382,8 +2382,17 @@ Private Function TieneFacturas() As Boolean
     Next I
     TieneFacturas = False
 End Function
+Private Function SafeCharAt(s As String, pos As Long) As String
+    ' Helper function for safe Mid() access - returns empty string if out of bounds
+    If pos >= 1 And pos <= Len(s) Then
+        SafeCharAt = Mid$(s, pos, 1)
+    Else
+        SafeCharAt = ""
+    End If
+End Function
+
 Private Function EnLetras(numero As String) As String
-    
+
     Dim b, paso As Integer
     Dim expresion, entero, deci, flag As String
        
@@ -2414,7 +2423,7 @@ Private Function EnLetras(numero As String) As String
             Case 3, 6, 9
                 Select Case Mid(entero, b, 1)
                     Case "1"
-                        If (b + 2 <= Len(entero)) And Mid(entero, b + 1, 1) = "0" And Mid(entero, b + 2, 1) = "0" Then
+                        If SafeCharAt(entero, b + 1) = "0" And SafeCharAt(entero, b + 2) = "0" Then
                             expresion = expresion & "cien "
                         Else
                             expresion = expresion & "ciento "
@@ -2440,103 +2449,107 @@ Private Function EnLetras(numero As String) As String
             Case 2, 5, 8
                 Select Case Mid(entero, b, 1)
                     Case "1"
-                        If (b + 1 <= Len(entero)) And Mid(entero, b + 1, 1) = "0" Then
+                        Dim nextChar As String
+                        nextChar = SafeCharAt(entero, b + 1)
+                        If nextChar = "0" Then
                             flag = "S"
                             expresion = expresion & "diez "
-                        End If
-                        If (b + 1 <= Len(entero)) And Mid(entero, b + 1, 1) = "1" Then
+                        ElseIf nextChar = "1" Then
                             flag = "S"
                             expresion = expresion & "once "
-                        End If
-                        If (b + 1 <= Len(entero)) And Mid(entero, b + 1, 1) = "2" Then
+                        ElseIf nextChar = "2" Then
                             flag = "S"
                             expresion = expresion & "doce "
-                        End If
-                        If (b + 1 <= Len(entero)) And Mid(entero, b + 1, 1) = "3" Then
+                        ElseIf nextChar = "3" Then
                             flag = "S"
                             expresion = expresion & "trece "
-                        End If
-                        If (b + 1 <= Len(entero)) And Mid(entero, b + 1, 1) = "4" Then
+                        ElseIf nextChar = "4" Then
                             flag = "S"
                             expresion = expresion & "catorce "
-                        End If
-                        If (b + 1 <= Len(entero)) And Mid(entero, b + 1, 1) = "5" Then
+                        ElseIf nextChar = "5" Then
                             flag = "S"
                             expresion = expresion & "quince "
-                        End If
-                        If (b + 1 <= Len(entero)) And Mid(entero, b + 1, 1) > "5" Then
+                        ElseIf nextChar > "5" And nextChar <> "" Then
                             flag = "N"
                             expresion = expresion & "dieci"
                         End If
                
                     Case "2"
-                        If (b + 1 <= Len(entero)) And Mid(entero, b + 1, 1) = "0" Then
+                        nextChar = SafeCharAt(entero, b + 1)
+                        If nextChar = "0" Then
                             expresion = expresion & "veinte "
                             flag = "S"
-                        ElseIf (b + 1 <= Len(entero)) Then
+                        ElseIf nextChar <> "" Then
                             expresion = expresion & "veinti"
                             flag = "N"
                         End If
 
                     Case "3"
-                        If (b + 1 <= Len(entero)) And Mid(entero, b + 1, 1) = "0" Then
+                        nextChar = SafeCharAt(entero, b + 1)
+                        If nextChar = "0" Then
                             expresion = expresion & "treinta "
                             flag = "S"
-                        ElseIf (b + 1 <= Len(entero)) Then
+                        ElseIf nextChar <> "" Then
                             expresion = expresion & "treinta y "
                             flag = "N"
                         End If
 
                     Case "4"
-                        If (b + 1 <= Len(entero)) And Mid(entero, b + 1, 1) = "0" Then
+                        nextChar = SafeCharAt(entero, b + 1)
+                        If nextChar = "0" Then
                             expresion = expresion & "cuarenta "
                             flag = "S"
-                        ElseIf (b + 1 <= Len(entero)) Then
+                        ElseIf nextChar <> "" Then
                             expresion = expresion & "cuarenta y "
                             flag = "N"
                         End If
 
                     Case "5"
-                        If (b + 1 <= Len(entero)) And Mid(entero, b + 1, 1) = "0" Then
+                        nextChar = SafeCharAt(entero, b + 1)
+                        If nextChar = "0" Then
                             expresion = expresion & "cincuenta "
                             flag = "S"
-                        ElseIf (b + 1 <= Len(entero)) Then
+                        ElseIf nextChar <> "" Then
                             expresion = expresion & "cincuenta y "
                             flag = "N"
                         End If
 
                     Case "6"
-                        If (b + 1 <= Len(entero)) And Mid(entero, b + 1, 1) = "0" Then
+                        nextChar = SafeCharAt(entero, b + 1)
+                        If nextChar = "0" Then
                             expresion = expresion & "sesenta "
                             flag = "S"
-                        ElseIf (b + 1 <= Len(entero)) Then
+                        ElseIf nextChar <> "" Then
                             expresion = expresion & "sesenta y "
                             flag = "N"
                         End If
 
                     Case "7"
-                        If (b + 1 <= Len(entero)) And Mid(entero, b + 1, 1) = "0" Then
+                        nextChar = SafeCharAt(entero, b + 1)
+                        If nextChar = "0" Then
                             expresion = expresion & "setenta "
                             flag = "S"
-                        ElseIf (b + 1 <= Len(entero)) Then
+                        ElseIf nextChar <> "" Then
                             expresion = expresion & "setenta y "
                             flag = "N"
                         End If
 
                     Case "8"
-                        If (b + 1 <= Len(entero)) And Mid(entero, b + 1, 1) = "0" Then
+                        nextChar = SafeCharAt(entero, b + 1)
+                        If nextChar = "0" Then
                             expresion = expresion & "ochenta "
                             flag = "S"
-                        ElseIf (b + 1 <= Len(entero)) Then
+                        ElseIf nextChar <> "" Then
                             expresion = expresion & "ochenta y "
                             flag = "N"
                         End If
 
                     Case "9"
-                        If (b + 1 <= Len(entero)) And Mid(entero, b + 1, 1) = "0" Then
+                        nextChar = SafeCharAt(entero, b + 1)
+                        If nextChar = "0" Then
                             expresion = expresion & "noventa "
                             flag = "S"
-                        ElseIf (b + 1 <= Len(entero)) Then
+                        ElseIf nextChar <> "" Then
                             expresion = expresion & "noventa y "
                             flag = "N"
                         End If
@@ -2597,9 +2610,10 @@ Private Function EnLetras(numero As String) As String
 
                 Dim hasThousands As Boolean
                 hasThousands = False
-                If posUnitsThousands > 0 And Mid(entero, posUnitsThousands, 1) <> "0" Then hasThousands = True
-                If posTensThousands > 0 And Mid(entero, posTensThousands, 1) <> "0" Then hasThousands = True
-                If posHundredsThousands > 0 And Mid(entero, posHundredsThousands, 1) <> "0" Then hasThousands = True
+                ' Use SafeCharAt to avoid out-of-bounds errors
+                If SafeCharAt(entero, posUnitsThousands) <> "0" And SafeCharAt(entero, posUnitsThousands) <> "" Then hasThousands = True
+                If SafeCharAt(entero, posTensThousands) <> "0" And SafeCharAt(entero, posTensThousands) <> "" Then hasThousands = True
+                If SafeCharAt(entero, posHundredsThousands) <> "0" And SafeCharAt(entero, posHundredsThousands) <> "" Then hasThousands = True
 
                 ' Also add "mil" if number is in thousands range (4-6 digits) even if all thousand digits are zero
                 If hasThousands Or (Len(entero) >= 4 And Len(entero) <= 6) Then
