@@ -2042,7 +2042,7 @@ Private Sub cmdImprimir_Click()
 
     Printer.ScaleMode = vbTwips
     Printer.FontName = "Arial"
-    Printer.FontSize = 10
+    Printer.FontSize = 9
     Printer.FontBold = False
     Printer.Copies = 2
 
@@ -2140,50 +2140,141 @@ Private Sub cmdImprimir_Click()
     Printer.Line (xLeft, sepY)-(boxRight - 180, sepY), vbBlack
 
     Y = Y + 420
-    Printer.CurrentX = xLeft: Printer.CurrentY = Y: Printer.Print "CHEQUES:"
-    Printer.CurrentX = xRight: Printer.CurrentY = Y: Printer.Print "$" & FormatMoney(ParseCurrency(txtSubCheques.text))
-    Y = Y + 520
 
-    ' Imprimir detalle de cheques si existen
-    Dim chequesCount As Long
-    chequesCount = grdCheques.Rows - 1
-    If chequesCount > 0 And Len(Trim$(grdCheques.TextMatrix(1, colChequeBanco))) > 0 Then
-        Dim oldFontSize As Integer
-        oldFontSize = Printer.FontSize
-        Printer.FontSize = 8
-        Dim chqIdx As Long
-        Dim chqBanco As String, chqNumero As String, chqFecha As String
-        For chqIdx = 1 To chequesCount
-            chqBanco = Trim$(grdCheques.TextMatrix(chqIdx, colChequeBanco))
-            chqNumero = Trim$(grdCheques.TextMatrix(chqIdx, colChequeNumero))
-            chqFecha = Trim$(grdCheques.TextMatrix(chqIdx, colChequeFecha))
-            If Len(chqBanco) > 0 Or Len(chqNumero) > 0 Then
-                Printer.CurrentX = xLeft + 240
-                Printer.CurrentY = Y
-                Printer.Print "  " & Left$(chqBanco, 20) & " | Nro: " & chqNumero & " | " & chqFecha
-                Y = Y + 300
-            End If
-        Next chqIdx
-        Printer.FontSize = oldFontSize
-        Y = Y + 220
+    ' Imprimir CHEQUES solo si tiene valor > 0
+    If ParseCurrency(txtSubCheques.text) > 0 Then
+        Printer.CurrentX = xLeft: Printer.CurrentY = Y: Printer.Print "CHEQUE/E-CHEQ:"
+        Printer.CurrentX = xRight: Printer.CurrentY = Y: Printer.Print "$" & FormatMoney(ParseCurrency(txtSubCheques.text))
+        Y = Y + 520
+
+        ' Imprimir detalle de cheques si existen
+        Dim chequesCount As Long
+        chequesCount = grdCheques.Rows - 1
+        If chequesCount > 0 And Len(Trim$(grdCheques.TextMatrix(1, colChequeBanco))) > 0 Then
+            Dim oldFontSize As Integer
+            oldFontSize = Printer.FontSize
+            Printer.FontSize = 8
+            Dim chqIdx As Long
+            Dim chqBanco As String, chqNumero As String, chqFecha As String
+            For chqIdx = 1 To chequesCount
+                chqBanco = Trim$(grdCheques.TextMatrix(chqIdx, colChequeBanco))
+                chqNumero = Trim$(grdCheques.TextMatrix(chqIdx, colChequeNumero))
+                chqFecha = Trim$(grdCheques.TextMatrix(chqIdx, colChequeFecha))
+                If Len(chqBanco) > 0 Or Len(chqNumero) > 0 Then
+                    Printer.CurrentX = xLeft + 240
+                    Printer.CurrentY = Y
+                    Printer.Print "  " & Left$(chqBanco, 20) & " | Nro: " & chqNumero & " | " & chqFecha
+                    Y = Y + 300
+                End If
+            Next chqIdx
+            Printer.FontSize = oldFontSize
+            Y = Y + 220
+        End If
     End If
 
-    Printer.CurrentX = xLeft: Printer.CurrentY = Y: Printer.Print "EFECTIVO:"
-    Printer.CurrentX = xRight: Printer.CurrentY = Y: Printer.Print "$" & FormatMoney(ParseCurrency(txtEfectivo.text))
-    Y = Y + 520
+    ' Imprimir EFECTIVO solo si tiene valor > 0
+    If ParseCurrency(txtEfectivo.text) > 0 Then
+        Printer.CurrentX = xLeft: Printer.CurrentY = Y: Printer.Print "EFECTIVO:"
+        Printer.CurrentX = xRight: Printer.CurrentY = Y: Printer.Print "$" & FormatMoney(ParseCurrency(txtEfectivo.text))
+        Y = Y + 520
+    End If
 
-    Printer.CurrentX = xLeft: Printer.CurrentY = Y: Printer.Print "TRANSFERENCIA:"
-    Printer.CurrentX = xRight: Printer.CurrentY = Y: Printer.Print "$" & FormatMoney(ParseCurrency(txtSubTransferencia.text))
-    Y = Y + 520
+    ' Imprimir TRANSFERENCIA solo si tiene valor > 0
+    If ParseCurrency(txtSubTransferencia.text) > 0 Then
+        Printer.CurrentX = xLeft: Printer.CurrentY = Y: Printer.Print "TRANSFERENCIA:"
+        Printer.CurrentX = xRight: Printer.CurrentY = Y: Printer.Print "$" & FormatMoney(ParseCurrency(txtSubTransferencia.text))
+        Y = Y + 520
 
-    Printer.CurrentX = xLeft: Printer.CurrentY = Y: Printer.Print "FACTURAS:"
-    Printer.CurrentX = xRight: Printer.CurrentY = Y: Printer.Print "$" & FormatMoney(ParseCurrency(txtSubFacturas.text))
-    Y = Y + 520
+        ' Imprimir detalle de transferencias si existen
+        Dim transfCount As Long
+        transfCount = grdTransferencia.Rows - 1
+        If transfCount > 0 And Len(Trim$(grdTransferencia.TextMatrix(1, colTransfBanco))) > 0 Then
+            Dim oldFontSize2 As Integer
+            oldFontSize2 = Printer.FontSize
+            Printer.FontSize = 8
+            Dim transfIdx As Long
+            Dim transfBanco As String, transfCuenta As String, transfCUIT As String
+            For transfIdx = 1 To transfCount
+                transfBanco = Trim$(grdTransferencia.TextMatrix(transfIdx, colTransfBanco))
+                transfCuenta = Trim$(grdTransferencia.TextMatrix(transfIdx, colTransfCuenta))
+                transfCUIT = Trim$(grdTransferencia.TextMatrix(transfIdx, colTransfCUIT))
+                If Len(transfBanco) > 0 Or Len(transfCuenta) > 0 Then
+                    Printer.CurrentX = xLeft + 240
+                    Printer.CurrentY = Y
+                    Printer.Print "  " & Left$(transfBanco, 20) & " | Cta: " & transfCuenta & " | CUIT: " & transfCUIT
+                    Y = Y + 300
+                End If
+            Next transfIdx
+            Printer.FontSize = oldFontSize2
+            Y = Y + 220
+        End If
+    End If
 
-    Printer.CurrentX = xLeft: Printer.CurrentY = Y: Printer.Print "OTROS:"
-    Printer.CurrentX = xRight: Printer.CurrentY = Y: Printer.Print "$" & FormatMoney(ParseCurrency(txtSubOtros.text))
+    ' Imprimir FACTURAS solo si tiene valor > 0
+    If ParseCurrency(txtSubFacturas.text) > 0 Then
+        Printer.CurrentX = xLeft: Printer.CurrentY = Y: Printer.Print "FACTURAS:"
+        Printer.CurrentX = xRight: Printer.CurrentY = Y: Printer.Print "$" & FormatMoney(ParseCurrency(txtSubFacturas.text))
+        Y = Y + 520
 
-    Y = Y + 700
+        ' Imprimir detalle de facturas si existen
+        Dim facturasCount As Long
+        facturasCount = grdFacturas.Rows - 1
+        If facturasCount > 0 And Len(Trim$(grdFacturas.TextMatrix(1, colFactNumero))) > 0 Then
+            Dim oldFontSize3 As Integer
+            oldFontSize3 = Printer.FontSize
+            Printer.FontSize = 8
+            Dim factIdx As Long
+            Dim factNumero As String, factFecha As String, factDesc As String
+            For factIdx = 1 To facturasCount
+                factNumero = Trim$(grdFacturas.TextMatrix(factIdx, colFactNumero))
+                factFecha = Trim$(grdFacturas.TextMatrix(factIdx, colFactFecha))
+                factDesc = Trim$(grdFacturas.TextMatrix(factIdx, colFactDescripcion))
+                If Len(factNumero) > 0 Or Len(factDesc) > 0 Then
+                    Printer.CurrentX = xLeft + 240
+                    Printer.CurrentY = Y
+                    If Len(factDesc) > 0 Then
+                        Printer.Print "  Nro: " & factNumero & " | " & factFecha & " | " & Left$(factDesc, 35)
+                    Else
+                        Printer.Print "  Nro: " & factNumero & " | " & factFecha
+                    End If
+                    Y = Y + 300
+                End If
+            Next factIdx
+            Printer.FontSize = oldFontSize3
+            Y = Y + 220
+        End If
+    End If
+
+    ' Imprimir OTROS solo si tiene valor > 0
+    If ParseCurrency(txtSubOtros.text) > 0 Then
+        Printer.CurrentX = xLeft: Printer.CurrentY = Y: Printer.Print "OTROS:"
+        Printer.CurrentX = xRight: Printer.CurrentY = Y: Printer.Print "$" & FormatMoney(ParseCurrency(txtSubOtros.text))
+        Y = Y + 520
+
+        ' Imprimir detalle de otros si existen
+        Dim otrosCount As Long
+        otrosCount = grdOtros.Rows - 1
+        If otrosCount > 0 And Len(Trim$(grdOtros.TextMatrix(1, colOtroConcepto))) > 0 Then
+            Dim oldFontSize4 As Integer
+            oldFontSize4 = Printer.FontSize
+            Printer.FontSize = 8
+            Dim otroIdx As Long
+            Dim otroConcepto As String
+            For otroIdx = 1 To otrosCount
+                otroConcepto = Trim$(grdOtros.TextMatrix(otroIdx, colOtroConcepto))
+                If Len(otroConcepto) > 0 Then
+                    Printer.CurrentX = xLeft + 240
+                    Printer.CurrentY = Y
+                    Printer.Print "  " & Left$(otroConcepto, 50)
+                    Y = Y + 300
+                End If
+            Next otroIdx
+            Printer.FontSize = oldFontSize4
+            Y = Y + 220
+        End If
+    End If
+
+    Y = Y + 180
     sepY = Y + 120
     Printer.Line (xLeft, sepY)-(boxRight - 180, sepY), vbBlack
 
