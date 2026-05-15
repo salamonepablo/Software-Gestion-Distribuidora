@@ -2155,15 +2155,16 @@ Private Sub cmdImprimir_Click()
             oldFontSize = Printer.FontSize
             Printer.FontSize = 8
             Dim chqIdx As Long
-            Dim chqBanco As String, chqNumero As String, chqFecha As String
+            Dim chqBanco As String, chqNumero As String, chqFecha As String, chqImporte As String
             For chqIdx = 1 To chequesCount
                 chqBanco = Trim$(grdCheques.TextMatrix(chqIdx, colChequeBanco))
                 chqNumero = Trim$(grdCheques.TextMatrix(chqIdx, colChequeNumero))
                 chqFecha = Trim$(grdCheques.TextMatrix(chqIdx, colChequeFecha))
+                chqImporte = Trim$(grdCheques.TextMatrix(chqIdx, colChequeImporte))
                 If Len(chqBanco) > 0 Or Len(chqNumero) > 0 Then
                     Printer.CurrentX = xLeft + 240
                     Printer.CurrentY = Y
-                    Printer.Print "  " & Left$(chqBanco, 20) & " | Nro: " & chqNumero & " | " & chqFecha
+                    Printer.Print "  " & Left$(chqBanco, 20) & " | Nro: " & chqNumero & " | " & chqFecha & " | $" & FormatMoney(ParseCurrency(chqImporte))
                     Y = Y + 300
                 End If
             Next chqIdx
@@ -2193,15 +2194,16 @@ Private Sub cmdImprimir_Click()
             oldFontSize2 = Printer.FontSize
             Printer.FontSize = 8
             Dim transfIdx As Long
-            Dim transfBanco As String, transfCuenta As String, transfCUIT As String
+            Dim transfBanco As String, transfCuenta As String, transfCUIT As String, transfImporte As String
             For transfIdx = 1 To transfCount
                 transfBanco = Trim$(grdTransferencia.TextMatrix(transfIdx, colTransfBanco))
                 transfCuenta = Trim$(grdTransferencia.TextMatrix(transfIdx, colTransfCuenta))
                 transfCUIT = Trim$(grdTransferencia.TextMatrix(transfIdx, colTransfCUIT))
+                transfImporte = Trim$(grdTransferencia.TextMatrix(transfIdx, colTransfImporte))
                 If Len(transfBanco) > 0 Or Len(transfCuenta) > 0 Then
                     Printer.CurrentX = xLeft + 240
                     Printer.CurrentY = Y
-                    Printer.Print "  " & Left$(transfBanco, 20) & " | Cta: " & transfCuenta & " | CUIT: " & transfCUIT
+                    Printer.Print "  " & Left$(transfBanco, 20) & " | Cta: " & transfCuenta & " | CUIT: " & transfCUIT & " | $" & FormatMoney(ParseCurrency(transfImporte))
                     Y = Y + 300
                 End If
             Next transfIdx
@@ -2224,18 +2226,19 @@ Private Sub cmdImprimir_Click()
             oldFontSize3 = Printer.FontSize
             Printer.FontSize = 8
             Dim factIdx As Long
-            Dim factNumero As String, factFecha As String, factDesc As String
+            Dim factNumero As String, factFecha As String, factDesc As String, factImporte As String
             For factIdx = 1 To facturasCount
                 factNumero = Trim$(grdFacturas.TextMatrix(factIdx, colFactNumero))
                 factFecha = Trim$(grdFacturas.TextMatrix(factIdx, colFactFecha))
                 factDesc = Trim$(grdFacturas.TextMatrix(factIdx, colFactDescripcion))
+                factImporte = Trim$(grdFacturas.TextMatrix(factIdx, colFactImporte))
                 If Len(factNumero) > 0 Or Len(factDesc) > 0 Then
                     Printer.CurrentX = xLeft + 240
                     Printer.CurrentY = Y
                     If Len(factDesc) > 0 Then
-                        Printer.Print "  Nro: " & factNumero & " | " & factFecha & " | " & Left$(factDesc, 35)
+                        Printer.Print "  Nro: " & factNumero & " | " & factFecha & " | " & Left$(factDesc, 25) & " | $" & FormatMoney(ParseCurrency(factImporte))
                     Else
-                        Printer.Print "  Nro: " & factNumero & " | " & factFecha
+                        Printer.Print "  Nro: " & factNumero & " | " & factFecha & " | $" & FormatMoney(ParseCurrency(factImporte))
                     End If
                     Y = Y + 300
                 End If
@@ -2259,13 +2262,14 @@ Private Sub cmdImprimir_Click()
             oldFontSize4 = Printer.FontSize
             Printer.FontSize = 8
             Dim otroIdx As Long
-            Dim otroConcepto As String
+            Dim otroConcepto As String, otroImporte As String
             For otroIdx = 1 To otrosCount
                 otroConcepto = Trim$(grdOtros.TextMatrix(otroIdx, colOtroConcepto))
+                otroImporte = Trim$(grdOtros.TextMatrix(otroIdx, colOtroImporte))
                 If Len(otroConcepto) > 0 Then
                     Printer.CurrentX = xLeft + 240
                     Printer.CurrentY = Y
-                    Printer.Print "  " & Left$(otroConcepto, 50)
+                    Printer.Print "  " & Left$(otroConcepto, 40) & " | $" & FormatMoney(ParseCurrency(otroImporte))
                     Y = Y + 300
                 End If
             Next otroIdx
