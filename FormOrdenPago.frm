@@ -2386,7 +2386,7 @@ Private Function TieneFacturas() As Boolean
     Next I
     TieneFacturas = False
 End Function
-Private Function SafeCharAt(s As String, pos As Long) As String
+Private Function SafeCharAt(ByVal s As String, ByVal pos As Long) As String
     ' Helper function for safe Mid() access - returns empty string if out of bounds
     If pos >= 1 And pos <= Len(s) Then
         SafeCharAt = Mid$(s, pos, 1)
