@@ -18,7 +18,7 @@ Begin VB.Form FormOrdenPago
       Top             =   0
       Width           =   16215
       Begin VB.Frame FrReimpresion 
-         Caption         =   "Reimpresión"
+         Caption         =   "Reimpresiï¿½n"
          Height          =   2415
          Left            =   8400
          TabIndex        =   63
@@ -2323,7 +2323,7 @@ Private Function EnLetras(numero As String) As String
             Case 3, 6, 9
                 Select Case Mid(entero, b, 1)
                     Case "1"
-                        If Mid(entero, b + 1, 1) = "0" And Mid(entero, b + 2, 1) = "0" Then
+                        If (b + 2 <= Len(entero)) And Mid(entero, b + 1, 1) = "0" And Mid(entero, b + 2, 1) = "0" Then
                             expresion = expresion & "cien "
                         Else
                             expresion = expresion & "ciento "
@@ -2349,103 +2349,103 @@ Private Function EnLetras(numero As String) As String
             Case 2, 5, 8
                 Select Case Mid(entero, b, 1)
                     Case "1"
-                        If Mid(entero, b + 1, 1) = "0" Then
+                        If (b + 1 <= Len(entero)) And Mid(entero, b + 1, 1) = "0" Then
                             flag = "S"
                             expresion = expresion & "diez "
                         End If
-                        If Mid(entero, b + 1, 1) = "1" Then
+                        If (b + 1 <= Len(entero)) And Mid(entero, b + 1, 1) = "1" Then
                             flag = "S"
                             expresion = expresion & "once "
                         End If
-                        If Mid(entero, b + 1, 1) = "2" Then
+                        If (b + 1 <= Len(entero)) And Mid(entero, b + 1, 1) = "2" Then
                             flag = "S"
                             expresion = expresion & "doce "
                         End If
-                        If Mid(entero, b + 1, 1) = "3" Then
+                        If (b + 1 <= Len(entero)) And Mid(entero, b + 1, 1) = "3" Then
                             flag = "S"
                             expresion = expresion & "trece "
                         End If
-                        If Mid(entero, b + 1, 1) = "4" Then
+                        If (b + 1 <= Len(entero)) And Mid(entero, b + 1, 1) = "4" Then
                             flag = "S"
                             expresion = expresion & "catorce "
                         End If
-                        If Mid(entero, b + 1, 1) = "5" Then
+                        If (b + 1 <= Len(entero)) And Mid(entero, b + 1, 1) = "5" Then
                             flag = "S"
                             expresion = expresion & "quince "
                         End If
-                        If Mid(entero, b + 1, 1) > "5" Then
+                        If (b + 1 <= Len(entero)) And Mid(entero, b + 1, 1) > "5" Then
                             flag = "N"
                             expresion = expresion & "dieci"
                         End If
                
                     Case "2"
-                        If Mid(entero, b + 1, 1) = "0" Then
+                        If (b + 1 <= Len(entero)) And Mid(entero, b + 1, 1) = "0" Then
                             expresion = expresion & "veinte "
                             flag = "S"
-                        Else
+                        ElseIf (b + 1 <= Len(entero)) Then
                             expresion = expresion & "veinti"
                             flag = "N"
                         End If
-                   
+
                     Case "3"
-                        If Mid(entero, b + 1, 1) = "0" Then
+                        If (b + 1 <= Len(entero)) And Mid(entero, b + 1, 1) = "0" Then
                             expresion = expresion & "treinta "
                             flag = "S"
-                        Else
+                        ElseIf (b + 1 <= Len(entero)) Then
                             expresion = expresion & "treinta y "
                             flag = "N"
                         End If
-               
+
                     Case "4"
-                        If Mid(entero, b + 1, 1) = "0" Then
+                        If (b + 1 <= Len(entero)) And Mid(entero, b + 1, 1) = "0" Then
                             expresion = expresion & "cuarenta "
                             flag = "S"
-                        Else
+                        ElseIf (b + 1 <= Len(entero)) Then
                             expresion = expresion & "cuarenta y "
                             flag = "N"
                         End If
-               
+
                     Case "5"
-                        If Mid(entero, b + 1, 1) = "0" Then
+                        If (b + 1 <= Len(entero)) And Mid(entero, b + 1, 1) = "0" Then
                             expresion = expresion & "cincuenta "
                             flag = "S"
-                        Else
+                        ElseIf (b + 1 <= Len(entero)) Then
                             expresion = expresion & "cincuenta y "
                             flag = "N"
                         End If
-               
+
                     Case "6"
-                        If Mid(entero, b + 1, 1) = "0" Then
+                        If (b + 1 <= Len(entero)) And Mid(entero, b + 1, 1) = "0" Then
                             expresion = expresion & "sesenta "
                             flag = "S"
-                        Else
+                        ElseIf (b + 1 <= Len(entero)) Then
                             expresion = expresion & "sesenta y "
                             flag = "N"
                         End If
-               
+
                     Case "7"
-                        If Mid(entero, b + 1, 1) = "0" Then
+                        If (b + 1 <= Len(entero)) And Mid(entero, b + 1, 1) = "0" Then
                             expresion = expresion & "setenta "
                             flag = "S"
-                        Else
+                        ElseIf (b + 1 <= Len(entero)) Then
                             expresion = expresion & "setenta y "
                             flag = "N"
                         End If
-               
+
                     Case "8"
-                        If Mid(entero, b + 1, 1) = "0" Then
+                        If (b + 1 <= Len(entero)) And Mid(entero, b + 1, 1) = "0" Then
                             expresion = expresion & "ochenta "
                             flag = "S"
-                        Else
+                        ElseIf (b + 1 <= Len(entero)) Then
                             expresion = expresion & "ochenta y "
                             flag = "N"
                         End If
-               
+
                     Case "9"
-                        If Mid(entero, b + 1, 1) = "0" Then
+                        If (b + 1 <= Len(entero)) And Mid(entero, b + 1, 1) = "0" Then
                             expresion = expresion & "noventa "
                             flag = "S"
-                        Else
+                        ElseIf (b + 1 <= Len(entero)) Then
                             expresion = expresion & "noventa y "
                             flag = "N"
                         End If
@@ -2556,7 +2556,7 @@ Private Sub txtRetIIBB_Change()
 End Sub
 
 Private Sub RecalcularTodo()
-    On Error GoTo EH
+'    On Error GoTo EH
 
     Dim subDeuda As Currency
     Dim subCheques As Currency
@@ -2588,7 +2588,13 @@ Private Sub RecalcularTodo()
     txtSubFacturas.text = FormatMoney(subFacturas)
     txtTotalPago.text = FormatMoney(totalPago)
     txtSaldo.text = FormatMoney(Saldo)
-    txtImporteLetras.text = EnLetras(CStr(totalPago)) 'NumeroALetrasSimple(totalPago)
+
+    ' Format number for EnLetras: use comma as decimal separator, no thousands separators
+    Dim numStr As String
+    numStr = Format$(totalPago, "0.00")
+    numStr = Replace$(numStr, ".", ",")  ' Ensure comma as decimal separator
+    txtImporteLetras.text = EnLetras(numStr)
+
     m_Cargando = False
 
     Exit Sub
