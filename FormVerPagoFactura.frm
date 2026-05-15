@@ -765,7 +765,7 @@ Begin VB.Form FormVerPagoFacturas
       End
       Begin VB.Label Label2 
          AutoSize        =   -1  'True
-         Caption         =   "Nº Cliente"
+         Caption         =   "Nï¿½ Cliente"
          BeginProperty Font 
             Name            =   "MS Sans Serif"
             Size            =   8.25
@@ -794,6 +794,7 @@ Dim suma As Double
 Dim numDoc As Long
 Dim tipoDoc As String
 Dim vCorresponde As String
+Dim idClienteMov As Long
 
 Private Function BuscarCondicionIva(CI As String) As String
     Dim tCondicionIVA As DAO.Recordset
@@ -805,7 +806,7 @@ Private Function BuscarCondicionIva(CI As String) As String
 End Function
 
 Private Sub cmdPrintRecibo_Click()
-    If MsgBox("¿Desea imprimir este recibo?", vbYesNo, "Módulo de Pagos") = vbYes Then
+    If MsgBox("ï¿½Desea imprimir este recibo?", vbYesNo, "Mï¿½dulo de Pagos") = vbYes Then
         If vCorresponde = "L1" Then
             Call ImprimirReciboE
         Else
@@ -885,12 +886,12 @@ Private Sub BotonGuardar_Click()
             rstMovimientosCtaCte.Fields!Fecha = Format(TextFechaPago.text, "dd/mm/yyyy")
             rstMovimientosCtaCte.Fields!IdCliente = TextCodigoCliente.text
             If OptionSaldoLinea1.Value = True Then
-                rstMovimientosCtaCte.Fields!tipoDoc = "Anulacion Pago Nº " & TextNumeroPago.text & " Linea 1"
+                rstMovimientosCtaCte.Fields!tipoDoc = "Anulacion Pago Nï¿½ " & TextNumeroPago.text & " Linea 1"
                 rstMovimientosCtaCte.Fields!ImporteLinea1 = Format(LabelTotalAbonado.Caption, "#,###,###,#0.00")
                 rstMovimientosCtaCte.Fields!ImporteLinea2 = 0
             End If
             If OptionSaldoLinea2.Value = True Then
-                rstMovimientosCtaCte.Fields!tipoDoc = "Anulacion Pago Nº " & TextNumeroPago.text & " Linea 2"
+                rstMovimientosCtaCte.Fields!tipoDoc = "Anulacion Pago Nï¿½ " & TextNumeroPago.text & " Linea 2"
                 rstMovimientosCtaCte.Fields!ImporteLinea2 = Format(LabelTotalAbonado.Caption, "#,###,###,#0.00")
                 rstMovimientosCtaCte.Fields!ImporteLinea1 = 0
             End If
@@ -1244,12 +1245,12 @@ Private Sub BotonModificar_Click()
 '            rstMovimientosCtaCte.Fields!Fecha = Format(Date, "dd/mm/yyyy")
 '            rstMovimientosCtaCte.Fields!idcliente = TextCodigoCliente.Text
 '            If OptionSaldoLinea1.Value = True Then
-'                rstMovimientosCtaCte.Fields!tipoDoc = "Anulacion Pago Nº " & TextNumeroPago.Text & " Linea 1"
+'                rstMovimientosCtaCte.Fields!tipoDoc = "Anulacion Pago Nï¿½ " & TextNumeroPago.Text & " Linea 1"
 '                rstMovimientosCtaCte.Fields!ImporteLinea1 = Format(LabelTotalAbonado.Caption, "#,###,###,#0.00")
 '                rstMovimientosCtaCte.Fields!ImporteLinea2 = 0
 '            End If
 '            If OptionSaldoLinea2.Value = True Then
-'                rstMovimientosCtaCte.Fields!tipoDoc = "Anulacion Pago Nº " & TextNumeroPago.Text & " Linea 2"
+'                rstMovimientosCtaCte.Fields!tipoDoc = "Anulacion Pago Nï¿½ " & TextNumeroPago.Text & " Linea 2"
 '                rstMovimientosCtaCte.Fields!ImporteLinea2 = Format(LabelTotalAbonado.Caption, "#,###,###,#0.00")
 '                rstMovimientosCtaCte.Fields!ImporteLinea1 = 0
 '            End If
@@ -1372,7 +1373,8 @@ Private Sub Form_Load()
     
     numDoc = FormMovimientosCuentaCorriente.TextNumeroDocumento
     tipoDoc = FormMovimientosCuentaCorriente.TextTipodocumento
-   
+    idClienteMov = Val(FormMovimientosCuentaCorriente.TextCodigoCliente.text)
+
     ruta = App.Path & "\DB_SPC_SI.mdb"
 
     Set db = DBEngine.OpenDatabase(ruta)
@@ -1497,7 +1499,8 @@ Private Sub buscodatos()
     Set rstPagoC = db.OpenRecordset("Pagoc", dbOpenDynaset)
     Set rstPagoD = db.OpenRecordset("PagoD", dbOpenDynaset)
 
-    rstPagoC.FindFirst "NroPago= " + Str(numDoc)
+    ' Filtrar por NroPago Y IdCliente para evitar traer pagos de otros clientes con mismo nÃºmero
+    rstPagoC.FindFirst "NroPago= " + Str(numDoc) + " AND IdCliente= " + Str(idClienteMov)
     If rstPagoC.NoMatch Then Exit Sub
 
     TextCodigoCliente.text = rstPagoC.Fields!IdCliente
@@ -1524,7 +1527,8 @@ Private Sub buscodatos()
         End If
     Next I
 
-    rstPagoD.FindFirst "NroPago= " + Str(numDoc)
+    ' Filtrar por NroPago Y IdSucursal para evitar traer detalles de otros pagos con mismo nÃºmero
+    rstPagoD.FindFirst "NroPago= " + Str(numDoc) + " AND IdSucursal= " + Str(idSucPago)
     Do While Not rstPagoD.NoMatch
         Select Case rstPagoD.Fields!FormaPago
             Case "Efectivo":      TextEfectivo.text = rstPagoD.Fields!ImportePago
@@ -1540,7 +1544,7 @@ Private Sub buscodatos()
                 TextObservaciones.text = rstPagoD.Fields!observaciones
             End If
         End If
-        rstPagoD.FindNext "NroPago= " + Str(numDoc)
+        rstPagoD.FindNext "NroPago= " + Str(numDoc) + " AND IdSucursal= " + Str(idSucPago)
     Loop
 
     If tipoDoc = "Pago Linea 1" Then
@@ -1651,7 +1655,7 @@ Private Sub ImprimirReciboE()
         .CurrentX = 150: .CurrentY = .CurrentY + 2
         .FontSize = 9: .FontBold = False
         Printer.Print "C.U.I.T N? 30-70843254-3"
-        .CurrentX = 150: Printer.Print "Ing.Brutos Nº 30-70843254-3"
+        .CurrentX = 150: Printer.Print "Ing.Brutos Nï¿½ 30-70843254-3"
         .CurrentX = 150: Printer.Print "Inicio de Actividades: 11-06-2003"
         .CurrentX = 150: Printer.Print "I.V.A. Responsable Inscripto"
 
@@ -1662,7 +1666,7 @@ Private Sub ImprimirReciboE()
         .CurrentX = 12: .CurrentY = 20
         .Font = "Arial": .FontSize = 10: .FontBold = True: .FontUnderline = False
         Printer.Print "QUILPLAC S.A."
-        .CurrentX = 12: Printer.Print "Andrés Baranda 520 - CP (1878) - Quilmes"
+        .CurrentX = 12: Printer.Print "Andrï¿½s Baranda 520 - CP (1878) - Quilmes"
         .CurrentX = 12: Printer.Print "Pcia. Buenos Aires"
         .CurrentX = 12: Printer.Print "Tel. 4257-5875"
 
@@ -1677,12 +1681,12 @@ Private Sub ImprimirReciboE()
         tClientes.Seek "=", TextCodigoCliente.text
         If Not tClientes.NoMatch Then
             .CurrentX = 15: .CurrentY = 48: .FontSize = 10: .FontBold = True
-            Printer.Print "Señor(es): "
+            Printer.Print "Seï¿½or(es): "
             .CurrentX = 35: .CurrentY = 48: .FontBold = False
             Printer.Print tClientes!RazonSocial
 
             .CurrentX = 130: .CurrentY = 48: .FontBold = True
-            Printer.Print "C.U.I.T Nº:"
+            Printer.Print "C.U.I.T Nï¿½:"
             .CurrentX = 150: .CurrentY = 48: .FontBold = False
             CUIT = Left(tClientes!CUIT, 2) & "-" & Mid(tClientes!CUIT, 3, 8) & "-" & Right(tClientes!CUIT, 1)
             Printer.Print CUIT
@@ -1700,7 +1704,7 @@ Private Sub ImprimirReciboE()
                 Printer.Print tDomiciliosClientes!localidad
 
                 .CurrentX = 130: .CurrentY = 62: .FontBold = True
-                Printer.Print "Teléfono: "
+                Printer.Print "Telï¿½fono: "
                 .CurrentX = 150: .CurrentY = 62: .FontBold = False
                 Printer.Print tClientes!Tel
 
@@ -1955,7 +1959,7 @@ Private Sub ImprimirReciboX()
 
             .CurrentX = 83: .CurrentY = 80: .FontSize = 10: .FontBold = True
       '      Printer.Print "*** www.quilplac.com ***"
-           '  Printer.Print "Energía del Futuro... Hoy"
+           '  Printer.Print "Energï¿½a del Futuro... Hoy"
         End If
 
         'Recuadro detalle
@@ -2280,7 +2284,7 @@ Private Function EnLetras(numero As String) As String
             If paso = 7 Then
                 'MsgBox (Mid(entero, 1, 1))
                 If Len(entero) = 7 And Mid(entero, 1, 1) = "1" Then
-                    expresion = expresion & "millón "
+                    expresion = expresion & "millï¿½n "
                 Else
                     expresion = expresion & "millones "
                 End If
