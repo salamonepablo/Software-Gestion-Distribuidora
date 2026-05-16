@@ -173,12 +173,12 @@ Public Sub CrearQR(Fecha As String, CUIT As Double, PtoVta As Long, TipoComp As 
   'Double
   'codAut = 12345678901234#
   
-  If Qr.Generar(Ver, Fecha, CUIT, PtoVta, TipoComp, nroCmp, Importe, Moneda, ctz, tipoDocRec, nroDocRec, TipoCodAut, codAut) Then
-    '  MsgBox ("QR generado con éxito en " + Qr.ArchivoPNG)
-  Else
-    MsgBox (Qr.ErrorDesc)
-  End If
-
+    If Qr.Generar(Ver, Fecha, CUIT, PtoVta, TipoComp, nroCmp, Importe, Moneda, ctz, tipoDocRec, nroDocRec, TipoCodAut, codAut) Then
+      '  MsgBox ("QR generado con éxito en " + Qr.ArchivoPNG)
+     Else
+      MsgBox (Qr.ErrorDesc)
+    End If
+ 
 End Sub
 Public Sub FacturaElectronicaSPC_OLD(PtoVta As Long, DocTipo As Long, DocNro As Double, TipoComp As Long, CbteDesde As Double, CbteHasta As Double, CbteFch As String, ImpTotal As Double, ImpNeto As Double, MonId As String, MonCotiz As Double, AlicIVA As Long, BaseImpIVA As Double, ImpIva As Double, IdTributo As Long, DescTributo As String, BaseImpTributo As Double, Alicuota As Double, ImpAlicuota As Double, ImporteExento As Double, Optional TipoCbteAsoc As Long, Optional NroCbteAsoc As Double, Optional FechaCbteAsoc As String)
 

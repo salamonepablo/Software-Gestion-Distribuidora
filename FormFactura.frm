@@ -1515,6 +1515,11 @@ Private Sub BotonGrabar_Click()
             rstFacturaC.Fields!FechaFactura = TextFechaFactura.text
             rstFacturaC.Fields!TotalFactura = TextTotalFactura.text
             
+                '///////// PARA PRUEBAS /////////////////////
+                        'rstFacturaC.Fields!CAE = 86205792942934#
+                        'rstFacturaC.Fields!FechaVC = "26/05/2026"
+                '/////////////////////////////
+            
             'Agregamos Nro de Orden de compra 2024-10-14
             If txtOrdenCompra.text = "" Then txtOrdenCompra.text = "-"
             'rstFacturaC.Fields!OrdenCompra = txtOrdenCompra.text
@@ -1726,14 +1731,15 @@ Private Sub BotonGrabar_Click()
                     Call RevertirFactura(TipoComp, CbteDesde)
                         Fila = Fila - 1
                         fila2 = fila2 - 1
-                    
+
                     Call blanqueototal
-            
+
                         MSFlexGrid1.Visible = False
                         TextCodigoCliente.SetFocus
                     Exit Sub
                 End If
 '///////////////////////FIN FE SPC //////////////////////////////////////////////////////////////////////////////////////
+                
                 
                 
      '           Call FacturaElectronicaSPC(PtoVta, DocTipo, DocNro, TipoComp, CbteDesde, CbteHasta, CbteFch, ImpTotal, ImpNeto, MonId, MonCotiz, AlicIVA, BaseImpIVA, ImpIva, IdTributo, DescTributo, BaseImpTributo, Alicuota, ImpAlicuota, ImporteExento)

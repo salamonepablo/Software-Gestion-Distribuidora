@@ -1128,7 +1128,11 @@ Private Sub GenerarFEB()
                                     .CurrentX = 35
                                     .CurrentY = 55
                                     .FontBold = False
-                                     Printer.Print tDomiciliosClientes!Domicilio
+                                     If Not IsNull(tDomiciliosClientes!Domicilio) Then
+                                        Printer.Print tDomiciliosClientes!Domicilio
+                                      Else
+                                        Printer.Print " - "
+                                     End If
                                    
                                    'Localidad
                                     .CurrentX = 15
@@ -1139,7 +1143,12 @@ Private Sub GenerarFEB()
                                     .CurrentX = 35
                                     .CurrentY = 62
                                     .FontBold = False
-                                     Printer.Print tDomiciliosClientes!localidad
+                                     
+                                     If Not IsNull(tDomiciliosClientes!localidad) Then
+                                        Printer.Print ttDomiciliosClientes!localidad
+                                      Else
+                                        Printer.Print " - "
+                                     End If
                                      
                                     'Telefono
                                       .CurrentX = 130
@@ -1161,6 +1170,7 @@ Private Sub GenerarFEB()
                                     .CurrentY = 69
                                     .FontBold = False
                                      Printer.Print BuscarCondicionIva(tClientes!condicionIva)
+                                     
                                 End If
                          'Condiciones de venta
                             'Recuadro
@@ -2487,7 +2497,11 @@ Private Sub ImprimirFEB()
                                     .CurrentX = 35
                                     .CurrentY = 55
                                     .FontBold = False
-                                     Printer.Print tDomiciliosClientes!Domicilio
+                                    If IsNull(tDomiciliosClientes!Domicilio) Then
+                                        Printer.Print " - "
+                                     Else
+                                       Printer.Print tDomiciliosClientes!Domicilio
+                                    End If
                                    
                                    'Localidad
                                     .CurrentX = 15
@@ -2498,8 +2512,11 @@ Private Sub ImprimirFEB()
                                     .CurrentX = 35
                                     .CurrentY = 62
                                     .FontBold = False
-                                     Printer.Print tDomiciliosClientes!localidad
-                                     
+                                     If IsNull(tDomiciliosClientes!localidad) Then
+                                       Printer.Print " - "
+                                      Else
+                                        Printer.Print tDomiciliosClientes!localidad
+                                     End If
                                     'Telefono
                                       .CurrentX = 130
                                       .CurrentY = 62
