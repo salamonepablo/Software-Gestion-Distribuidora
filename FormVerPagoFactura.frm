@@ -765,7 +765,7 @@ Begin VB.Form FormVerPagoFacturas
       End
       Begin VB.Label Label2 
          AutoSize        =   -1  'True
-         Caption         =   "Nï¿½ Cliente"
+         Caption         =   "Nº Cliente"
          BeginProperty Font 
             Name            =   "MS Sans Serif"
             Size            =   8.25
@@ -806,7 +806,7 @@ Private Function BuscarCondicionIva(CI As String) As String
 End Function
 
 Private Sub cmdPrintRecibo_Click()
-    If MsgBox("ï¿½Desea imprimir este recibo?", vbYesNo, "Mï¿½dulo de Pagos") = vbYes Then
+    If MsgBox("¿Desea imprimir este recibo?", vbYesNo, "Módulo de Pagos") = vbYes Then
         If vCorresponde = "L1" Then
             Call ImprimirReciboE
         Else
@@ -886,12 +886,12 @@ Private Sub BotonGuardar_Click()
             rstMovimientosCtaCte.Fields!Fecha = Format(TextFechaPago.text, "dd/mm/yyyy")
             rstMovimientosCtaCte.Fields!IdCliente = TextCodigoCliente.text
             If OptionSaldoLinea1.Value = True Then
-                rstMovimientosCtaCte.Fields!tipoDoc = "Anulacion Pago Nï¿½ " & TextNumeroPago.text & " Linea 1"
+                rstMovimientosCtaCte.Fields!tipoDoc = "Anulacion Pago Nº " & TextNumeroPago.text & " Linea 1"
                 rstMovimientosCtaCte.Fields!ImporteLinea1 = Format(LabelTotalAbonado.Caption, "#,###,###,#0.00")
                 rstMovimientosCtaCte.Fields!ImporteLinea2 = 0
             End If
             If OptionSaldoLinea2.Value = True Then
-                rstMovimientosCtaCte.Fields!tipoDoc = "Anulacion Pago Nï¿½ " & TextNumeroPago.text & " Linea 2"
+                rstMovimientosCtaCte.Fields!tipoDoc = "Anulacion Pago Nº " & TextNumeroPago.text & " Linea 2"
                 rstMovimientosCtaCte.Fields!ImporteLinea2 = Format(LabelTotalAbonado.Caption, "#,###,###,#0.00")
                 rstMovimientosCtaCte.Fields!ImporteLinea1 = 0
             End If
@@ -1005,7 +1005,7 @@ Private Sub blanco()
     TextSaldoLinea2.text = 0
     'TextNumeroPago.Text = 0
     TextEfectivo.text = ""
-    TextTransferencia.text = ""
+    textTransferencia.text = ""
     TextRezago.text = ""
     TextMercaderia.text = ""
     TextCheque.text = ""
@@ -1166,13 +1166,13 @@ Private Sub BotonModificar_Click()
                 rstPagoD.Update
             End If
             
-            If TextTransferencia.text <> "" Then
+            If textTransferencia.text <> "" Then
                 rstPagoD.AddNew
                 rstPagoD.Fields!NroPago = TextNumeroPago.text
                 If NroLinea >= 0 Then NroLinea = NroLinea + 1
                 rstPagoD.Fields!LineaPago = CInt(NroLinea)
                 rstPagoD.Fields!FormaPago = "Transferencia"
-                rstPagoD.Fields!ImportePago = TextTransferencia.text
+                rstPagoD.Fields!ImportePago = textTransferencia.text
                 rstPagoD.Update
             End If
                 
@@ -1245,12 +1245,12 @@ Private Sub BotonModificar_Click()
 '            rstMovimientosCtaCte.Fields!Fecha = Format(Date, "dd/mm/yyyy")
 '            rstMovimientosCtaCte.Fields!idcliente = TextCodigoCliente.Text
 '            If OptionSaldoLinea1.Value = True Then
-'                rstMovimientosCtaCte.Fields!tipoDoc = "Anulacion Pago Nï¿½ " & TextNumeroPago.Text & " Linea 1"
+'                rstMovimientosCtaCte.Fields!tipoDoc = "Anulacion Pago Nº " & TextNumeroPago.Text & " Linea 1"
 '                rstMovimientosCtaCte.Fields!ImporteLinea1 = Format(LabelTotalAbonado.Caption, "#,###,###,#0.00")
 '                rstMovimientosCtaCte.Fields!ImporteLinea2 = 0
 '            End If
 '            If OptionSaldoLinea2.Value = True Then
-'                rstMovimientosCtaCte.Fields!tipoDoc = "Anulacion Pago Nï¿½ " & TextNumeroPago.Text & " Linea 2"
+'                rstMovimientosCtaCte.Fields!tipoDoc = "Anulacion Pago Nº " & TextNumeroPago.Text & " Linea 2"
 '                rstMovimientosCtaCte.Fields!ImporteLinea2 = Format(LabelTotalAbonado.Caption, "#,###,###,#0.00")
 '                rstMovimientosCtaCte.Fields!ImporteLinea1 = 0
 '            End If
@@ -1432,7 +1432,7 @@ Private Sub buscodatos_old()
                         TextEfectivo.text = rstPagoD.Fields!ImportePago
                     End If
                     If rstPagoD.Fields!FormaPago = "Transferencia" Then
-                        TextTransferencia.text = rstPagoD.Fields!ImportePago
+                        textTransferencia.text = rstPagoD.Fields!ImportePago
                     End If
                     If rstPagoD.Fields!FormaPago = "Rezago" Then
                         TextRezago.text = rstPagoD.Fields!ImportePago
@@ -1479,7 +1479,7 @@ Private Sub buscodatos_old()
        OptionSaldoLinea1.Enabled = False
        OptionSaldoLinea1.Enabled = False
        TextEfectivo.Enabled = False
-       TextTransferencia.Enabled = False
+       textTransferencia.Enabled = False
        TextRezago.Enabled = False
        TextMercaderia.Enabled = False
        TextCheque.Enabled = False
@@ -1532,7 +1532,7 @@ Private Sub buscodatos()
     Do While Not rstPagoD.NoMatch
         Select Case rstPagoD.Fields!FormaPago
             Case "Efectivo":      TextEfectivo.text = rstPagoD.Fields!ImportePago
-            Case "Transferencia": TextTransferencia.text = rstPagoD.Fields!ImportePago
+            Case "Transferencia": textTransferencia.text = rstPagoD.Fields!ImportePago
             Case "Rezago":        TextRezago.text = rstPagoD.Fields!ImportePago
             Case "Mercaderia":    TextMercaderia.text = rstPagoD.Fields!ImportePago
             Case "Cheque":        TextCheque.text = rstPagoD.Fields!ImportePago
@@ -1565,7 +1565,7 @@ Private Sub buscodatos()
         OptionSaldoLinea1.Enabled = False
         OptionSaldoLinea2.Enabled = False
         TextEfectivo.Enabled = False
-        TextTransferencia.Enabled = False
+        textTransferencia.Enabled = False
         TextRezago.Enabled = False
         TextMercaderia.Enabled = False
         TextCheque.Enabled = False
@@ -1654,8 +1654,8 @@ Private Sub ImprimirReciboE()
 
         .CurrentX = 150: .CurrentY = .CurrentY + 2
         .FontSize = 9: .FontBold = False
-        Printer.Print "C.U.I.T N? 30-70843254-3"
-        .CurrentX = 150: Printer.Print "Ing.Brutos Nï¿½ 30-70843254-3"
+        Printer.Print "C.U.I.T Nº 30-70843254-3"
+        .CurrentX = 150: Printer.Print "Ing.Brutos Nº 30-70843254-3"
         .CurrentX = 150: Printer.Print "Inicio de Actividades: 11-06-2003"
         .CurrentX = 150: Printer.Print "I.V.A. Responsable Inscripto"
 
@@ -1666,7 +1666,7 @@ Private Sub ImprimirReciboE()
         .CurrentX = 12: .CurrentY = 20
         .Font = "Arial": .FontSize = 10: .FontBold = True: .FontUnderline = False
         Printer.Print "QUILPLAC S.A."
-        .CurrentX = 12: Printer.Print "Andrï¿½s Baranda 520 - CP (1878) - Quilmes"
+        .CurrentX = 12: Printer.Print "Andrés Baranda 520 - CP (1878) - Quilmes"
         .CurrentX = 12: Printer.Print "Pcia. Buenos Aires"
         .CurrentX = 12: Printer.Print "Tel. 4257-5875"
 
@@ -1681,12 +1681,12 @@ Private Sub ImprimirReciboE()
         tClientes.Seek "=", TextCodigoCliente.text
         If Not tClientes.NoMatch Then
             .CurrentX = 15: .CurrentY = 48: .FontSize = 10: .FontBold = True
-            Printer.Print "Seï¿½or(es): "
+            Printer.Print "Señor(es): "
             .CurrentX = 35: .CurrentY = 48: .FontBold = False
             Printer.Print tClientes!RazonSocial
 
             .CurrentX = 130: .CurrentY = 48: .FontBold = True
-            Printer.Print "C.U.I.T Nï¿½:"
+            Printer.Print "C.U.I.T Nº:"
             .CurrentX = 150: .CurrentY = 48: .FontBold = False
             CUIT = Left(tClientes!CUIT, 2) & "-" & Mid(tClientes!CUIT, 3, 8) & "-" & Right(tClientes!CUIT, 1)
             Printer.Print CUIT
@@ -1704,7 +1704,7 @@ Private Sub ImprimirReciboE()
                 Printer.Print tDomiciliosClientes!localidad
 
                 .CurrentX = 130: .CurrentY = 62: .FontBold = True
-                Printer.Print "Telï¿½fono: "
+                Printer.Print "Teléfono: "
                 .CurrentX = 150: .CurrentY = 62: .FontBold = False
                 Printer.Print tClientes!Tel
 
@@ -1743,7 +1743,7 @@ Private Sub ImprimirReciboE()
         Printer.Print "* Efectivo: " & Chr(9) & Chr(9) & Format(vEfete, "Currency")
 
         .CurrentX = 32: .CurrentY = 120
-        vTransf = Val(TextTransferencia.text)
+        vTransf = Val(textTransferencia.text)
         Printer.Print "* Transferencia: " & Chr(9) & Format(vTransf, "Currency")
 
         .CurrentX = 32: .CurrentY = 130
@@ -1786,6 +1786,7 @@ Private Sub ImprimirReciboE()
         .CurrentX = 12: .CurrentY = 245
         Printer.Print "RECIBIMOS PESOS:"
         .ForeColor = vbBlack
+        .Font = "Arial": .FontSize = 10
 
         'Importe en letras
         TotalFac = Format(TotalFac, "Fixed")
@@ -1829,7 +1830,7 @@ Private Sub ImprimirReciboE()
     Exit Sub
 
 CapturaErrores:
-    MsgBox "Error imprimiendo recibo: " & Err.Description, vbCritical, "Impresi?n"
+    MsgBox "Error imprimiendo recibo: " & Err.Description, vbCritical, "Impresión"
 End Sub
 
 
@@ -1845,8 +1846,11 @@ Private Sub ImprimirReciboX()
     Dim Largo As Integer, LargoSuc As Integer
     Dim I As Integer, Hasta As Integer
     Dim TotalFac As Variant
+    
     Dim vEfete As Variant, vCheques As Variant
-    Dim vRetenciones As Variant, vTransf As Variant
+    Dim vRetenciones As Variant, vTransf As Variant, vRezago As Variant
+    Dim vMercaderia As Variant, vTarjeta As Variant
+    
     Dim vImporteEnLetras As String, SegundoTramo As String
 
     Set BaseSPC = OpenDatabase(App.Path & "\DB_SPC_SI.mdb")
@@ -1959,7 +1963,7 @@ Private Sub ImprimirReciboX()
 
             .CurrentX = 83: .CurrentY = 80: .FontSize = 10: .FontBold = True
       '      Printer.Print "*** www.quilplac.com ***"
-           '  Printer.Print "Energï¿½a del Futuro... Hoy"
+           '  Printer.Print "Energºa del Futuro... Hoy"
         End If
 
         'Recuadro detalle
@@ -1981,16 +1985,28 @@ Private Sub ImprimirReciboX()
         Printer.Print "* Efectivo: " & Chr(9) & Chr(9) & Format(vEfete, "Currency")
 
         .CurrentX = 32: .CurrentY = 120
-        vTransf = Val(TextTransferencia.text)
+        vTransf = Val(textTransferencia.text)
         Printer.Print "* Transferencia: " & Chr(9) & Format(vTransf, "Currency")
 
         .CurrentX = 32: .CurrentY = 130
         vCheques = Val(TextCheque.text)
         Printer.Print "* Cheques Varios: " & Chr(9) & Format(vCheques, "Currency")
 
+        '.CurrentX = 32: .CurrentY = 140
+        'vRetenciones = Val(TextRetencion.text)
+        'Printer.Print "* Retenciones: " & Chr(9) & Format(vRetenciones, "Currency")
+        
         .CurrentX = 32: .CurrentY = 140
-        vRetenciones = Val(TextRetencion.text)
-        Printer.Print "* Retenciones: " & Chr(9) & Format(vRetenciones, "Currency")
+        vRezago = Val(TextRezago.text)
+        Printer.Print "* Rezago: " & Chr(9) & Chr(9) & Format(vRezago, "Currency")
+        
+        .CurrentX = 32: .CurrentY = 150
+        vMercaderia = Val(TextMercaderia.text)
+        Printer.Print "* Mercaderìa: " & Chr(9) & Format(vMercaderia, "Currency")
+        
+        .CurrentX = 32: .CurrentY = 160
+        vTarjeta = Val(TextTarjeta.text)
+        Printer.Print "* Tarjeta: " & Chr(9) & Chr(9) & Format(vTarjeta, "Currency")
 
         'Observaciones
         If TextObservaciones.text <> "" Then
@@ -2284,7 +2300,7 @@ Private Function EnLetras(numero As String) As String
             If paso = 7 Then
                 'MsgBox (Mid(entero, 1, 1))
                 If Len(entero) = 7 And Mid(entero, 1, 1) = "1" Then
-                    expresion = expresion & "millï¿½n "
+                    expresion = expresion & "millon "
                 Else
                     expresion = expresion & "millones "
                 End If
@@ -2343,7 +2359,7 @@ End Sub
 
 Private Sub calculoabonado()
 
-    suma = CDec(TextEfectivo.text) + CDec(TextTransferencia.text) + CDec(TextRezago.text) + CDec(TextMercaderia.text) + CDec(TextCheque.text) + CDec(TextRetencion.text) + CDec(TextTarjeta.text)
+    suma = CDec(TextEfectivo.text) + CDec(textTransferencia.text) + CDec(TextRezago.text) + CDec(TextMercaderia.text) + CDec(TextCheque.text) + CDec(TextRetencion.text) + CDec(TextTarjeta.text)
    
     LabelTotalAbonado.Caption = Format(suma, "#,###,###,#0.00")
     

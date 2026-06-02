@@ -18,7 +18,7 @@ Begin VB.Form FormOrdenPago
       Top             =   0
       Width           =   16215
       Begin VB.Frame FrReimpresion 
-         Caption         =   "Reimpresiï¿½n"
+         Caption         =   "Reimpresión"
          Height          =   2415
          Left            =   8400
          TabIndex        =   63
@@ -974,7 +974,7 @@ Private Sub Form_KeyDown(KeyCode As Integer, Shift As Integer)
                  ' En grilla se maneja aparte
              Case "TextBox"
                  If m_EditingActive Then
-                     ' Durante ediciÃ³n inline, Enter/Tab se resuelve en ManejadorTextBoxKeyDown.
+                     ' Durante edición inline, Enter/Tab se resuelve en ManejadorTextBoxKeyDown.
                      Exit Sub
                  End If
                  KeyCode = 0
@@ -1338,7 +1338,7 @@ Private Sub EditarCeldaGrid(ByRef g As MSFlexGrid)
     m_EditGridName = g.Name
     m_EditEditorName = ""
 
-    ' Calcular posiciÃ³n de la celda respecto del contenedor del grid
+    ' Calcular posición de la celda respecto del contenedor del grid
     leftPos = g.Left + g.CellLeft
     topPos = g.Top + g.CellTop
 
@@ -1538,8 +1538,8 @@ End Sub
 ' ============================================================
 ' txtGridEditor event handlers (Phase 7)
 ' ============================================================
-' Event handlers para los TextBox de ediciÃ³n
-' Se vinculan dinÃ¡micamente en Form_Load
+' Event handlers para los TextBox de edición
+' Se vinculan dinámicamente en Form_Load
 Private Sub ManejadorTextBoxChange()
     On Error GoTo EH
 
@@ -1551,7 +1551,6 @@ Private Sub ManejadorTextBoxChange()
     Dim formatted As String
     Dim oldSelStart As Long
     Dim newSelStart As Long
-    Dim previewValue As String
 
     inputText = m_ActiveEditorTextBox.text
     oldSelStart = m_ActiveEditorTextBox.SelStart
@@ -1561,13 +1560,14 @@ Private Sub ManejadorTextBoxChange()
     If StrComp(formatted, inputText, vbBinaryCompare) <> 0 Then
         m_FormattingEditorChange = True
         m_ActiveEditorTextBox.text = formatted
+        If newSelStart < 0 Then newSelStart = 0
+        If newSelStart > Len(formatted) Then newSelStart = Len(formatted)
         m_ActiveEditorTextBox.SelStart = newSelStart
         m_FormattingEditorChange = False
     End If
 
-    previewValue = ObtenerPreviewImporte(inputText, formatted)
     If Not m_EditGrid Is Nothing Then
-        m_EditGrid.TextMatrix(m_EditRow, m_EditCol) = previewValue
+        m_EditGrid.TextMatrix(m_EditRow, m_EditCol) = formatted
     End If
 
     Exit Sub
@@ -1610,50 +1610,71 @@ End Function
 Private Function FormatearImporteEnVivo(ByVal rawText As String, ByVal caretPos As Long, ByRef newCaretPos As Long) As String
     Dim I As Long
     Dim ch As String
-    Dim digits As String
     Dim intDigits As String
     Dim decDigits As String
-    Dim hadComma As Boolean
-    Dim commaPos As Long
-    Dim digitsLeftOfCaret As Long
     Dim outText As String
+    Dim decSepPos As Long
+    Dim pCom As Long
+    Dim pDot As Long
+    Dim digitsAfterDot As Long
+    Dim intDigitsLeftOfCaret As Long
+    Dim decDigitsLeftOfCaret As Long
+    Dim caretAfterDecimal As Boolean
 
     If caretPos < 0 Then caretPos = 0
     If caretPos > Len(rawText) Then caretPos = Len(rawText)
 
+    pCom = InStrRev(rawText, ",")
+    If pCom > 0 Then
+        decSepPos = pCom
+    Else
+        pDot = InStrRev(rawText, ".")
+        If pDot > 0 Then
+            digitsAfterDot = 0
+            For I = pDot + 1 To Len(rawText)
+                ch = Mid$(rawText, I, 1)
+                If ch >= "0" And ch <= "9" Then digitsAfterDot = digitsAfterDot + 1
+            Next I
+
+            ' Un punto con 0, 1 o 2 digitos a la derecha se toma como decimal.
+            ' Si tiene 3 o mas digitos a la derecha, se considera separador de miles ya formateado.
+            If digitsAfterDot <= 2 Then decSepPos = pDot
+        End If
+    End If
+
+    caretAfterDecimal = (decSepPos > 0 And caretPos >= decSepPos)
+
     For I = 1 To Len(rawText)
         ch = Mid$(rawText, I, 1)
-
         If ch >= "0" And ch <= "9" Then
-            digits = digits & ch
-            If I <= caretPos Then digitsLeftOfCaret = digitsLeftOfCaret + 1
-        ElseIf ch = "," And Not hadComma Then
-            hadComma = True
-            commaPos = Len(digits)
+            If decSepPos > 0 And I > decSepPos Then
+                If Len(decDigits) < 2 Then decDigits = decDigits & ch
+                If I <= caretPos Then decDigitsLeftOfCaret = decDigitsLeftOfCaret + 1
+            Else
+                intDigits = intDigits & ch
+                If I <= caretPos Then intDigitsLeftOfCaret = intDigitsLeftOfCaret + 1
+            End If
         End If
     Next I
 
-    If Len(digits) = 0 Then
+    If Len(intDigits) = 0 And decSepPos = 0 Then
         FormatearImporteEnVivo = ""
         newCaretPos = 0
         Exit Function
     End If
 
-    If hadComma Then
-        intDigits = Left$(digits, commaPos)
-        decDigits = Mid$(digits, commaPos + 1)
+    If Len(intDigits) = 0 Then intDigits = "0"
 
-        If Len(intDigits) = 0 Then intDigits = "0"
-        If Len(decDigits) > 2 Then decDigits = Left$(decDigits, 2)
-
-        outText = GroupThousands(intDigits)
-        If commaPos >= 0 Then outText = outText & "," & decDigits
-    Else
-        outText = GroupThousands(digits)
-    End If
+    outText = GroupThousands(intDigits)
+    If decSepPos > 0 Then outText = outText & "," & decDigits
 
     FormatearImporteEnVivo = outText
-    newCaretPos = PosicionCursorPorDigitos(outText, digitsLeftOfCaret)
+
+    If caretAfterDecimal Then
+        newCaretPos = InStr(1, outText, ",", vbBinaryCompare) + decDigitsLeftOfCaret
+    Else
+        newCaretPos = PosicionCursorPorDigitos(outText, intDigitsLeftOfCaret)
+    End If
 End Function
 
 Private Function PosicionCursorPorDigitos(ByVal formattedText As String, ByVal digitsToLeft As Long) As Long
@@ -1700,7 +1721,8 @@ Private Sub ManejadorTextBoxKeyDown(KeyCode As Integer, Shift As Integer)
     If KeyCode = vbKeyReturn Then
         KeyCode = 0
         Shift = 0
-        Sendkeys "{TAB}"
+        m_SuppressEditorLostFocusCommit = True
+        FinalizarEdicion True, True
     ElseIf KeyCode = vbKeyTab Then
         KeyCode = 0
         Shift = 0
@@ -2011,7 +2033,7 @@ End Sub
 Private Sub cmdImprimir_Click()
     On Error GoTo ErrHandler
 
-    Dim Y As Single
+    Dim y As Single
     Const MM_TO_TWIPS As Single = 56.7
     Const EXTRA_LEFT_MM As Single = 10
     Const EXTRA_BOX_HEIGHT_MM As Single = 1.25
@@ -2046,56 +2068,56 @@ Private Sub cmdImprimir_Click()
     Printer.FontBold = False
     Printer.Copies = 2
 
-    Y = 220
+    y = 220
 
     logoPath = App.Path & "\Quilplac2.jpg"
     If Dir$(logoPath) <> "" Then
-        Printer.PaintPicture LoadPicture(logoPath), xLeft, Y, 2600, 900
+        Printer.PaintPicture LoadPicture(logoPath), xLeft, y, 2600, 900
     End If
 
     Printer.FontSize = 14
     Printer.FontBold = True
     Printer.CurrentX = xLeft
-    Printer.CurrentY = Y + 980
+    Printer.CurrentY = y + 980
     Printer.Print "ORDEN DE PAGO"
     Printer.FontBold = False
     Printer.FontSize = 11
 
     Printer.CurrentX = 6200 + xOffset
-    Printer.CurrentY = Y + 980
+    Printer.CurrentY = y + 980
     Printer.Print "FECHA:"
     Printer.CurrentX = 7700 + xOffset
-    Printer.CurrentY = Y + 980
+    Printer.CurrentY = y + 980
     Printer.Print Trim$(txtFecha.text)
 
-    Y = Y + 1600
+    y = y + 1600
     Printer.CurrentX = xLeft
-    Printer.CurrentY = Y
+    Printer.CurrentY = y
     Printer.Print "Nro: " & Trim$(txtNroOrden.text)
 
-    Y = Y + 520
+    y = y + 520
     Printer.CurrentX = xLeft
-    Printer.CurrentY = Y
+    Printer.CurrentY = y
     Printer.Print "PROVEEDOR:"
-    DrawBoxConBordeGrueso 2500 + xOffset, Y - 60, boxRight, Y + 360 + EXTRA_BOX_HEIGHT_TWIPS, 30
+    DrawBoxConBordeGrueso 2500 + xOffset, y - 60, boxRight, y + 360 + EXTRA_BOX_HEIGHT_TWIPS, 30
     Printer.CurrentX = 2560 + xOffset
-    Printer.CurrentY = Y + 10 + EXTRA_BOX_TEXT_Y_TWIPS
+    Printer.CurrentY = y + 10 + EXTRA_BOX_TEXT_Y_TWIPS
     Printer.Print UCase$(Trim$(txtProveedor.text))
 
-    Y = Y + 900
-    DrawBoxConBordeGrueso BoxLeft, Y, boxRight, Y + 340 + EXTRA_BOX_HEIGHT_TWIPS, 30
+    y = y + 900
+    DrawBoxConBordeGrueso BoxLeft, y, boxRight, y + 340 + EXTRA_BOX_HEIGHT_TWIPS, 30
     Printer.FontBold = True
-    headerBandTop = Y + 48
-    headerBandBottom = Y + 236 + EXTRA_BOX_TEXT_Y_TWIPS
+    headerBandTop = y + 48
+    headerBandBottom = y + 236 + EXTRA_BOX_TEXT_Y_TWIPS
     
-    titleY = Y + 64 + EXTRA_BOX_TEXT_Y_TWIPS
+    titleY = y + 64 + EXTRA_BOX_TEXT_Y_TWIPS
     PrintBoxHeaderTitle "DEUDA", BoxLeft, boxRight, headerBandTop, headerBandBottom, titleY
     Printer.FontBold = False
 
-    Y = Y + 700 + EXTRA_BOX_HEIGHT_TWIPS
-    sepY = Y + 120
+    y = y + 700 + EXTRA_BOX_HEIGHT_TWIPS
+    sepY = y + 120
     Printer.Line (xLeft, sepY)-(boxRight - 180, sepY), vbBlack
-    Y = Y + 360
+    y = y + 360
 
     deudaMax = grdDeuda.Rows - 1
     If deudaMax > 4 Then deudaMax = 4
@@ -2105,47 +2127,47 @@ Private Sub cmdImprimir_Click()
         Importe = Trim$(grdDeuda.TextMatrix(I, 1))
         If Len(detalle) > 0 Then
             Printer.CurrentX = xLeft
-            Printer.CurrentY = Y
+            Printer.CurrentY = y
             Printer.Print Left$(UCase$(detalle), 45)
         End If
         If Len(Importe) > 0 Then
             Printer.CurrentX = xRight
-            Printer.CurrentY = Y
+            Printer.CurrentY = y
             Printer.Print "$" & FormatMoney(ParseCurrency(Importe))
         End If
-        Y = Y + lineH
+        y = y + lineH
     Next I
 
     Printer.CurrentX = xLeft
-    Printer.CurrentY = Y + 120
+    Printer.CurrentY = y + 120
     Printer.FontBold = True
     Printer.Print "TOTAL DEUDA:"
     Printer.CurrentX = xRight
-    Printer.CurrentY = Y + 120
+    Printer.CurrentY = y + 120
     Printer.Print "$" & FormatMoney(ParseCurrency(txtSubDeuda.text))
     Printer.FontBold = False
 
-    Y = Y + 760
-    DrawBoxConBordeGrueso BoxLeft, Y, boxRight, Y + 340 + EXTRA_BOX_HEIGHT_TWIPS, 30
+    y = y + 760
+    DrawBoxConBordeGrueso BoxLeft, y, boxRight, y + 340 + EXTRA_BOX_HEIGHT_TWIPS, 30
     Printer.FontBold = True
-    headerBandTop = Y + 48
-    headerBandBottom = Y + 236 + EXTRA_BOX_TEXT_Y_TWIPS
+    headerBandTop = y + 48
+    headerBandBottom = y + 236 + EXTRA_BOX_TEXT_Y_TWIPS
     
-    titleY = Y + 64 + EXTRA_BOX_TEXT_Y_TWIPS
+    titleY = y + 64 + EXTRA_BOX_TEXT_Y_TWIPS
     PrintBoxHeaderTitle "PAGO", BoxLeft, boxRight, headerBandTop, headerBandBottom, titleY
     Printer.FontBold = False
 
-    Y = Y + 700 + EXTRA_BOX_HEIGHT_TWIPS
-    sepY = Y + 120
+    y = y + 700 + EXTRA_BOX_HEIGHT_TWIPS
+    sepY = y + 120
     Printer.Line (xLeft, sepY)-(boxRight - 180, sepY), vbBlack
 
-    Y = Y + 420
+    y = y + 420
 
     ' Imprimir CHEQUES solo si tiene valor > 0
     If ParseCurrency(txtSubCheques.text) > 0 Then
-        Printer.CurrentX = xLeft: Printer.CurrentY = Y: Printer.Print "CHEQUE/E-CHEQ:"
-        Printer.CurrentX = xRight: Printer.CurrentY = Y: Printer.Print "$" & FormatMoney(ParseCurrency(txtSubCheques.text))
-        Y = Y + 520
+        Printer.CurrentX = xLeft: Printer.CurrentY = y: Printer.Print "CHEQUE/E-CHEQ:"
+        Printer.CurrentX = xRight: Printer.CurrentY = y: Printer.Print "$" & FormatMoney(ParseCurrency(txtSubCheques.text))
+        y = y + 520
 
         ' Imprimir detalle de cheques si existen
         Dim chequesCount As Long
@@ -2163,28 +2185,28 @@ Private Sub cmdImprimir_Click()
                 chqImporte = Trim$(grdCheques.TextMatrix(chqIdx, colChequeImporte))
                 If Len(chqBanco) > 0 Or Len(chqNumero) > 0 Then
                     Printer.CurrentX = xLeft + 240
-                    Printer.CurrentY = Y
+                    Printer.CurrentY = y
                     Printer.Print "  " & Left$(chqBanco, 20) & " | Nro: " & chqNumero & " | " & chqFecha & " | $" & FormatMoney(ParseCurrency(chqImporte))
-                    Y = Y + 300
+                    y = y + 300
                 End If
             Next chqIdx
             Printer.FontSize = oldFontSize
-            Y = Y + 220
+            y = y + 220
         End If
     End If
 
     ' Imprimir EFECTIVO solo si tiene valor > 0
     If ParseCurrency(txtEfectivo.text) > 0 Then
-        Printer.CurrentX = xLeft: Printer.CurrentY = Y: Printer.Print "EFECTIVO:"
-        Printer.CurrentX = xRight: Printer.CurrentY = Y: Printer.Print "$" & FormatMoney(ParseCurrency(txtEfectivo.text))
-        Y = Y + 520
+        Printer.CurrentX = xLeft: Printer.CurrentY = y: Printer.Print "EFECTIVO:"
+        Printer.CurrentX = xRight: Printer.CurrentY = y: Printer.Print "$" & FormatMoney(ParseCurrency(txtEfectivo.text))
+        y = y + 520
     End If
 
     ' Imprimir TRANSFERENCIA solo si tiene valor > 0
     If ParseCurrency(txtSubTransferencia.text) > 0 Then
-        Printer.CurrentX = xLeft: Printer.CurrentY = Y: Printer.Print "TRANSFERENCIA:"
-        Printer.CurrentX = xRight: Printer.CurrentY = Y: Printer.Print "$" & FormatMoney(ParseCurrency(txtSubTransferencia.text))
-        Y = Y + 520
+        Printer.CurrentX = xLeft: Printer.CurrentY = y: Printer.Print "TRANSFERENCIA:"
+        Printer.CurrentX = xRight: Printer.CurrentY = y: Printer.Print "$" & FormatMoney(ParseCurrency(txtSubTransferencia.text))
+        y = y + 520
 
         ' Imprimir detalle de transferencias si existen
         Dim transfCount As Long
@@ -2202,21 +2224,21 @@ Private Sub cmdImprimir_Click()
                 transfImporte = Trim$(grdTransferencia.TextMatrix(transfIdx, colTransfImporte))
                 If Len(transfBanco) > 0 Or Len(transfCuenta) > 0 Then
                     Printer.CurrentX = xLeft + 240
-                    Printer.CurrentY = Y
+                    Printer.CurrentY = y
                     Printer.Print "  " & Left$(transfBanco, 20) & " | Cta: " & transfCuenta & " | CUIT: " & transfCUIT & " | $" & FormatMoney(ParseCurrency(transfImporte))
-                    Y = Y + 300
+                    y = y + 300
                 End If
             Next transfIdx
             Printer.FontSize = oldFontSize2
-            Y = Y + 220
+            y = y + 220
         End If
     End If
 
     ' Imprimir FACTURAS solo si tiene valor > 0
     If ParseCurrency(txtSubFacturas.text) > 0 Then
-        Printer.CurrentX = xLeft: Printer.CurrentY = Y: Printer.Print "FACTURAS:"
-        Printer.CurrentX = xRight: Printer.CurrentY = Y: Printer.Print "$" & FormatMoney(ParseCurrency(txtSubFacturas.text))
-        Y = Y + 520
+        Printer.CurrentX = xLeft: Printer.CurrentY = y: Printer.Print "FACTURAS:"
+        Printer.CurrentX = xRight: Printer.CurrentY = y: Printer.Print "$" & FormatMoney(ParseCurrency(txtSubFacturas.text))
+        y = y + 520
 
         ' Imprimir detalle de facturas si existen
         Dim facturasCount As Long
@@ -2234,25 +2256,25 @@ Private Sub cmdImprimir_Click()
                 factImporte = Trim$(grdFacturas.TextMatrix(factIdx, colFactImporte))
                 If Len(factNumero) > 0 Or Len(factDesc) > 0 Then
                     Printer.CurrentX = xLeft + 240
-                    Printer.CurrentY = Y
+                    Printer.CurrentY = y
                     If Len(factDesc) > 0 Then
                         Printer.Print "  Nro: " & factNumero & " | " & factFecha & " | " & Left$(factDesc, 25) & " | $" & FormatMoney(ParseCurrency(factImporte))
                     Else
                         Printer.Print "  Nro: " & factNumero & " | " & factFecha & " | $" & FormatMoney(ParseCurrency(factImporte))
                     End If
-                    Y = Y + 300
+                    y = y + 300
                 End If
             Next factIdx
             Printer.FontSize = oldFontSize3
-            Y = Y + 220
+            y = y + 220
         End If
     End If
 
     ' Imprimir OTROS solo si tiene valor > 0
     If ParseCurrency(txtSubOtros.text) > 0 Then
-        Printer.CurrentX = xLeft: Printer.CurrentY = Y: Printer.Print "OTROS:"
-        Printer.CurrentX = xRight: Printer.CurrentY = Y: Printer.Print "$" & FormatMoney(ParseCurrency(txtSubOtros.text))
-        Y = Y + 520
+        Printer.CurrentX = xLeft: Printer.CurrentY = y: Printer.Print "OTROS:"
+        Printer.CurrentX = xRight: Printer.CurrentY = y: Printer.Print "$" & FormatMoney(ParseCurrency(txtSubOtros.text))
+        y = y + 520
 
         ' Imprimir detalle de otros si existen
         Dim otrosCount As Long
@@ -2268,47 +2290,47 @@ Private Sub cmdImprimir_Click()
                 otroImporte = Trim$(grdOtros.TextMatrix(otroIdx, colOtroImporte))
                 If Len(otroConcepto) > 0 Then
                     Printer.CurrentX = xLeft + 240
-                    Printer.CurrentY = Y
+                    Printer.CurrentY = y
                     Printer.Print "  " & Left$(otroConcepto, 40) & " | $" & FormatMoney(ParseCurrency(otroImporte))
-                    Y = Y + 300
+                    y = y + 300
                 End If
             Next otroIdx
             Printer.FontSize = oldFontSize4
-            Y = Y + 220
+            y = y + 220
         End If
     End If
 
-    Y = Y + 180
-    sepY = Y + 120
+    y = y + 180
+    sepY = y + 120
     Printer.Line (xLeft, sepY)-(boxRight - 180, sepY), vbBlack
 
-    Y = Y + 420
+    y = y + 420
     Printer.FontBold = True
     Printer.CurrentX = xLeft
-    Printer.CurrentY = Y
+    Printer.CurrentY = y
     Printer.Print "TOTAL PAGO:"
     Printer.CurrentX = xRight
-    Printer.CurrentY = Y
+    Printer.CurrentY = y
     Printer.Print "$" & FormatMoney(ParseCurrency(txtTotalPago.text))
 
-    Y = Y + 440
+    y = y + 440
     Printer.CurrentX = xLeft
-    Printer.CurrentY = Y
+    Printer.CurrentY = y
     Printer.Print "SALDO:"
     Printer.CurrentX = xRight
-    Printer.CurrentY = Y
+    Printer.CurrentY = y
     Printer.Print "$" & FormatMoney(ParseCurrency(txtSaldo.text))
     Printer.FontBold = False
 
-    Y = Y + 560
+    y = y + 560
     Printer.FontSize = 8
     Printer.CurrentX = xLeft
-    Printer.CurrentY = Y
+    Printer.CurrentY = y
     Printer.Print "IMPORTE EN LETRAS: " & UCase$(Trim$(txtImporteLetras.text))
 
-    Y = Y + 1200
+    y = y + 1200
     Printer.CurrentX = xLeft
-    Printer.CurrentY = Y
+    Printer.CurrentY = y
     Printer.Print "Firma/Aclaracion:"
 
     Printer.EndDoc
@@ -2728,7 +2750,7 @@ End Function
 ' Guardado
 ' ------------------------------------------------------------
 Private Sub cmdGuardar_Click()
-'    On Error GoTo EH
+    On Error GoTo EH
 
     Dim nroOrden As Long
     Dim rs As DAO.Recordset
@@ -2759,7 +2781,7 @@ Private Sub cmdGuardar_Click()
     End If
 
     rs!Fecha = ParseDateOrToday(txtFecha.text)
-    rs!Proveedor = NzS(txtProveedor.text)
+    SetTextFieldValue rs, "Proveedor", NzS(txtProveedor.text)
 
     rs!TotalDeuda = ParseCurrency(txtSubDeuda.text)
     rs!SubtotalCheques = ParseCurrency(txtSubCheques.text)
@@ -2770,13 +2792,13 @@ Private Sub cmdGuardar_Click()
 '   rs!RetencionIIBB = ParseCurrency(GetRetIIBBText())
     rs!totalPago = ParseCurrency(txtTotalPago.text)
     rs!Saldo = ParseCurrency(txtSaldo.text)
-    rs!MontoLetras = NzS(txtImporteLetras.text)
+    SetTextFieldValue rs, "MontoLetras", NzS(txtImporteLetras.text)
 
-    rs!DetalleDeuda = deudaTxt
-    rs!DetalleCheques = chequesTxt
-    rs!DetalleOtros = otrosTxt
-    rs!DetalleTransferencia = transfTxt
-    rs!DetalleFacturas = factTxt
+    SetTextFieldValue rs, "DetalleDeuda", deudaTxt
+    SetTextFieldValue rs, "DetalleCheques", chequesTxt
+    SetTextFieldValue rs, "DetalleOtros", otrosTxt
+    SetTextFieldValue rs, "DetalleTransferencia", transfTxt
+    SetTextFieldValue rs, "DetalleFacturas", factTxt
 
     rs!FechaAlta = Now
     rs.Update
@@ -2797,6 +2819,45 @@ EH:
     End If
     MsgBox "Error guardando orden: " & Err.Description, vbCritical, "Orden de Pago"
 End Sub
+
+Private Sub SetTextFieldValue(ByRef rs As DAO.Recordset, ByVal fieldName As String, ByVal valueText As String)
+    Dim fld As DAO.Field
+    Dim maxLen As Long
+
+    On Error GoTo EH
+
+    Set fld = rs.Fields(fieldName)
+    maxLen = GetMaxTextLengthForField(fld)
+
+    If maxLen > 0 Then
+        If Len(valueText) > maxLen Then
+            rs.Fields(fieldName).Value = Left$(valueText, maxLen)
+        Else
+            rs.Fields(fieldName).Value = valueText
+        End If
+    Else
+        rs.Fields(fieldName).Value = valueText
+    End If
+    Exit Sub
+EH:
+    rs.Fields(fieldName).Value = valueText
+End Sub
+
+Private Function GetMaxTextLengthForField(ByRef fld As DAO.Field) As Long
+    On Error GoTo EH
+
+    Select Case fld.Type
+        Case dbText
+            GetMaxTextLengthForField = CLng(fld.Size)
+        Case dbMemo
+            GetMaxTextLengthForField = 0
+        Case Else
+            GetMaxTextLengthForField = 0
+    End Select
+    Exit Function
+EH:
+    GetMaxTextLengthForField = 0
+End Function
 
 ' ------------------------------------------------------------
 ' Reimpresion / Carga
@@ -3267,7 +3328,7 @@ Private Sub FormatImporteTextBox(ByRef txt As TextBox)
 End Sub
 
 Private Sub FormatImporteTextBoxDynamic(ByRef txt As TextBox)
-    ' Formatea el importe dinÃ¡micamente preservando la posiciÃ³n del cursor
+    ' Formatea el importe dinámicamente preservando la posición del cursor
     Dim oldText As String
     Dim newText As String
     Dim oldPos As Long
@@ -3279,7 +3340,7 @@ Private Sub FormatImporteTextBoxDynamic(ByRef txt As TextBox)
     oldText = txt.text
     oldPos = txt.SelStart
 
-    ' Contar dÃ­gitos antes del cursor en el texto original
+    ' Contar dígitos antes del cursor en el texto original
     oldDigitsBeforeCursor = 0
     For I = 1 To oldPos
         If Mid$(oldText, I, 1) >= "0" And Mid$(oldText, I, 1) <= "9" Then
@@ -3290,11 +3351,11 @@ Private Sub FormatImporteTextBoxDynamic(ByRef txt As TextBox)
     ' Formatear el texto
     newText = FormatMoney(ParseCurrency(oldText))
 
-    ' Solo actualizar si cambiÃ³
+    ' Solo actualizar si cambió
     If newText <> oldText Then
         txt.text = newText
 
-        ' Encontrar la nueva posiciÃ³n del cursor contando la misma cantidad de dÃ­gitos
+        ' Encontrar la nueva posición del cursor contando la misma cantidad de dígitos
         newDigitsBeforeCursor = 0
         newPos = 0
         For I = 1 To Len(newText)
@@ -3307,7 +3368,7 @@ Private Sub FormatImporteTextBoxDynamic(ByRef txt As TextBox)
             End If
         Next I
 
-        ' Si no encontramos suficientes dÃ­gitos, poner al final
+        ' Si no encontramos suficientes dígitos, poner al final
         If newPos = 0 Then newPos = Len(newText)
 
         txt.SelStart = newPos

@@ -1205,7 +1205,7 @@ End Sub
 
 Private Sub ImprimirReciboE()
 
-        'On Error GoTo CapturaErrores
+        On Error GoTo CapturaErrores
        
         Dim NroFactura As String
         Dim NroRecibo As Long
@@ -1885,6 +1885,16 @@ Private Sub ImprimirReciboE()
     
 CapturaErrores:
 
+Select Case Err
+
+    Case 1
+    
+    Case Else
+    
+
+End Select
+
+
 End Sub
 
 Private Function BuscarCondicionIva(CI As String) As String
@@ -2268,8 +2278,11 @@ Private Sub ImprimirReciboX()
     Dim Largo As Integer, LargoSuc As Integer
     Dim I As Integer, Hasta As Integer
     Dim TotalFac As Variant
+    
     Dim vEfete As Variant, vCheques As Variant
-    Dim vRetenciones As Variant, vTransf As Variant
+    Dim vRetenciones As Variant, vTransf As Variant, vRezago As Variant
+    Dim vMercaderia As Variant, vTarjeta As Variant
+    
     Dim vImporteEnLetras As String, SegundoTramo As String
 
     Set BaseSPC = OpenDatabase(App.Path & "\DB_SPC_SI.mdb")
@@ -2411,9 +2424,21 @@ Private Sub ImprimirReciboX()
         vCheques = Val(TextCheque.text)
         Printer.Print "* Cheques Varios: " & Chr(9) & Format(vCheques, "Currency")
 
+'        .CurrentX = 32: .CurrentY = 140
+'        vRetenciones = Val(TextRetencion.text)
+'        Printer.Print "* Retenciones: " & Chr(9) & Format(vRetenciones, "Currency")
+        
         .CurrentX = 32: .CurrentY = 140
-        vRetenciones = Val(TextRetencion.text)
-        Printer.Print "* Retenciones: " & Chr(9) & Format(vRetenciones, "Currency")
+        vRezago = Val(TextRezago.text)
+        Printer.Print "* Rezago: " & Chr(9) & Chr(9) & Format(vRezago, "Currency")
+
+        .CurrentX = 32: .CurrentY = 150
+        vMercaderia = Val(TextMercaderia.text)
+        Printer.Print "* Mercadería: " & Chr(9) & Format(vMercaderia, "Currency")
+        
+        .CurrentX = 32: .CurrentY = 160
+        vTarjeta = Val(TextTarjeta.text)
+        Printer.Print "* Tarjeta: " & Chr(9) & Chr(9) & Format(vTarjeta, "Currency")
 
         'Observaciones
         If TextObservaciones.text <> "" Then
@@ -2780,7 +2805,7 @@ Public Function EnLetras(numero As String) As String
             If paso = 7 Then
                 'MsgBox (Mid(entero, 1, 1))
                 If Len(entero) = 7 And Mid(entero, 1, 1) = "1" Then
-                    expresion = expresion & "millón "
+                    expresion = expresion & "millon "
                 Else
                     expresion = expresion & "millones "
                 End If
@@ -3378,15 +3403,15 @@ Private Sub FiltrarGrilla(MSFlexGrid1 As Object, TBox As TextBox, Columna As Lon
                 MSFlexGrid1.Row = linea2
             
             
-                MSFlexGrid1.Col = 0
+                MSFlexGrid1.col = 0
                 MSFlexGrid1.text = tClientes.Fields!IdCliente
                 
                 With Me.MSFlexGrid1
 
                     MSFlexGrid1.ColAlignment(1) = flexAlignLeftTop
-                    MSFlexGrid1.Col = 0
+                    MSFlexGrid1.col = 0
                     MSFlexGrid1.text = tClientes.Fields!IdCliente
-                    MSFlexGrid1.Col = 1
+                    MSFlexGrid1.col = 1
                     MSFlexGrid1.text = tClientes.Fields!RazonSocial
                     
                 End With
@@ -3394,7 +3419,7 @@ Private Sub FiltrarGrilla(MSFlexGrid1 As Object, TBox As TextBox, Columna As Lon
                 tClientes.MoveNext
         Loop
     End If
-MSFlexGrid1.Col = 4
+MSFlexGrid1.col = 4
 'MSFlexGrid1.Sort = flexSortGenericAscending
 
 
@@ -3403,35 +3428,35 @@ Private Sub titulos()
 
     MSFlexGrid1.Row = 0
     
-    MSFlexGrid1.Col = 0
+    MSFlexGrid1.col = 0
     MSFlexGrid1.text = "Codigo"
     MSFlexGrid1.ColWidth(0) = 900
     
-    MSFlexGrid1.Col = 1
+    MSFlexGrid1.col = 1
     MSFlexGrid1.text = "Apellido y Nombre"
     MSFlexGrid1.ColWidth(1) = 4700
     
-    MSFlexGrid1.Col = 2
+    MSFlexGrid1.col = 2
     MSFlexGrid1.text = "CUIT"
     MSFlexGrid1.ColWidth(2) = 1200
     
-    MSFlexGrid1.Col = 3
+    MSFlexGrid1.col = 3
     MSFlexGrid1.text = "Direccion"
     MSFlexGrid1.ColWidth(3) = 0
     
-    MSFlexGrid1.Col = 4
+    MSFlexGrid1.col = 4
     MSFlexGrid1.text = "Localidad"
     MSFlexGrid1.ColWidth(4) = 0
     
-    MSFlexGrid1.Col = 5
+    MSFlexGrid1.col = 5
     MSFlexGrid1.text = "CP"
     MSFlexGrid1.ColWidth(5) = 0
     
-    MSFlexGrid1.Col = 6
+    MSFlexGrid1.col = 6
     MSFlexGrid1.text = "Provincia"
     MSFlexGrid1.ColWidth(6) = 0
     
-    MSFlexGrid1.Col = 7
+    MSFlexGrid1.col = 7
     MSFlexGrid1.text = "Porcentaje Descuento"
     MSFlexGrid1.ColWidth(7) = 0
 
@@ -3440,10 +3465,10 @@ Private Sub titulos()
  Private Sub MSFlexGrid1_Click()
    
     
-    MSFlexGrid1.Col = 0
+    MSFlexGrid1.col = 0
     Textcod.text = MSFlexGrid1.text
     
-    MSFlexGrid1.Col = 1
+    MSFlexGrid1.col = 1
     TextNombre.text = MSFlexGrid1.text
     
    
