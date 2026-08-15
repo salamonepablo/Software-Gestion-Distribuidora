@@ -1,6 +1,6 @@
 VERSION 5.00
-Object = "{5E9E78A0-531B-11CF-91F6-C2863C385E30}#1.0#0"; "Msflxgrd.ocx"
-Object = "{86CF1D34-0C5F-11D2-A9FC-0000F8754DA1}#2.0#0"; "mscomct2.ocx"
+Object = "{5E9E78A0-531B-11CF-91F6-C2863C385E30}#1.0#0"; "MSFLXGRD.OCX"
+Object = "{86CF1D34-0C5F-11D2-A9FC-0000F8754DA1}#2.0#0"; "MSCOMCT2.OCX"
 Begin VB.Form FormListadoVentas 
    Caption         =   "INFORME DE VENTAS"
    ClientHeight    =   7215
@@ -33,14 +33,14 @@ Begin VB.Form FormListadoVentas
          TabIndex        =   25
          Top             =   1080
          Visible         =   0   'False
-         Width           =   2595
-         _ExtentX        =   4577
+         Width           =   2700
+         _ExtentX        =   4763
          _ExtentY        =   4180
          _Version        =   393216
          ForeColor       =   -2147483630
          BackColor       =   -2147483633
          Appearance      =   1
-         StartOfWeek     =   109772801
+         StartOfWeek     =   135462913
          CurrentDate     =   41921
       End
       Begin VB.Frame Frame4 
@@ -343,6 +343,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
 Private Sub LlenarGrilla(CodProd, cantidad, total)
     
        'On Error GoTo CapturaErrores
@@ -352,19 +353,19 @@ Private Sub LlenarGrilla(CodProd, cantidad, total)
         
         FG1.Col = 0
         FG1.CellAlignment = 7
-        FG1.Text = CodProd
+        FG1.text = CodProd
         
         FG1.Col = 1
         FG1.CellAlignment = 1
-        FG1.Text = BuscarDescProd(CodProd)
+        FG1.text = BuscarDescProd(CodProd)
         
         FG1.Col = 2
         FG1.CellAlignment = 7
-        FG1.Text = Format(cantidad, "Standard")
+        FG1.text = Format(cantidad, "Standard")
         
         FG1.Col = 3
         FG1.CellAlignment = 7
-        FG1.Text = FormatCurrency(total, 2)
+        FG1.text = FormatCurrency(total, 2)
         
 CapturaErrores:
     Select Case Err
@@ -386,22 +387,22 @@ Private Sub SeteoGrilla()
     FG1.Col = 0
     FG1.ColWidth(0) = 1000
     FG1.CellAlignment = 4
-    FG1.Text = "Producto"
+    FG1.text = "Producto"
     
     FG1.Col = 1
     FG1.CellAlignment = 4
     FG1.ColWidth(1) = 4000
-    FG1.Text = "Descripcion"
+    FG1.text = "Descripcion"
     
     FG1.Col = 2
     FG1.CellAlignment = 4
     FG1.ColWidth(2) = 1500
-    FG1.Text = "Cantidad"
+    FG1.text = "Cantidad"
     
     FG1.Col = 3
     FG1.CellAlignment = 4
     FG1.ColWidth(3) = 1500
-    FG1.Text = "Importe $"
+    FG1.text = "Importe $"
     
 End Sub
 
@@ -417,7 +418,7 @@ Private Sub cmbProductos_KeyPress(Index As Integer, KeyAscii As Integer)
     cmbProductos(1).ListIndex = cmbProductos(0).ListIndex
     If KeyAscii = 13 Then
             KeyAscii = 0
-            SendKeys "{TAB}"
+            Sendkeys "{TAB}"
     End If
 
 End Sub
@@ -440,7 +441,7 @@ Private Sub cmbVendedores_KeyPress(Index As Integer, KeyAscii As Integer)
     cmbVendedores(0).ListIndex = cmbVendedores(1).ListIndex
     If KeyAscii = 13 Then
             KeyAscii = 0
-            SendKeys "{TAB}"
+            Sendkeys "{TAB}"
     End If
 
 End Sub
@@ -455,11 +456,11 @@ Private Sub cmdExcel_Click()
 
     Dim NombreArchivo As String
     
-    Vendor = cmbVendedores(0).Text
+    Vendor = cmbVendedores(0).text
     
     If Vendor = "*" Then Vendor = "Todos"
     
-    NombreArchivo = "\Liq_Ventas_" + Vendor + "_" + Format(TxtFechaHasta.Text, "MMM-YYYY") + ".xlsx"
+    NombreArchivo = "\Liq_Ventas_" + Vendor + "_" + Format(TxtFechaHasta.text, "MMM-YYYY") + ".xlsx"
     
     'If Exportar_Excel(App.Path & "\Comisiones.xls", MSHFlexGrid1) Then
     
@@ -496,7 +497,7 @@ Public Function Exportar_Excel(sOutputPath As String, FlexGrid As Object) As Boo
     End With
     
     o_Hoja.Cells(Fila, (Columna - 1)).Value = "Liquidación Total:"
-    o_Hoja.Cells(Fila, Columna).Value = FormatCurrency(txtImporteTotal.Text, 2)
+    o_Hoja.Cells(Fila, Columna).Value = FormatCurrency(txtImporteTotal.text, 2)
     
     
     o_Libro.Close True, sOutputPath
@@ -544,15 +545,15 @@ Private Sub cmdImprimir_Click()
         
         .TextEncabezado1 = Chr(9) & "LIQUIDACION DE VENTAS POR PRODUCTO"
             
-                    nVendedor = Chr(9) & cmbVendedores(1).Text
-                    Pie = Chr(9) & Chr(9) & Chr(9) & Chr(9) & Chr(9) & Chr(9) & Chr(9) & Chr(9) & Chr(9) & Chr(9) & "Liquidación Total: " & FormatCurrency(txtImporteTotal.Text, 2)
+                    nVendedor = Chr(9) & cmbVendedores(1).text
+                    Pie = Chr(9) & Chr(9) & Chr(9) & Chr(9) & Chr(9) & Chr(9) & Chr(9) & Chr(9) & Chr(9) & Chr(9) & "Liquidación Total: " & FormatCurrency(txtImporteTotal.text, 2)
                     'Pie = "Desarrollado por SPC Software Integral"
         
         If OptionL1.Value = True Then li = "Ventas de Línea 1"
         If OptionL2.Value = True Then li = "Ventas de Línea 2"
         If OptionAll.Value = True Then li = "Todas las Ventas"
         
-        .TextEncabezado2 = Chr(9) & nVendedor & Chr(10) & Chr(9) & Chr(9) & "Desde el " & TxtFechaDesde.Text & " al " & TxtFechaHasta.Text & Chr(10) & Chr(9) & Chr(9) & li
+        .TextEncabezado2 = Chr(9) & nVendedor & Chr(10) & Chr(9) & Chr(9) & "Desde el " & TxtFechaDesde.text & " al " & TxtFechaHasta.text & Chr(10) & Chr(9) & Chr(9) & li
                 
         'CGrid.Row = 1
         'CGrid.Col = 10
@@ -602,28 +603,31 @@ Private Sub cmdLiquidar_Click()
     
     On Error GoTo CapturaErrores
     
-    FechaDesde = Format(TxtFechaDesde.Text, "m/d/yyyy")
-    FechaHasta = Format(TxtFechaHasta.Text, "m/d/yyyy")
+    'FechaDesde = Format(TxtFechaDesde.text, "mm/dd/yyyy")
+    FechaDesde = Format(TxtFechaDesde.text, "yyyy-mm-dd")
+    'FechaHasta = Format(TxtFechaHasta.text, "mm/dd/yyyy")
+    FechaHasta = Format(TxtFechaHasta.text, "yyyy-mm-dd")
     
   'Se calcula la liquidación si se elige linea 1
     If OptionL1.Value = True Then
-        vSQL1 = "SELECT * FROM qListadoVentasFac WHERE FechaFactura>=#" & FechaDesde & "# AND FechaFactura <=#" & FechaHasta & "# AND CodVendedor Like '" & cmbVendedores(0).Text & "' AND IDCodProd Like'" & cmbProductos(1).Text & "' ORDER BY IDCodProd, FechaFactura"
+        vSQL1 = "SELECT * FROM qListadoVentasFac WHERE FechaFactura>=#" & FechaDesde & "# AND FechaFactura <=#" & FechaHasta & "# AND CodVendedor Like '" & cmbVendedores(0).text & "' AND IDCodProd Like'" & cmbProductos(1).text & "' ORDER BY IDCodProd, FechaFactura"
         
         'MsgBox (vSQL1)
         
-        Set qVentasL1 = BaseSPC.OpenRecordset(vSQL1, dbOpenDynaset)
+        Set qventasL1 = BaseSPC.OpenRecordset(vSQL1, dbOpenDynaset)
         
-        qVentasL1.MoveFirst
+        qventasL1.MoveFirst
        
-        IdCodProd = qVentasL1!IdCodProd
-        While qVentasL1.EOF = False
-            If qVentasL1!IdCodProd = IdCodProd Then
-                Cant = Cant + qVentasL1!cantidad
-                total = total + qVentasL1!totalLinea
-                qVentasL1.MoveNext
+        IdCodProd = qventasL1!IdCodProd
+        While qventasL1.EOF = False
+            If qventasL1!IdCodProd = IdCodProd Then
+                Cant = Cant + qventasL1!cantidad
+                'total = total + qVentasL1!totalLinea
+                total = total + qventasL1!totalLinea + (qventasL1!totalLinea * qventasL1!PorcentajeIVA / 100)
+                qventasL1.MoveNext
              Else
                 Call LlenarGrilla(IdCodProd, Cant, total)
-                IdCodProd = qVentasL1!IdCodProd
+                IdCodProd = qventasL1!IdCodProd
                 GrandTotal = GrandTotal + total
                 Cant = 0
                 total = 0
@@ -636,7 +640,7 @@ Private Sub cmdLiquidar_Click()
     
   'Se calcula la liquidación si se elige linea 2
     If OptionL2.Value = True Then
-        vsql2 = "SELECT * FROM qListadoVentasPres WHERE FechaPresu>=#" & FechaDesde & "# AND FechaPresu <=#" & FechaHasta & "# AND CodVendedor Like '" & cmbVendedores(0).Text & "' AND CodProd Like'" & cmbProductos(1).Text & "' ORDER BY CodProd, FechaPresu"
+        vsql2 = "SELECT * FROM qListadoVentasPres WHERE FechaPresu>=#" & FechaDesde & "# AND FechaPresu <=#" & FechaHasta & "# AND CodVendedor Like '" & cmbVendedores(0).text & "' AND CodProd Like'" & cmbProductos(1).text & "' ORDER BY CodProd, FechaPresu"
         
         Set qVentasL2 = BaseSPC.OpenRecordset(vsql2, dbOpenDynaset)
         
@@ -663,13 +667,13 @@ Private Sub cmdLiquidar_Click()
 
   'Se calcula la liquidación si se eligen ambas lineas
     If OptionAll.Value = True Then
-        vSQL1 = "SELECT * FROM qListadoVentasFac WHERE FechaFactura>=#" & FechaDesde & "# AND FechaFactura <=#" & FechaHasta & "# AND CodVendedor Like'" & cmbVendedores(0).Text & "' AND IDCodProd Like'" & cmbProductos(1).Text & "' ORDER BY IDCodProd, FechaFactura"
-        vsql2 = "SELECT * FROM qListadoVentasPres WHERE FechaPresu>=#" & FechaDesde & "# AND FechaPresu <=#" & FechaHasta & "# AND CodVendedor Like'" & cmbVendedores(0).Text & "' AND CodProd Like'" & cmbProductos(1).Text & "' ORDER BY CodProd, FechaPresu"
+        vSQL1 = "SELECT * FROM qListadoVentasFac WHERE FechaFactura>=#" & FechaDesde & "# AND FechaFactura <=#" & FechaHasta & "# AND CodVendedor Like'" & cmbVendedores(0).text & "' AND IDCodProd Like'" & cmbProductos(1).text & "' ORDER BY IDCodProd, FechaFactura"
+        vsql2 = "SELECT * FROM qListadoVentasPres WHERE FechaPresu>=#" & FechaDesde & "# AND FechaPresu <=#" & FechaHasta & "# AND CodVendedor Like'" & cmbVendedores(0).text & "' AND CodProd Like'" & cmbProductos(1).text & "' ORDER BY CodProd, FechaPresu"
         
         'MsgBox (vSQL1)
         'MsgBox (vSQL2)
         
-        Set qVentasL1 = BaseSPC.OpenRecordset(vSQL1, dbOpenDynaset)
+        Set qventasL1 = BaseSPC.OpenRecordset(vSQL1, dbOpenDynaset)
         Set qVentasL2 = BaseSPC.OpenRecordset(vsql2, dbOpenDynaset)
         
        'Tabla auxiliar de ventas
@@ -686,18 +690,19 @@ Private Sub cmdLiquidar_Click()
         tVA.Index = "PrimaryKey"
                 
       'Preparo las consultas de L1 y L2
-        qVentasL1.MoveFirst
+        qventasL1.MoveFirst
         qVentasL2.MoveFirst
         
-        IdCodProd = qVentasL1!IdCodProd
+        IdCodProd = qventasL1!IdCodProd
         IdCodProd2 = qVentasL2!CodProd
         
       'Cargo las ventas L1 en la Tabla Auxiliar
-        While Not qVentasL1.EOF
-            If qVentasL1!IdCodProd = IdCodProd Then
-                Cant = Cant + qVentasL1!cantidad
-                total = total + qVentasL1!totalLinea
-                qVentasL1.MoveNext
+        While Not qventasL1.EOF
+            If qventasL1!IdCodProd = IdCodProd Then
+                Cant = Cant + qventasL1!cantidad
+                'total = total + qventasL1!totalLinea
+                total = total + qventasL1!totalLinea + (qventasL1!totalLinea * qventasL1!PorcentajeIVA / 100)
+                qventasL1.MoveNext
             Else
                 tVA.AddNew
                     tVA!IdProducto = IdCodProd
@@ -706,7 +711,7 @@ Private Sub cmdLiquidar_Click()
                     tVA!Importe = total
                 tVA.Update
                 GrandTotal = GrandTotal + total
-                IdCodProd = qVentasL1!IdCodProd
+                IdCodProd = qventasL1!IdCodProd
                 Cant = 0
                 total = 0
             End If
@@ -788,7 +793,9 @@ Private Sub cmdLiquidar_Click()
         
     End If
 
-    txtImporteTotal.Text = Format(GrandTotal, "Standard")
+    txtImporteTotal.text = Format(GrandTotal, "Standard")
+    
+    Exit Sub
     
 CapturaErrores:
     Select Case Err
@@ -825,7 +832,7 @@ Private Sub Form_Load()
         cmbVendedores(1).Clear
         While Not tVendedores.EOF
             cmbVendedores(0).AddItem (tVendedores!Legajo)
-            cmbVendedores(1).AddItem (tVendedores!nombre)
+            cmbVendedores(1).AddItem (tVendedores!Nombre)
             tVendedores.MoveNext
         Wend
         
@@ -849,8 +856,8 @@ Private Sub Form_Load()
         tProductos.Close
     
     'Fechas
-        TxtFechaDesde.Text = Format("01/01/2014", "DD/MM/YYYY")
-        TxtFechaHasta.Text = Format(Date, "DD/MM/YYYY")
+        TxtFechaDesde.text = Format("01/01/2014", "DD/MM/YYYY")
+        TxtFechaHasta.text = Format(Date, "DD/MM/YYYY")
 
 CapturaErrores:
 
@@ -865,13 +872,13 @@ End Sub
 Private Sub Mv1_DateDblClick(ByVal DateDblClicked As Date)
 
  If Llamado = "Desde" Then
-    TxtFechaDesde.Text = Mv1.Value
+    TxtFechaDesde.text = Mv1.Value
     TxtFechaDesde.SetFocus
     Mv1.Visible = False
  End If
  
  If Llamado = "Hasta" Then
-    TxtFechaHasta.Text = Mv1.Value
+    TxtFechaHasta.text = Mv1.Value
     TxtFechaHasta.SetFocus
     Mv1.Visible = False
  End If
@@ -891,7 +898,7 @@ End Sub
 
 Private Sub txtFechaDesde_GotFocus()
 
-    TxtFechaDesde.SelLength = Len(TxtFechaDesde.Text)
+    TxtFechaDesde.SelLength = Len(TxtFechaDesde.text)
 
 End Sub
 
@@ -899,7 +906,7 @@ Private Sub txtFechaDesde_KeyPress(KeyAscii As Integer)
     
     If KeyAscii = 13 Then
         KeyAscii = 0
-        SendKeys "{TAB}"
+        Sendkeys "{TAB}"
     End If
 
 End Sub
@@ -917,7 +924,7 @@ End Sub
 
 Private Sub txtFechaHasta_GotFocus()
 
-    TxtFechaHasta.SelLength = Len(TxtFechaHasta.Text)
+    TxtFechaHasta.SelLength = Len(TxtFechaHasta.text)
 
 End Sub
 
@@ -925,7 +932,7 @@ Private Sub txtFechaHasta_KeyPress(KeyAscii As Integer)
     
     If KeyAscii = 13 Then
             KeyAscii = 0
-            SendKeys "{TAB}"
+            Sendkeys "{TAB}"
     End If
 
 End Sub
