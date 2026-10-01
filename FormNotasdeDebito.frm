@@ -1509,6 +1509,8 @@ Private Sub BotonGrabar_Click()
         Dim MonId As String
         Dim DescTributo As String
         Dim ImporteExento As Double
+        Dim periodStart As String
+        Dim periodEnd As String
 '///Declaraciones para FE SPC
         
         Textfac.text = 1
@@ -1588,6 +1590,13 @@ Private Sub BotonGrabar_Click()
                     MsgBox "No se encontró la factura asociada. No se guardó la nota de débito.", vbExclamation, "Comprobante asociado"
                     Exit Sub
                 End If
+            Else
+                If Not IsDate(TextFechaFactura.text) Then
+                    MsgBox "La fecha de la nota de débito no es válida.", vbExclamation, "Período asociado"
+                    Exit Sub
+                End If
+                periodStart = Format$(CDate(TextFechaFactura.text), "yyyymmdd")
+                periodEnd = periodStart
             End If
 
             Call CalculoTotalFactura2
@@ -1694,7 +1703,7 @@ Private Sub BotonGrabar_Click()
                     ImpAlicuota = 0
                 End If
                 
-                If Not FacturaElectronicaSPC(PtoVta, DocTipo, DocNro, TipoComp, CbteDesde, CbteHasta, CbteFch, ImpTotal, ImpNeto, MonId, MonCotiz, AlicIVA, BaseImpIVA, ImpIva, IdTributo, DescTributo, BaseImpTributo, Alicuota, ImpAlicuota, ImporteExento, TipoCbteAsoc, NroCbteAsoc, FechaCbteAsoc) Then
+                If Not FacturaElectronicaSPC(PtoVta, DocTipo, DocNro, TipoComp, CbteDesde, CbteHasta, CbteFch, ImpTotal, ImpNeto, MonId, MonCotiz, AlicIVA, BaseImpIVA, ImpIva, IdTributo, DescTributo, BaseImpTributo, Alicuota, ImpAlicuota, ImporteExento, TipoCbteAsoc, NroCbteAsoc, FechaCbteAsoc, periodStart, periodEnd) Then
                     MsgBox "No se pudo confirmar el CAE. La nota quedó pendiente y no se modificó la cuenta corriente. Verificá el comprobante en ARCA antes de volver a emitirlo.", vbCritical, "Nota de débito sin CAE"
                     Exit Sub
                 End If

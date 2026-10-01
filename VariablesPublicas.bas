@@ -560,7 +560,7 @@ Public Sub CrearQR(Fecha As String, CUIT As Double, PtoVta As Long, TipoComp As 
 
 End Sub
 
-Public Function FacturaElectronicaSPC(PtoVta As Long, DocTipo As Long, DocNro As Double, TipoComp As Long, CbteDesde As Double, CbteHasta As Double, CbteFch As String, ImpTotal As Double, ImpNeto As Double, MonId As String, MonCotiz As Double, AlicIVA As Long, BaseImpIVA As Double, ImpIva As Double, IdTributo As Long, DescTributo As String, BaseImpTributo As Double, Alicuota As Double, ImpAlicuota As Double, ImporteExento As Double, Optional TipoCbteAsoc As Long, Optional NroCbteAsoc As Double, Optional FechaCbteAsoc As String) As Boolean
+Public Function FacturaElectronicaSPC(PtoVta As Long, DocTipo As Long, DocNro As Double, TipoComp As Long, CbteDesde As Double, CbteHasta As Double, CbteFch As String, ImpTotal As Double, ImpNeto As Double, MonId As String, MonCotiz As Double, AlicIVA As Long, BaseImpIVA As Double, ImpIva As Double, IdTributo As Long, DescTributo As String, BaseImpTributo As Double, Alicuota As Double, ImpAlicuota As Double, ImporteExento As Double, Optional TipoCbteAsoc As Long, Optional NroCbteAsoc As Double, Optional FechaCbteAsoc As String, Optional PeriodStart As String, Optional PeriodEnd As String) As Boolean
 
     If invoiceSimulationEnabled Then
         FacturaElectronicaSPC = SimulateInvoiceAuthorization(TipoComp, CbteDesde)
@@ -626,11 +626,29 @@ Public Function FacturaElectronicaSPC(PtoVta As Long, DocTipo As Long, DocNro As
            'Acá Agregar el comprobante asociado si es NC o ND
             Select Case TipoComp
                 Case 2
-                    If NroCbteAsoc > 0 Then wsfev1.AgregaCompAsoc TipoCbteAsoc, PtoVta, NroCbteAsoc, 30708432543#, FechaCbteAsoc
+                    If NroCbteAsoc > 0 Then
+                        wsfev1.AgregaCompAsoc TipoCbteAsoc, PtoVta, NroCbteAsoc, 30708432543#, FechaCbteAsoc
+                    Else
+                        If Len(PeriodStart) <> 8 Or Len(PeriodEnd) <> 8 Then
+                            MsgBox "Falta el período asociado a la nota de débito.", vbExclamation
+                            FacturaElectronicaSPC = False
+                            Exit Function
+                        End If
+                        wsfev1.PeriodoAsoc PeriodStart, PeriodEnd
+                    End If
                 Case 3
                     If NroCbteAsoc > 0 Then wsfev1.AgregaCompAsoc TipoCbteAsoc, PtoVta, NroCbteAsoc, 30708432543#, FechaCbteAsoc
                 Case 7
-                    If NroCbteAsoc > 0 Then wsfev1.AgregaCompAsoc TipoCbteAsoc, PtoVta, NroCbteAsoc, 30708432543#, FechaCbteAsoc
+                    If NroCbteAsoc > 0 Then
+                        wsfev1.AgregaCompAsoc TipoCbteAsoc, PtoVta, NroCbteAsoc, 30708432543#, FechaCbteAsoc
+                    Else
+                        If Len(PeriodStart) <> 8 Or Len(PeriodEnd) <> 8 Then
+                            MsgBox "Falta el período asociado a la nota de débito.", vbExclamation
+                            FacturaElectronicaSPC = False
+                            Exit Function
+                        End If
+                        wsfev1.PeriodoAsoc PeriodStart, PeriodEnd
+                    End If
                 Case 8
                     If NroCbteAsoc > 0 Then wsfev1.AgregaCompAsoc TipoCbteAsoc, PtoVta, NroCbteAsoc, 30708432543#, FechaCbteAsoc
             End Select
@@ -676,16 +694,15 @@ Public Function FacturaElectronicaSPC(PtoVta As Long, DocTipo As Long, DocNro As
             Exit Function
         End If
       
+    Exit Function
 CapturaErrores:
     Select Case Err.Number
-        Case -2147418113 ' &H8000FFFF - Error de conexión inesperada
+        Case -2147418113
             MsgBox "Error de conexión con ARCA. Verifique su conexión a internet o intente nuevamente más tarde.", vbExclamation
-                FacturaElectronicaSPC = False
         Case Else
-            Resume Next
-            ' Otros errores no esperados
-         '   MsgBox "Un error inesperado ocurrió. Por favor, contacte a soporte técnico.", vbCritical
+            MsgBox "Error al solicitar el CAE: " & Err.Description, vbCritical, "Facturación electrónica"
     End Select
+    FacturaElectronicaSPC = False
 
 End Function
 Public Function BuscaCbteAsociado(NroCbteAsociado As Long, TipoCbteAsociado As String)
