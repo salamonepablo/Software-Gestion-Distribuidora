@@ -626,11 +626,11 @@ Public Function FacturaElectronicaSPC(PtoVta As Long, DocTipo As Long, DocNro As
            'Acá Agregar el comprobante asociado si es NC o ND
             Select Case TipoComp
                 Case 2
-                    wsfev1.AgregaCompAsoc TipoCbteAsoc, PtoVta, NroCbteAsoc, 30708432543#, FechaCbteAsoc
+                    If NroCbteAsoc > 0 Then wsfev1.AgregaCompAsoc TipoCbteAsoc, PtoVta, NroCbteAsoc, 30708432543#, FechaCbteAsoc
                 Case 3
                     If NroCbteAsoc > 0 Then wsfev1.AgregaCompAsoc TipoCbteAsoc, PtoVta, NroCbteAsoc, 30708432543#, FechaCbteAsoc
                 Case 7
-                    wsfev1.AgregaCompAsoc TipoCbteAsoc, PtoVta, NroCbteAsoc, 30708432543#, FechaCbteAsoc
+                    If NroCbteAsoc > 0 Then wsfev1.AgregaCompAsoc TipoCbteAsoc, PtoVta, NroCbteAsoc, 30708432543#, FechaCbteAsoc
                 Case 8
                     If NroCbteAsoc > 0 Then wsfev1.AgregaCompAsoc TipoCbteAsoc, PtoVta, NroCbteAsoc, 30708432543#, FechaCbteAsoc
             End Select

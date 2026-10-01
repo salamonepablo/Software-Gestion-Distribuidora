@@ -1216,10 +1216,10 @@ Private Sub LlenoComboFacturasDeReferencia(txtTipoFacturaReferencia As String)
 
     vSQL = "SELECT * FROM FacturaC WHERE CodCliente=" & Val(TextCodigoCliente.text) & " ORDER BY FechaFactura DESC"
     
+    cmbFacturaReferencia.Clear
+    cmbFacturaReferencia.text = vbNullString
     Set tP = BaseSPC.OpenRecordset(vSQL, dbOpenDynaset)
-    
-    tP.MoveFirst
-    
+
     While Not tP.EOF
         cmbFacturaReferencia.AddItem tP!NroFactura
         tP.MoveNext
@@ -1575,18 +1575,19 @@ Private Sub BotonGrabar_Click()
         
         
      
-            If Len(Trim$(cmbFacturaReferencia.text)) = 0 Then
-                MsgBox "Elegí la factura asociada a la nota de débito.", vbExclamation, "Comprobante asociado"
-                cmbFacturaReferencia.SetFocus
-                Exit Sub
-            End If
             TipoCbteAsoc = 0
             NroCbteAsoc = 0
             FechaCbteAsoc = vbNullString
-            Call BuscaCbteAsociado(CLng(cmbFacturaReferencia.text), CStr(txtTipoFacturaReferencia.text))
-            If NroCbteAsoc = 0 Then
-                MsgBox "No se encontró la factura asociada. No se guardó la nota de débito.", vbExclamation, "Comprobante asociado"
-                Exit Sub
+            If Len(Trim$(cmbFacturaReferencia.text)) > 0 Then
+                If Not IsNumeric(cmbFacturaReferencia.text) Then
+                    MsgBox "Elegí una factura válida o dejá la referencia vacía.", vbExclamation, "Comprobante asociado"
+                    Exit Sub
+                End If
+                Call BuscaCbteAsociado(CLng(cmbFacturaReferencia.text), CStr(txtTipoFacturaReferencia.text))
+                If NroCbteAsoc = 0 Then
+                    MsgBox "No se encontró la factura asociada. No se guardó la nota de débito.", vbExclamation, "Comprobante asociado"
+                    Exit Sub
+                End If
             End If
 
             Call CalculoTotalFactura2
