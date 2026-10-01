@@ -573,6 +573,7 @@ Private Sub GenerarFEB()
                                 .FontBold = False
                                 Printer.Print tFacturaC!CondicionVenta
                             
+                                If Val(tFacturaC!NroRemito & "") > 0 Then
                                 .CurrentX = 130
                                 .CurrentY = 80
                                 .FontSize = 10
@@ -597,6 +598,7 @@ Private Sub GenerarFEB()
                                     Printer.Print IdSucursal & "-" & NroRemito
                                  Else
                                     IdSucursal = InputBox("Ingrese Nº Sucursal", "SPC SI")
+                                End If
                                 End If
                         End If
                      
@@ -1116,6 +1118,7 @@ Private Sub GenerarFEB()
                                 .FontBold = False
                                 Printer.Print tFacturaC!CondicionVenta
                             
+                                If Val(tFacturaC!NroRemito & "") > 0 Then
                                 .CurrentX = 130
                                 .CurrentY = 80
                                 .FontSize = 10
@@ -1140,6 +1143,7 @@ Private Sub GenerarFEB()
                                     Printer.Print IdSucursal & "-" & NroRemito
                                  Else
                                     IdSucursal = InputBox("Ingrese Nº Sucursal", "SPC SI")
+                                End If
                                 End If
                         End If
                      
@@ -1714,6 +1718,7 @@ Private Sub ImprimirFE()
                                 .FontBold = False
                                 Printer.Print tFacturaC!CondicionVenta
                             
+                                If Val(tFacturaC!NroRemito & "") > 0 Then
                                 .CurrentX = 130
                                 .CurrentY = 80
                                 .FontSize = 10
@@ -1738,6 +1743,7 @@ Private Sub ImprimirFE()
                                     Printer.Print IdSucursal & "-" & NroRemito
                                  Else
                                     IdSucursal = InputBox("Ingrese Nº Sucursal", "SPC SI")
+                                End If
                                 End If
                         End If
                      
@@ -2762,6 +2768,7 @@ Private Sub ImprimirFEB()
                                 .FontBold = False
                                 Printer.Print tFacturaC!CondicionVenta
                             
+                                If Val(tFacturaC!NroRemito & "") > 0 Then
                                 .CurrentX = 130
                                 .CurrentY = 80
                                 .FontSize = 10
@@ -2786,6 +2793,7 @@ Private Sub ImprimirFEB()
                                     Printer.Print IdSucursal & "-" & NroRemito
                                  Else
                                     IdSucursal = InputBox("Ingrese Nº Sucursal", "SPC SI")
+                                End If
                                 End If
                         End If
                      
@@ -3304,6 +3312,7 @@ Private Sub ImprimirFEB()
                                 .FontBold = False
                                 Printer.Print tFacturaC!CondicionVenta
                             
+                                If Val(tFacturaC!NroRemito & "") > 0 Then
                                 .CurrentX = 130
                                 .CurrentY = 80
                                 .FontSize = 10
@@ -3328,6 +3337,7 @@ Private Sub ImprimirFEB()
                                     Printer.Print IdSucursal & "-" & NroRemito
                                  Else
                                     IdSucursal = InputBox("Ingrese Nº Sucursal", "SPC SI")
+                                End If
                                 End If
                         End If
                      
@@ -4429,6 +4439,7 @@ Private Sub GenerarFE()
                                 .FontBold = False
                                 Printer.Print tFacturaC!CondicionVenta
                             
+                                If Val(tFacturaC!NroRemito & "") > 0 Then
                                 .CurrentX = 130
                                 .CurrentY = 80
                                 .FontSize = 10
@@ -4455,6 +4466,7 @@ Private Sub GenerarFE()
                                     Printer.Print IdSucursal & "-" & NroRemito
                                  Else
                                     IdSucursal = InputBox("Ingrese Nº Sucursal", "SPC SI")
+                                End If
                                 End If
                         End If
                      
@@ -4951,6 +4963,7 @@ Private Sub GenerarFE()
                                 .FontBold = False
                                 Printer.Print tFacturaC!CondicionVenta
                             
+                                If Val(tFacturaC!NroRemito & "") > 0 Then
                                 .CurrentX = 130
                                 .CurrentY = 80
                                 .FontSize = 10
@@ -4975,6 +4988,7 @@ Private Sub GenerarFE()
                                     Printer.Print IdSucursal & "-" & NroRemito
                                  Else
                                     IdSucursal = InputBox("Ingrese Nº Sucursal", "SPC SI")
+                                End If
                                 End If
                         End If
                      

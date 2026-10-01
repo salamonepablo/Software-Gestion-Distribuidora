@@ -1454,7 +1454,16 @@ Private Sub BotonGrabar_Click()
             DepoOrigen = tDepositos!IDDEPOSITO
             'MsgBox (DepoOrigen)
            Else
-            A = MsgBox("ERROR !!", vbCritical, "Vendedor sin Depósito Asociado")
+            If CheckModificaStock.Value = vbChecked Then
+                MsgBox "El vendedor no tiene un depósito asociado. Seleccione otro vendedor o desactive Modifica Stock antes de guardar.", vbCritical, "Vendedor sin depósito"
+                tDepositos.Close
+                rstFacturaC.Close
+                rstFacturaD.Close
+                rstProductos.Close
+                rstMovimientosCtaCte.Close
+                db.Close
+                Exit Sub
+            End If
            End If
               
            tDepositos.Close
@@ -2070,7 +2079,9 @@ End Sub
 
 Private Sub CheckModificaStock_Click()
 
-    If CheckModificaStock.Value = Unchecked Then
+    If CheckModificaStock.Value = vbChecked Then
+        modificaStock = 1
+    Else
         modificaStock = 0
     End If
     
