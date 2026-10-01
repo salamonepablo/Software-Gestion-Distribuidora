@@ -336,6 +336,14 @@ Begin VB.Form FormClientes
          TabIndex        =   21
          Top             =   480
          Width           =   13695
+         Begin VB.TextBox txtComision 
+            Alignment       =   1  'Right Justify
+            Height          =   375
+            Left            =   7080
+            TabIndex        =   53
+            Top             =   2280
+            Width           =   615
+         End
          Begin VB.TextBox txtZonaVenta 
             Alignment       =   2  'Center
             Height          =   375
@@ -355,12 +363,12 @@ Begin VB.Form FormClientes
          End
          Begin VB.TextBox txtObservaciones 
             Height          =   1215
-            Left            =   8880
+            Left            =   9480
             MultiLine       =   -1  'True
             ScrollBars      =   2  'Vertical
             TabIndex        =   10
             Top             =   1440
-            Width           =   4455
+            Width           =   3855
          End
          Begin VB.TextBox txtLimiteCredito 
             Alignment       =   1  'Right Justify
@@ -400,7 +408,7 @@ Begin VB.Form FormClientes
             Left            =   360
             TabIndex        =   5
             Top             =   1440
-            Width           =   8175
+            Width           =   8775
          End
          Begin VB.TextBox txtRazonSocial 
             Height          =   375
@@ -417,6 +425,24 @@ Begin VB.Form FormClientes
             TabIndex        =   1
             Top             =   600
             Width           =   855
+         End
+         Begin VB.Label lblcomision 
+            AutoSize        =   -1  'True
+            Caption         =   "Comisión %"
+            BeginProperty Font 
+               Name            =   "MS Sans Serif"
+               Size            =   8.25
+               Charset         =   0
+               Weight          =   700
+               Underline       =   0   'False
+               Italic          =   0   'False
+               Strikethrough   =   0   'False
+            EndProperty
+            Height          =   195
+            Left            =   6960
+            TabIndex        =   52
+            Top             =   2040
+            Width           =   945
          End
          Begin VB.Label Label9 
             AutoSize        =   -1  'True
@@ -468,7 +494,7 @@ Begin VB.Form FormClientes
                Strikethrough   =   0   'False
             EndProperty
             Height          =   195
-            Left            =   8760
+            Left            =   9360
             TabIndex        =   31
             Top             =   1200
             Width           =   1275
@@ -560,7 +586,7 @@ Begin VB.Form FormClientes
             Height          =   195
             Left            =   240
             TabIndex        =   26
-            Top             =   1200
+            Top             =   1080
             Width           =   1455
          End
          Begin VB.Label Label2 
@@ -620,6 +646,7 @@ Private Sub LimpiarPantalla()
     txtNombreFantasia.text = ""
     txtObservaciones.text = ""
     txtPorcentajeDescuento.text = ""
+    txtComision.text = ""
     txtLimiteCredito.text = ""
     txtZonaVenta.text = ""
     txtDomicilio.text = ""
@@ -667,6 +694,8 @@ Private Sub Mostrar()
             If Not IsNull(!Cel) Then txtCel.text = !Cel
             If Not IsNull(!email) Then txtEmail.text = !email
             If Not IsNull(!PorcentajeDescuento) Then txtPorcentajeDescuento.text = !PorcentajeDescuento
+            txtComision.text = ""
+            If Not IsNull(!PorcentajeComision) Then txtComision.text = !PorcentajeComision
             'txtLimiteCredito.Text = !LimiteCredito
             If Not IsNull(!ZonaVenta) Then txtZonaVenta.text = !ZonaVenta
             If Not IsNull(!observaciones) Then txtObservaciones.text = !observaciones
@@ -767,15 +796,15 @@ Private Sub btnBuscar_Click()
         
         If txtIDCliente.text <> "" Then
             Campo = "IDCliente= "
-            Valor = txtIDCliente.text
+            valor = txtIDCliente.text
          Else
             If txtRazonSocial.text <> "" Then
                 Campo = "RazonSocial Like "
-                Valor = "'*" + txtRazonSocial.text + "*'"
+                valor = "'*" + txtRazonSocial.text + "*'"
              Else
                 If txtNombreFantasia.text <> "" Then
                     Campo = "NombreFantasia Like "
-                    Valor = "'*" + txtNombreFantasia.text + "*'"
+                    valor = "'*" + txtNombreFantasia.text + "*'"
                  Else
                     A = MsgBox("DEBE INGRESAR UN VALOR DE BUSQUEDA", vbCritical, "ERROR !!!")
                     txtIDCliente.SetFocus
@@ -785,7 +814,7 @@ Private Sub btnBuscar_Click()
         End If
         
         'vSQL = "SELECT IDProv, Descripcion FROM Provincias Where IDPais=" & tPaises!IDPais & " ORDER BY Descripcion"
-        vSQL = "SELECT * FROM Clientes WHERE " & Campo & Valor & " ORDER BY IDCliente"
+        vSQL = "SELECT * FROM Clientes WHERE " & Campo & valor & " ORDER BY IDCliente"
         
         'MsgBox (vSQL)
         
@@ -841,6 +870,8 @@ End Sub
 
 Private Sub btnGrabar_Click()
 
+    If Not ComisionValida(True) Then Exit Sub
+
     A = MsgBox("¿ Seguro Genera Nuevo Registro ?", vbQuestion + vbOKCancel, "INFO DEL SISTEMA")
     
   If A = 1 Then
@@ -873,6 +904,7 @@ Private Sub btnGrabar_Click()
             !email = Format(txtEmail.text, ">")
             If txtPorcentajeDescuento.text = "" Then txtPorcentajeDescuento.text = 0
             !PorcentajeDescuento = txtPorcentajeDescuento.text
+            !PorcentajeComision = CDbl(txtComision.text)
             '!LimiteCredito = txtLimiteCredito.Text
             !ZonaVenta = txtZonaVenta.text
             !observaciones = Format(txtObservaciones.text, ">")
@@ -994,6 +1026,8 @@ Private Sub btnModificar_Click()
         txtIDCliente.Enabled = False
          
     Else
+        If Not ComisionValida(False) Then Exit Sub
+
         A = MsgBox("¿Seguro desea Guardar las Modificaciones Realizadas?", vbQuestion + vbOKCancel, "INFO DEL SISTEMA")
         
         '1 es Ok 2 es Cancel
@@ -1021,6 +1055,11 @@ Private Sub btnModificar_Click()
                         !Cel = txtCel.text
                         !email = Format(txtEmail.text, ">")
                         !PorcentajeDescuento = txtPorcentajeDescuento.text
+                        If Trim$(txtComision.text) = "" Then
+                            !PorcentajeComision = Null
+                        Else
+                            !PorcentajeComision = CDbl(txtComision.text)
+                        End If
                         '!LimiteCredito = txtLimiteCredito.Text
                         If (txtZonaVenta.text = "") Then txtZonaVenta.text = 0
                         !ZonaVenta = txtZonaVenta.text
@@ -1637,15 +1676,15 @@ Private Sub txtIDCliente_LostFocus()
         
         If txtIDCliente.text <> "" Then
             Campo = "IDCliente= "
-            Valor = txtIDCliente.text
+            valor = txtIDCliente.text
          Else
             If txtRazonSocial.text <> "" Then
                 Campo = "RazonSocial Like "
-                Valor = "'*" + txtRazonSocial.text + "*'"
+                valor = "'*" + txtRazonSocial.text + "*'"
              Else
                 If txtNombreFantasia.text <> "" Then
                     Campo = "NombreFantasia Like "
-                    Valor = "'*" + txtNombreFantasia.text + "*'"
+                    valor = "'*" + txtNombreFantasia.text + "*'"
                  Else
                     A = MsgBox("DEBE INGRESAR UN VALOR DE BUSQUEDA", vbCritical, "ERROR !!!")
                     txtIDCliente.SetFocus
@@ -1655,7 +1694,7 @@ Private Sub txtIDCliente_LostFocus()
         End If
         
         'vSQL = "SELECT IDProv, Descripcion FROM Provincias Where IDPais=" & tPaises!IDPais & " ORDER BY Descripcion"
-        vSQL = "SELECT * FROM Clientes WHERE " & Campo & Valor & " ORDER BY IDCliente"
+        vSQL = "SELECT * FROM Clientes WHERE " & Campo & valor & " ORDER BY IDCliente"
         
 '        MsgBox (vSQL)
         
@@ -1755,6 +1794,63 @@ Private Sub txtObservaciones_KeyPress(KeyAscii As Integer)
 End Sub
 
 
+Private Function ComisionValida(ByVal EsAlta As Boolean) As Boolean
+
+    Dim porcentaje As Double
+
+    If Trim$(txtComision.text) = "" Then
+        If EsAlta Then
+            MsgBox "Debe ingresar el porcentaje de comisión.", vbCritical, "ERROR"
+            txtComision.SetFocus
+            Exit Function
+        End If
+
+        ComisionValida = True
+        Exit Function
+    End If
+
+    If Not IsNumeric(txtComision.text) Then
+        MsgBox "El porcentaje de comisión debe ser numérico.", vbCritical, "ERROR"
+        txtComision.SetFocus
+        Exit Function
+    End If
+
+    porcentaje = CDbl(txtComision.text)
+
+    If porcentaje < 0 Or porcentaje > 100 Then
+        MsgBox "El porcentaje de comisión debe estar entre 0 y 100.", vbCritical, "ERROR"
+        txtComision.SetFocus
+        Exit Function
+    End If
+
+    ComisionValida = True
+
+End Function
+
+Private Sub txtComision_GotFocus()
+    txtComision.SelLength = Len(txtComision.text)
+End Sub
+
+Private Sub txtComision_KeyPress(KeyAscii As Integer)
+
+    If KeyAscii = 13 Then
+        KeyAscii = 0
+        Sendkeys "{TAB}"
+    End If
+
+    KeyAscii = Verificar_Tecla(KeyAscii)
+
+End Sub
+
+Private Sub txtComision_LostFocus()
+
+    If Trim$(txtComision.text) <> "" Then
+        If IsNumeric(txtComision.text) Then
+            txtComision.text = Format(txtComision.text, "Standard")
+        End If
+    End If
+
+End Sub
 Private Sub txtPorcentajeDescuento_GotFocus()
     txtPorcentajeDescuento.SelLength = Len(txtPorcentajeDescuento.text)
 End Sub

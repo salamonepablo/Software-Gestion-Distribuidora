@@ -759,7 +759,11 @@ Private Sub GenerarFEB()
                         .FontSize = 10
                         .CurrentX = 45
                         .CurrentY = 255
-                        Printer.Print "C.A.E: " & tNotaCreditoC!CAE
+                        If CDbl(tNotaCreditoC!CAE) = InvoiceSimulationCae Then
+                            Printer.Print "PRUEBA - SIN VALIDEZ FISCAL"
+                        Else
+                            Printer.Print "C.A.E: " & tNotaCreditoC!CAE
+                        End If
                         .CurrentX = 45
                         .CurrentY = 260
                         Printer.Print "Fecha Vencimiento C.A.E: " & Format(tNotaCreditoC!FechaVC, "DD/MM/YYYY")
@@ -1215,7 +1219,11 @@ Private Sub GenerarFEB()
                         .FontSize = 10
                         .CurrentX = 45
                         .CurrentY = 255
-                        Printer.Print "C.A.E: " & tNotaCreditoC!CAE
+                        If CDbl(tNotaCreditoC!CAE) = InvoiceSimulationCae Then
+                            Printer.Print "PRUEBA - SIN VALIDEZ FISCAL"
+                        Else
+                            Printer.Print "C.A.E: " & tNotaCreditoC!CAE
+                        End If
                         .CurrentX = 45
                         .CurrentY = 260
                         Printer.Print "Fecha Vencimiento C.A.E: " & Format(tNotaCreditoC!FechaVC, "DD/MM/YYYY")
@@ -2242,7 +2250,11 @@ Private Sub ImprimirFE()
                         .FontSize = 10
                         .CurrentX = 45
                         .CurrentY = 255
-                        Printer.Print "C.A.E: " & tNotaCreditoC!CAE
+                        If CDbl(tNotaCreditoC!CAE) = InvoiceSimulationCae Then
+                            Printer.Print "PRUEBA - SIN VALIDEZ FISCAL"
+                        Else
+                            Printer.Print "C.A.E: " & tNotaCreditoC!CAE
+                        End If
                         .CurrentX = 45
                         .CurrentY = 260
                         Printer.Print "Fecha Vencimiento C.A.E: " & Format(tNotaCreditoC!FechaVC, "DD/MM/YYYY")
@@ -2714,7 +2726,11 @@ Private Sub ImprimirFE()
                         .FontSize = 10
                         .CurrentX = 45
                         .CurrentY = 255
-                        Printer.Print "C.A.E: " & tNotaCreditoC!CAE
+                        If CDbl(tNotaCreditoC!CAE) = InvoiceSimulationCae Then
+                            Printer.Print "PRUEBA - SIN VALIDEZ FISCAL"
+                        Else
+                            Printer.Print "C.A.E: " & tNotaCreditoC!CAE
+                        End If
                         .CurrentX = 45
                         .CurrentY = 260
                         Printer.Print "Fecha Vencimiento C.A.E: " & Format(tNotaCreditoC!FechaVC, "DD/MM/YYYY")
@@ -3227,7 +3243,11 @@ Private Sub ImprimirFEB()
                         .FontSize = 10
                         .CurrentX = 45
                         .CurrentY = 255
-                        Printer.Print "C.A.E: " & tNotaCreditoC!CAE
+                        If CDbl(tNotaCreditoC!CAE) = InvoiceSimulationCae Then
+                            Printer.Print "PRUEBA - SIN VALIDEZ FISCAL"
+                        Else
+                            Printer.Print "C.A.E: " & tNotaCreditoC!CAE
+                        End If
                         .CurrentX = 45
                         .CurrentY = 260
                         Printer.Print "Fecha Vencimiento C.A.E: " & Format(tNotaCreditoC!FechaVC, "DD/MM/YYYY")
@@ -3683,7 +3703,11 @@ Private Sub ImprimirFEB()
                         .FontSize = 10
                         .CurrentX = 45
                         .CurrentY = 255
-                        Printer.Print "C.A.E: " & tNotaCreditoC!CAE
+                        If CDbl(tNotaCreditoC!CAE) = InvoiceSimulationCae Then
+                            Printer.Print "PRUEBA - SIN VALIDEZ FISCAL"
+                        Else
+                            Printer.Print "C.A.E: " & tNotaCreditoC!CAE
+                        End If
                         .CurrentX = 45
                         .CurrentY = 260
                         Printer.Print "Fecha Vencimiento C.A.E: " & Format(tNotaCreditoC!FechaVC, "DD/MM/YYYY")
@@ -4472,7 +4496,11 @@ Private Sub GenerarFE()
                         .FontSize = 10
                         .CurrentX = 45
                         .CurrentY = 255
-                        Printer.Print "C.A.E: " & tNotaCreditoC!CAE
+                        If CDbl(tNotaCreditoC!CAE) = InvoiceSimulationCae Then
+                            Printer.Print "PRUEBA - SIN VALIDEZ FISCAL"
+                        Else
+                            Printer.Print "C.A.E: " & tNotaCreditoC!CAE
+                        End If
                         .CurrentX = 45
                         .CurrentY = 260
                         Printer.Print "Fecha Vencimiento C.A.E: " & Format(tNotaCreditoC!FechaVC, "DD/MM/YYYY")
@@ -4943,7 +4971,11 @@ Private Sub GenerarFE()
                         .FontSize = 10
                         .CurrentX = 45
                         .CurrentY = 255
-                        Printer.Print "C.A.E: " & tNotaCreditoC!CAE
+                        If CDbl(tNotaCreditoC!CAE) = InvoiceSimulationCae Then
+                            Printer.Print "PRUEBA - SIN VALIDEZ FISCAL"
+                        Else
+                            Printer.Print "C.A.E: " & tNotaCreditoC!CAE
+                        End If
                         .CurrentX = 45
                         .CurrentY = 260
                         Printer.Print "Fecha Vencimiento C.A.E: " & Format(tNotaCreditoC!FechaVC, "DD/MM/YYYY")

@@ -1569,7 +1569,13 @@ Private Sub BotonGrabar_Click()
         
 '///Declaraciones para FE SPC
         
-        
+        Dim associationError As String
+        If Not ResolveCreditAssociation(App.Path & "\DB_SPC_SI.mdb", cmbFacturaReferencia.text, txtTipoFacturaReferencia.text, CLng(Val(TextCodigoCliente.text)), TipoCbteAsoc, NroCbteAsoc, FechaCbteAsoc, associationError) Then
+            MsgBox associationError, vbExclamation, "Factura asociada"
+            cmbFacturaReferencia.SetFocus
+            Exit Sub
+        End If
+
         ruta = App.Path & "\DB_SPC_SI.mdb"
     
         Set db = DBEngine.OpenDatabase(ruta)
@@ -1809,14 +1815,6 @@ Private Sub BotonGrabar_Click()
                     ImpAlicuota = 0
                 End If
                 
-            'Buscamos el comprobante asociado a la NC
-                If cmbFacturaReferencia.text = "" Then
-                    z = MsgBox("Debe Elegir un Comprobante Asociado a la Nota de Crédito", vbOKOnly, "ERROR !!!")
-                    cmbFacturaReferencia.SetFocus
-                End If
-                
-                Call BuscaCbteAsociado(CLng(cmbFacturaReferencia.text), CStr(txtTipoFacturaReferencia.text))
-            
                ' Call FacturaElectronicaSPC(PtoVta, DocTipo, DocNro, TipoComp, CbteDesde, CbteHasta, CbteFch, ImpTotal, ImpNeto, MonId, MonCotiz, AlicIVA, BaseImpIVA, ImpIva, IdTributo, DescTributo, BaseImpTributo, Alicuota, ImpAlicuota, ImporteExento, TipoCbteAsoc, NroCbteAsoc, FechaCbteAsoc)
                 
 '********************* Generar Factura Electrónica SPC ******************************************************************

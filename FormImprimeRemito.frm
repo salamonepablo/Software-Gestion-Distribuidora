@@ -395,7 +395,120 @@ Dim rstDomiciliosClientes As DAO.Recordset
 Dim rstRemitoC As DAO.Recordset
 Dim rstRemitoD As DAO.Recordset
 
+Private Function ResolveDeliveryAddressItem() As Long
+    Dim rawItem As String
+    Dim numericItem As Double
+    On Error GoTo UseDefault
+    rawItem = Trim$(TextItemDomicilio.text)
+    If Len(rawItem) = 0 Then GoTo UseDefault
+    If Not IsNumeric(rawItem) Then GoTo UseDefault
+    numericItem = CDbl(rawItem)
+    If numericItem < 0 Or numericItem > 2147483647# Then GoTo UseDefault
+    If numericItem <> Fix(numericItem) Then GoTo UseDefault
+    ResolveDeliveryAddressItem = CLng(numericItem)
+    Exit Function
+UseDefault:
+    SetDefaultDeliveryAddress
+    LogDeliveryAddressFallback
+    MsgBox "No se selecciono un domicilio adicional valido. Se usara el domicilio principal de la factura (identificador 0).", vbInformation, "Domicilio del remito"
+    ResolveDeliveryAddressItem = 0
+End Function
+
+Private Sub SetDefaultDeliveryAddress()
+    TextItemDomicilio.text = "0"
+    TextDireccion.text = FormFactura.TextDireccion.text
+    TextLocalidad.text = FormFactura.TextLocalidad.text
+    TextCodigoPostal.text = FormFactura.TextCodigoPostal.text
+    TextProvincia.text = FormFactura.TextProvincia.text
+End Sub
+
+Private Sub LogDeliveryAddressFallback()
+    Dim logFile As Integer
+    On Error GoTo LogUnavailable
+    logFile = FreeFile
+    Open App.Path & "\delivery-address-fallback.log" For Append As #logFile
+    Print #logFile, Format$(Now, "yyyy-mm-dd hh:nn:ss") & " client=" & TextCodigoCliente.text & " invoice=" & TextNumeroFactura.text & " delivery=" & TextNumeroRemito.text & " defaultItem=0"
+    Close #logFile
+    Exit Sub
+LogUnavailable:
+    On Error Resume Next
+    If logFile > 0 Then Close #logFile
+    MsgBox "Se aplico el domicilio principal, pero no se pudo escribir el registro de diagnostico.", vbExclamation
+End Sub
+
+Private Sub SelectDeliveryAddressRow()
+    If MSHFlexGrid1.Row < 1 Then Exit Sub
+    If Len(Trim$(MSHFlexGrid1.TextMatrix(MSHFlexGrid1.Row, 5))) = 0 Then Exit Sub
+    TextDireccion.text = MSHFlexGrid1.TextMatrix(MSHFlexGrid1.Row, 1)
+    TextLocalidad.text = MSHFlexGrid1.TextMatrix(MSHFlexGrid1.Row, 2)
+    TextCodigoPostal.text = MSHFlexGrid1.TextMatrix(MSHFlexGrid1.Row, 3)
+    TextProvincia.text = MSHFlexGrid1.TextMatrix(MSHFlexGrid1.Row, 4)
+    TextItemDomicilio.text = MSHFlexGrid1.TextMatrix(MSHFlexGrid1.Row, 5)
+End Sub
+
+Private Function TryReuseExistingDelivery() As Integer
+    Dim checkDatabase As DAO.Database
+    Dim existingDelivery As DAO.Recordset
+    Dim branchNumber As Long
+    Dim deliveryNumber As Long
+    Dim sourceType As String
+    Dim sourceNumber As Long
+    Dim creditInput As String
+    Dim creditNumber As Long
+    Dim failureReason As String
+    On Error GoTo Failed
+    branchNumber = CLng(Val(cmbSucursales.text))
+    deliveryNumber = CLng(TextNumeroRemito.text)
+    If branchNumber <= 0 Or deliveryNumber <= 0 Then Err.Raise vbObjectError + 2250, , "Seleccione sucursal y numero de remito validos."
+    Set checkDatabase = DBEngine.OpenDatabase(App.Path & "\DB_SPC_SI.mdb", False, True)
+    Set existingDelivery = checkDatabase.OpenRecordset("SELECT * FROM RemitoC WHERE IdSucursal=" & branchNumber & " AND NroRemito=" & deliveryNumber, dbOpenSnapshot)
+    If existingDelivery.EOF Then
+        existingDelivery.Close
+        checkDatabase.Close
+        Exit Function
+    End If
+    TryReuseExistingDelivery = -1
+    If Val(existingDelivery!CodCliente & "") <> CLng(TextCodigoCliente.text) Then Err.Raise vbObjectError + 2251, , "El remito pertenece a otro cliente."
+    sourceType = Trim$(existingDelivery!TipoFactura & "")
+    sourceNumber = Val(existingDelivery!NroFactura & "")
+    existingDelivery.Close
+    checkDatabase.Close
+    If sourceType = FormFactura.TextTipoFactura.text And sourceNumber = CLng(FormFactura.TextNumeroFactura.text) Then
+        MsgBox "El remito ya esta asociado a esta factura.", vbInformation
+        TryReuseExistingDelivery = 1
+        Exit Function
+    End If
+    creditInput = Trim$(InputBox("El remito esta asociado a la factura " & sourceType & " " & sourceNumber & ". Ingrese el numero de la NOTA DE CREDITO TOTAL de esa factura (misma letra). Cancelar conserva la asociacion actual.", "Reutilizar remito existente"))
+    If Len(creditInput) = 0 Then Exit Function
+    If Not IsNumeric(creditInput) Then Err.Raise vbObjectError + 2252, , "Numero de nota de credito no valido."
+    If CDbl(creditInput) <> Fix(CDbl(creditInput)) Or CDbl(creditInput) <= 0 Then Err.Raise vbObjectError + 2252, , "Numero de nota de credito no valido."
+    creditNumber = CLng(creditInput)
+    If MsgBox("Confirma que la nota de credito " & sourceType & " " & creditNumber & " fue emitida para compensar totalmente la factura " & sourceType & " " & sourceNumber & "?" & vbCrLf & "La relacion historica no esta guardada en el sistema: verifique el comprobante. El remito " & branchNumber & "-" & deliveryNumber & " pasara a la factura " & FormFactura.TextTipoFactura.text & " " & FormFactura.TextNumeroFactura.text & ", conservando su detalle e historial.", vbYesNo Or vbExclamation Or vbDefaultButton2, "Confirmar reasociacion") <> vbYes Then Exit Function
+    If ReassignDelivery(App.Path & "\DB_SPC_SI.mdb", branchNumber, deliveryNumber, FormFactura.TextTipoFactura.text, CLng(FormFactura.TextNumeroFactura.text), CLng(TextCodigoCliente.text), sourceType, creditNumber, failureReason) Then
+        TryReuseExistingDelivery = 1
+    Else
+        MsgBox "No se pudo reasociar el remito: " & failureReason, vbExclamation
+    End If
+    Exit Function
+Failed:
+    TryReuseExistingDelivery = -1
+    MsgBox "No se pudo verificar el remito: " & Err.Description, vbExclamation
+    On Error Resume Next
+    If Not existingDelivery Is Nothing Then existingDelivery.Close
+    If Not checkDatabase Is Nothing Then checkDatabase.Close
+End Function
+
 Private Sub BotonGrabar_Click()
+    Dim addressItem As Long
+    Dim reuseResult As Integer
+    reuseResult = TryReuseExistingDelivery()
+    If reuseResult < 0 Then Exit Sub
+    If reuseResult = 1 Then
+        vNroRemImp = TextNumeroRemito.text
+        GoTo DeliverySaved
+    End If
+    IdSucursal = CLng(Val(cmbSucursales.text))
+    addressItem = ResolveDeliveryAddressItem()
 
     ruta = App.Path & "\DB_SPC_SI.mdb"
 
@@ -414,7 +527,7 @@ Private Sub BotonGrabar_Click()
        
 '    Set db1 = DBEngine.OpenDatabase(ruta)
 '
-'        Set rstRemC = db1.OpenRecordset("RemitoD", dbOpenTable)
+'        Set rstRemC = db1.OpenRecordset("RemitoC", dbOpenTable)
 '
 '        rstRemC.Index = "PrimaryKey"
 '
@@ -440,9 +553,10 @@ Private Sub BotonGrabar_Click()
 
     NumFac = Val(TextNumeroFactura.text)
       
-    rstFacturaC.FindFirst "NroFactura= " + Str(NumFac)
-    If rstFacturaC.Fields!NroFactura <> Val(TextNumeroFactura.text) Then
+    rstFacturaC.FindFirst "NroFactura=" & CStr(NumFac) & " AND TipoFactura='" & FormFactura.TextTipoFactura.text & "'"
+    If rstFacturaC.NoMatch Then
         mensaje = MsgBox("Factura Inexistente", vbCritical, "Final de la busqueda")
+        Exit Sub
         'TextCodigoCliente.Text = ""
         'Call blanqueototal
         'TextCodigoCliente.SetFocus
@@ -460,28 +574,31 @@ Private Sub BotonGrabar_Click()
        
         Set db1 = DBEngine.OpenDatabase(ruta)
         
-        Set rstRemC = db1.OpenRecordset("RemitoD", dbOpenTable)
+        Set rstRemC = db1.OpenRecordset("RemitoC", dbOpenTable)
         
         rstRemC.Index = "PrimaryKey"
         
-        rstRemC.Seek "=", Str(TextNumeroFactura.text)
+        rstRemC.Seek "=", CLng(Val(cmbSucursales.text)), CLng(TextNumeroRemito.text)
 
         If Not rstRemC.NoMatch Then
             A = MsgBox("Remito Existente", vbCritical, "INFO DEL SISTEMA")
            
             TextNumeroRemito.text = num
             TextNumeroRemito.SetFocus
+            rstRemC.Close
+            db1.Close
+            Exit Sub
         Else
         
         rstRemC.Close
         db1.Close
      
-            IdSucursal = Left(cmbSucursales.text, 1)
+            IdSucursal = CLng(Val(cmbSucursales.text))
             rstRemitoC.AddNew
                 rstRemitoC.Fields!IdSucursal = CLng(IdSucursal)
                 rstRemitoC.Fields!NroRemito = TextNumeroRemito.text
                 rstRemitoC.Fields!FechaRemito = TextFechaRemito.text
-                rstRemitoC.Fields!item = TextItemDomicilio.text
+                rstRemitoC.Fields!item = addressItem
                 rstRemitoC.Fields!CodCliente = TextCodigoCliente.text
                 rstRemitoC.Fields!codVendedor = FormFactura.TextLegajoEmpleado.text
                 rstRemitoC.Fields!NroFactura = Val(FormFactura.TextNumeroFactura.text)
@@ -500,7 +617,7 @@ Private Sub BotonGrabar_Click()
                   If FormFactura.FG1.text <> "" Then
                         rstRemitoD.AddNew
                     
-                        rstRemitoD.Fields!IdSucursal = CInt(Left(cmbSucursales.text, 1))
+                        rstRemitoD.Fields!IdSucursal = CLng(Val(cmbSucursales.text))
                         rstRemitoD.Fields!NroRemito = TextNumeroRemito.text
                         
                     
@@ -540,7 +657,7 @@ Private Sub BotonGrabar_Click()
     
             'rstUltimosNumeros.FindFirst "IDTabla >= '" & busca1 & "' and IDTabla <= '" & busca2 & "'"
             'rstUltimosNumeros.FindFirst "IDTabla >= '" & busco & "' "
-            rstUltimosNumeros.Seek "=", busco, CLng(Left(cmbSucursales.text, 1))
+            rstUltimosNumeros.Seek "=", busco, CLng(Val(cmbSucursales.text))
             
             If Not rstUltimosNumeros.NoMatch Then
                 ultimo = rstUltimosNumeros.Fields!UltimoNumero
@@ -558,6 +675,7 @@ Private Sub BotonGrabar_Click()
             
         End If
         
+DeliverySaved:
          Unload FormImprimeRemito
         
         respuesta = MsgBox("Desea Realizar un Pago", vbYesNo, "Pago")
@@ -655,7 +773,7 @@ Private Sub Form_Load()
     
     'rstUltimosNumeros.FindFirst "IDTabla >= '" & busca1 & "' and IDTabla <= '" & busca2 & "'"
     'rstUltimosNumeros.FindFirst "IDTabla >= '" & busco & "' "
-    rstUltimosNumeros.Seek "=", busco, CLng(Left(cmbSucursales.text, 1))
+    rstUltimosNumeros.Seek "=", busco, CLng(Val(cmbSucursales.text))
     
     If Not rstUltimosNumeros.NoMatch Then
         NumeroRemito = rstUltimosNumeros.Fields!UltimoNumero
@@ -675,24 +793,8 @@ Private Sub Form_Load()
     TextApellidoNombre.text = FormFactura.TextApellidoNombre.text
     
     If TextCodigoCliente.text <> "" Then
-        
-        MSHFlexGrid1.Col = 1
-        TextDireccion.text = MSHFlexGrid1.text
-        
-        MSHFlexGrid1.Col = 2
-        TextLocalidad.text = MSHFlexGrid1.text
-        
-        MSHFlexGrid1.Col = 3
-        TextCodigoPostal = MSHFlexGrid1.text
-        
-        MSHFlexGrid1.Col = 4
-        TextProvincia.text = MSHFlexGrid1.text
-        
-        MSHFlexGrid1.Col = 5
-        TextItemDomicilio.text = MSHFlexGrid1.text
-        
+        SelectDeliveryAddressRow
         BotonGrabar.Enabled = True
-    
     End If
 
 
@@ -742,136 +844,49 @@ Private Sub titulos()
  End Sub
  
  Private Sub buscodirecciones()
- 
- MSHFlexGrid1.Clear
-    
-    ruta = App.Path & "\DB_SPC_SI.mdb"
-    
-    Set db = DBEngine.OpenDatabase(ruta)
-    Set rstDomiciliosClientes = db.OpenRecordset("DomiciliosClientes", dbOpenDynaset)
-    
-    
+    Dim addressRows As DAO.Recordset
+    Dim addressDatabase As DAO.Database
+    Dim rowIndex As Long
+    On Error GoTo AddressLoadFailed
+    SetDefaultDeliveryAddress
     MSHFlexGrid1.Rows = 2
     MSHFlexGrid1.Clear
-    MSHFlexGrid1.Visible = True
-    
-    Call titulos
-    
-    
-    CodigoClie = Val(TextCodigoCliente.text)
-    
-    rstDomiciliosClientes.FindFirst "IDCliente= " + Str(CodigoClie)
-    'facturacancelada = rstDomiciliosClientes.Fields!Cancelada
-    codigoclientedetalle = rstDomiciliosClientes.Fields!IdCliente
-    
-    If rstDomiciliosClientes.Fields!IdCliente <> Val(TextCodigoCliente.text) Then
-            'MSHFlexGrid1.Visible = False
-        
-            'MSHFlexGrid1.AddItem " "
-            'MSHFlexGrid1.Row = linea2
-       
-            'MSHFlexGrid1.Col = 0
-            'MSHFlexGrid1.Text = 1
-            'MSHFlexGrid1.Col = 1
-            TextDireccion.text = FormFactura.TextDireccion.text
-            'MSHFlexGrid1.Text =
-            'MSHFlexGrid1.Col = 2
-            TextLocalidad.text = FormFactura.TextLocalidad.text
-            'MSHFlexGrid1.Text = FormFactura.TextLocalidad.Text
-            'MSHFlexGrid1.Col = 3
-            TextCodigoPostal.text = FormFactura.TextCodigoPostal.text
-            'MSHFlexGrid1.Text = FormFactura.TextCodigoPostal.Text
-            'MSHFlexGrid1.Col = 4
-            TextProvincia.text = FormFactura.TextProvincia.text
-            TextItemDomicilio.text = 0
-            'MSHFlexGrid1.Text = FormFactura.TextProvincia.Text
-            'MSHFlexGrid1.Col = 5
-            'MSHFlexGrid1.Text = 0
-            'facturacancelada = rstDomiciliosClientes.Fields!Cancelada
-            'If facturacancelada = True Then
-            '    MSHFlexGrid1.Col = 4
-            '    MSHFlexGrid1.Text = "SI"
-            'Else
-            '    MSHFlexGrid1.Col = 4
-            '    MSHFlexGrid1.Text = "NO"
-            'End If
-            'linea2 = linea2 + 1
-                
-            'rstDomiciliosClientes.FindNext "IDCliente= " + Str(CodigoClie)
-        
-        'mensaje = MsgBox("No Existen Domicilios", vbCritical, "Final de la busqueda")
-        'TextCodigoCliente.Text = ""
-        'Call blanco
-        'TextCodigoCliente.SetFocus
-        BotonGrabar.Enabled = True
-        Exit Sub
-    End If
-    
-    If codigoclientedetalle = CodigoClie Then
-        MSHFlexGrid1.Rows = 2
-        MSHFlexGrid1.Clear
-        MSHFlexGrid1.Visible = True
-    
-       
-    Else
-        MSHFlexGrid1.Visible = False
-    End If
-    Call titulos
-    linea2 = 1
-    Do While Not rstDomiciliosClientes.NoMatch
-            MSHFlexGrid1.AddItem " "
-            MSHFlexGrid1.Row = linea2
-       
-            MSHFlexGrid1.Col = 0
-            MSHFlexGrid1.text = rstDomiciliosClientes.Fields!item
-            MSHFlexGrid1.Col = 1
-            MSHFlexGrid1.text = rstDomiciliosClientes.Fields!Domicilio
-            MSHFlexGrid1.Col = 2
-            MSHFlexGrid1.text = rstDomiciliosClientes.Fields!localidad
-            MSHFlexGrid1.Col = 3
-            MSHFlexGrid1.text = rstDomiciliosClientes.Fields!CP
-            MSHFlexGrid1.Col = 4
-            MSHFlexGrid1.text = rstDomiciliosClientes.Fields!Prov
-            MSHFlexGrid1.Col = 5
-            MSHFlexGrid1.text = rstDomiciliosClientes.Fields!item
-            'facturacancelada = rstDomiciliosClientes.Fields!Cancelada
-            'If facturacancelada = True Then
-            '    MSHFlexGrid1.Col = 4
-            '    MSHFlexGrid1.Text = "SI"
-            'Else
-            '    MSHFlexGrid1.Col = 4
-            '    MSHFlexGrid1.Text = "NO"
-            'End If
-            linea2 = linea2 + 1
-                
-            rstDomiciliosClientes.FindNext "IDCliente= " + Str(CodigoClie)
+    titulos
+    MSHFlexGrid1.Visible = False
+    If Len(Trim$(TextCodigoCliente.text)) = 0 Then Exit Sub
+    Set addressDatabase = DBEngine.OpenDatabase(App.Path & "\DB_SPC_SI.mdb")
+    Set addressRows = addressDatabase.OpenRecordset("SELECT * FROM DomiciliosClientes WHERE IdCliente=" & CStr(Val(TextCodigoCliente.text)) & " ORDER BY item", dbOpenSnapshot)
+    rowIndex = 1
+    Do While Not addressRows.EOF
+        MSHFlexGrid1.Rows = rowIndex + 1
+        MSHFlexGrid1.TextMatrix(rowIndex, 0) = addressRows!item & ""
+        MSHFlexGrid1.TextMatrix(rowIndex, 1) = addressRows!Domicilio & ""
+        MSHFlexGrid1.TextMatrix(rowIndex, 2) = addressRows!localidad & ""
+        MSHFlexGrid1.TextMatrix(rowIndex, 3) = addressRows!CP & ""
+        MSHFlexGrid1.TextMatrix(rowIndex, 4) = addressRows!Prov & ""
+        MSHFlexGrid1.TextMatrix(rowIndex, 5) = addressRows!item & ""
+        rowIndex = rowIndex + 1
+        addressRows.MoveNext
     Loop
-    
-    
-
- 
- End Sub
+    addressRows.Close
+    addressDatabase.Close
+    If rowIndex > 1 Then
+        MSHFlexGrid1.Visible = True
+        MSHFlexGrid1.Row = 1
+        SelectDeliveryAddressRow
+    End If
+    BotonGrabar.Enabled = True
+    Exit Sub
+AddressLoadFailed:
+    BotonGrabar.Enabled = False
+    MsgBox "No se pudieron cargar los domicilios: " & Err.Description, vbExclamation
+    On Error Resume Next
+    If Not addressRows Is Nothing Then addressRows.Close
+    If Not addressDatabase Is Nothing Then addressDatabase.Close
+End Sub
 
 Private Sub MSHFlexGrid1_Click()
-
-    MSHFlexGrid1.Col = 1
-    TextDireccion.text = MSHFlexGrid1.text
-    
-    MSHFlexGrid1.Col = 2
-    TextLocalidad.text = MSHFlexGrid1.text
-    
-    MSHFlexGrid1.Col = 3
-    TextCodigoPostal = MSHFlexGrid1.text
-    
-    MSHFlexGrid1.Col = 4
-    TextProvincia.text = MSHFlexGrid1.text
-    
-    MSHFlexGrid1.Col = 5
-    TextItemDomicilio.text = MSHFlexGrid1.text
-    
-    
-    BotonGrabar.Enabled = True
-
+    SelectDeliveryAddressRow
 End Sub
 
 Private Sub TextCodigoCliente_Change()

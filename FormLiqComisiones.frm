@@ -248,21 +248,21 @@ Private Sub SeteoGrilla()
             
     'Títulos
         FG1.Row = 0
-        FG1.Col = 0
-        FG1.Text = "Nro Pago"
-        FG1.Col = 1
-        FG1.Text = "Fecha"
-        FG1.Col = 2
+        FG1.col = 0
+        FG1.text = "Nro Pago"
+        FG1.col = 1
+        FG1.text = "Fecha"
+        FG1.col = 2
         'FG1.Text = "Total" + Chr(10) + "Abonado"
-        FG1.Text = "Importe" + Chr(10) + "Pago"
-        FG1.Col = 3
-        FG1.Text = "Forma" + Chr(10) + "de Pago"
-        FG1.Col = 4
-        FG1.Text = "Cliente"
-        FG1.Col = 5
-        FG1.Text = "Comisión %"
-        FG1.Col = 6
-        FG1.Text = "Importe" + Chr(10) + "Comisión"
+        FG1.text = "Importe" + Chr(10) + "Pago"
+        FG1.col = 3
+        FG1.text = "Forma" + Chr(10) + "de Pago"
+        FG1.col = 4
+        FG1.text = "Cliente"
+        FG1.col = 5
+        FG1.text = "Comisión %"
+        FG1.col = 6
+        FG1.text = "Importe" + Chr(10) + "Comisión"
         
     
 End Sub
@@ -280,7 +280,7 @@ Private Sub cmbVendedores_KeyPress(Index As Integer, KeyAscii As Integer)
     cmbVendedores(0).ListIndex = cmbVendedores(1).ListIndex
     If KeyAscii = 13 Then
             KeyAscii = 0
-            SendKeys "{TAB}"
+            Sendkeys "{TAB}"
     End If
         
 End Sub
@@ -296,7 +296,7 @@ End Sub
 Private Sub cmdExcel_Click()
     Dim NombreArchivo As String
     
-    NombreArchivo = "\LiqCom_Vend_" + cmbVendedores(0).Text + "_" + Format(TxtFechaHasta.Text, "MMM-YYYY") + ".xlsx"
+    NombreArchivo = "\LiqCom_Vend_" + cmbVendedores(0).text + "_" + Format(TxtFechaHasta.text, "MMM-YYYY") + ".xlsx"
     
     'If Exportar_Excel(App.Path & "\Comisiones.xls", MSHFlexGrid1) Then
     
@@ -332,7 +332,7 @@ Public Function Exportar_Excel(sOutputPath As String, FlexGrid As Object) As Boo
     End With
     
     o_Hoja.Cells(Fila, (Columna - 1)).Value = "Liquidación Total:"
-    o_Hoja.Cells(Fila, Columna).Value = FormatCurrency(txtImporteTotal.Text, 2)
+    o_Hoja.Cells(Fila, Columna).Value = FormatCurrency(txtImporteTotal.text, 2)
     
     
     o_Libro.Close True, sOutputPath
@@ -377,11 +377,11 @@ Private Sub cmdImprimir_Click()
         'texto de los encabezdos y el pie de pagina
         .TextEncabezado1 = Chr(9) & "LIQUIDACION DE COMISIONES"
             
-                    nVendedor = Chr(9) & cmbVendedores(1).Text
-                    Pie = Chr(9) & Chr(9) & Chr(9) & Chr(9) & Chr(9) & Chr(9) & Chr(9) & Chr(9) & Chr(9) & Chr(9) & "Liquidación Total: " & FormatCurrency(txtImporteTotal.Text, 2)
+                    nVendedor = Chr(9) & cmbVendedores(1).text
+                    Pie = Chr(9) & Chr(9) & Chr(9) & Chr(9) & Chr(9) & Chr(9) & Chr(9) & Chr(9) & Chr(9) & Chr(9) & "Liquidación Total: " & FormatCurrency(txtImporteTotal.text, 2)
                     'Pie = "Desarrollado por SPC Software Integral"
         
-        .TextEncabezado2 = Chr(9) & nVendedor & Chr(10) & Chr(9) & Chr(9) & "Desde el " & TxtFechaDesde.Text & " al " & TxtFechaHasta.Text
+        .TextEncabezado2 = Chr(9) & nVendedor & Chr(10) & Chr(9) & Chr(9) & "Desde el " & TxtFechaDesde.text & " al " & TxtFechaHasta.text
                 
         'CGrid.Row = 1
         'CGrid.Col = 10
@@ -440,12 +440,12 @@ Private Sub cmdLiquidar_Click()
         
     FG1.Rows = 2
     
-    'On Error GoTo CapturaErrores
+    On Error GoTo CapturaErrores
     
-    FechaDesde = Format(TxtFechaDesde.Text, "m/d/yyyy")
-    FechaHasta = Format(TxtFechaHasta.Text, "m/d/yyyy")
+    FechaDesde = Format(TxtFechaDesde.text, "m/d/yyyy")
+    FechaHasta = Format(TxtFechaHasta.text, "m/d/yyyy")
     
-    vSQL = "SELECT * FROM qLiqComisiones WHERE FechaPago>=#" & FechaDesde & "# AND FechaPago <=#" & FechaHasta & "# AND Legajo='" & cmbVendedores(0).Text & "' ORDER BY FormaPago, FechaPago"
+    vSQL = "SELECT * FROM qLiqComisiones WHERE FechaPago>=#" & FechaDesde & "# AND FechaPago <=#" & FechaHasta & "# AND Legajo='" & cmbVendedores(0).text & "' ORDER BY FormaPago, FechaPago"
     'MsgBox (vSQL)
     
     Set qComisiones = BaseSPC.OpenRecordset(vSQL, dbOpenDynaset)
@@ -459,31 +459,31 @@ Private Sub cmdLiquidar_Click()
     While Not qComisiones.EOF
       FG1.CellFontBold = False
       If FormaPago = qComisiones!FormaPago Then
-        FG1.Col = 0
-        FG1.Text = Format(qComisiones.[PagoC.NroPago], "General Number")
-        FG1.Col = 1
-        FG1.Text = Format(qComisiones!FechaPago, "DD-MMM-YY")
-        FG1.Col = 2
+        FG1.col = 0
+        FG1.text = Format(qComisiones.[PagoC.NroPago], "General Number")
+        FG1.col = 1
+        FG1.text = Format(qComisiones!FechaPago, "DD-MMM-YY")
+        FG1.col = 2
         FG1.CellAlignment = 7
         'FG1.Text = Format$(qComisiones!TotalAbonado, "Standard")
         'FG1.Text = FormatCurrency(qComisiones!TotalAbonado, 2)
-        FG1.Text = FormatCurrency(qComisiones!ImportePago, 2)
+        FG1.text = FormatCurrency(qComisiones!ImportePago, 2)
         TotalFormaPago = TotalFormaPago + qComisiones!ImportePago
-        FG1.Col = 3
-        FG1.Text = qComisiones!FormaPago
-        FG1.Col = 4
-        FG1.Text = qComisiones!RazonSocial
-        FG1.Col = 5
+        FG1.col = 3
+        FG1.text = qComisiones!FormaPago
+        FG1.col = 4
+        FG1.text = qComisiones!RazonSocial
+        FG1.col = 5
         FG1.CellAlignment = 7
-        FG1.Text = Format$(qComisiones!Comision, "Standard")
-        FG1.Col = 6
-        'LiqLinea = (qComisiones!TotalAbonado * qComisiones!Comision) / 100
+        FG1.text = Format$(qComisiones![qLiqComisiones.Comision], "Standard")
+        FG1.col = 6
+        'LiqLinea = (qComisiones!TotalAbonado * qComisiones![qLiqComisiones.Comision]) / 100
         FG1.CellAlignment = 7
-        'LiqLinea = (qComisiones!TotalAbonado * qComisiones!Comision) / 100
-        LiqLinea = (qComisiones!ImportePago * qComisiones!Comision) / 100
+        'LiqLinea = (qComisiones!TotalAbonado * qComisiones![qLiqComisiones.Comision]) / 100
+        LiqLinea = (qComisiones!ImportePago * qComisiones![qLiqComisiones.Comision]) / 100
         
         'FG1.Text = Format$(LiqLinea, "Standard")
-        FG1.Text = FormatCurrency(LiqLinea, 2)
+        FG1.text = FormatCurrency(LiqLinea, 2)
         
         LiqTotal = LiqTotal + LiqLinea
         
@@ -494,12 +494,12 @@ Private Sub cmdLiquidar_Click()
         
        Else
             'Subtotales
-                FG1.Col = 2
+                FG1.col = 2
                 FG1.CellFontBold = True
-                FG1.Text = "Total en " & FormaPago + ": "
-                FG1.Col = 3
+                FG1.text = "Total en " & FormaPago + ": "
+                FG1.col = 3
                 FG1.CellFontBold = True
-                FG1.Text = FormatCurrency(TotalFormaPago, 2)
+                FG1.text = FormatCurrency(TotalFormaPago, 2)
                 
                 FormaPago = qComisiones!FormaPago
                 LiqLinea = 0
@@ -509,12 +509,12 @@ Private Sub cmdLiquidar_Click()
        End If
     Wend
         'Ultima Linea
-            FG1.Col = 2
+            FG1.col = 2
             FG1.CellFontBold = True
-            FG1.Text = "Total en " & FormaPago + ": "
-            FG1.Col = 3
+            FG1.text = "Total en " & FormaPago + ": "
+            FG1.col = 3
             FG1.CellFontBold = True
-            FG1.Text = FormatCurrency(TotalFormaPago, 2)
+            FG1.text = FormatCurrency(TotalFormaPago, 2)
             FG1.Rows = FG1.Rows + 1
             FG1.Row = FG1.Row + 1
        
@@ -523,7 +523,7 @@ Private Sub cmdLiquidar_Click()
             txtImporteTotal.FontBold = True
             txtImporteTotal.FontSize = 10
             'txtImporteTotal.Text = Format$(LiqTotal, "Standard")
-            txtImporteTotal.Text = FormatCurrency(LiqTotal, 2)
+            txtImporteTotal.text = FormatCurrency(LiqTotal, 2)
     
 CapturaErrores:
     Select Case Err
@@ -555,14 +555,14 @@ Private Sub Form_Load()
         cmbVendedores(1).Clear
         While Not tVendedores.EOF
             cmbVendedores(0).AddItem (tVendedores!Legajo)
-            cmbVendedores(1).AddItem (tVendedores!nombre)
+            cmbVendedores(1).AddItem (tVendedores!Nombre)
             tVendedores.MoveNext
         Wend
         
         tVendedores.Close
     'Fechas
-        TxtFechaDesde.Text = Format(Date, "DD/MM/YYYY")
-        TxtFechaHasta.Text = Format(Date, "DD/MM/YYYY")
+        TxtFechaDesde.text = Format(Date, "DD/MM/YYYY")
+        TxtFechaHasta.text = Format(Date, "DD/MM/YYYY")
         
     'Setear Grilla
         Call SeteoGrilla
@@ -598,7 +598,7 @@ End Sub
 
 Private Sub txtFechaDesde_GotFocus()
 
-    TxtFechaDesde.SelLength = Len(TxtFechaDesde.Text)
+    TxtFechaDesde.SelLength = Len(TxtFechaDesde.text)
     
 End Sub
 
@@ -607,7 +607,7 @@ Private Sub txtFechaDesde_KeyPress(KeyAscii As Integer)
     
     If KeyAscii = 13 Then
         KeyAscii = 0
-        SendKeys "{TAB}"
+        Sendkeys "{TAB}"
     End If
 
 End Sub
@@ -615,7 +615,7 @@ End Sub
 
 Private Sub txtFechaDesde_LostFocus()
 
-    If Not IsDate(TxtFechaDesde.Text) Then
+    If Not IsDate(TxtFechaDesde.text) Then
         MsgBox "ERRROR !!! Formato de Fecha Incorrecto...", vbCritical + vbDefaultButton1, "INFO DEL SISTEMA"
         'Resume Next
     End If
@@ -624,7 +624,7 @@ End Sub
 
 Private Sub txtFechaHasta_GotFocus()
 
-    TxtFechaHasta.SelLength = Len(TxtFechaHasta.Text)
+    TxtFechaHasta.SelLength = Len(TxtFechaHasta.text)
 
 End Sub
 
@@ -633,7 +633,7 @@ Private Sub txtFechaHasta_KeyPress(KeyAscii As Integer)
 
     If KeyAscii = 13 Then
         KeyAscii = 0
-        SendKeys "{TAB}"
+        Sendkeys "{TAB}"
     End If
 
 End Sub

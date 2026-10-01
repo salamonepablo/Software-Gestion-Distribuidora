@@ -1,4 +1,7 @@
 Attribute VB_Name = "Vars"
+Private invoiceSimulationEnabled As Boolean
+Public Const InvoiceSimulationCae As Double = 99999999999999#
+
 Public BaseSPC As Database
 Public tClientes
 Public tPaises
@@ -75,6 +78,70 @@ Public Declare Function SendMessage Lib "user32" Alias "SendMessageA" (ByVal hwn
 
 Public Const HWND_BROADCAST = &HFFFF&
 Public Const WM_WININICHANGE = &H1A
+
+Private Function DetectInvoiceIde(ByRef detected As Boolean) As Boolean
+    detected = True
+    DetectInvoiceIde = True
+End Function
+
+Public Function CanSimulateInvoices() As Boolean
+    Dim runningInIde As Boolean
+    On Error GoTo Unavailable
+    Debug.Assert DetectInvoiceIde(runningInIde)
+    If Not runningInIde Then Exit Function
+    If StrComp(App.Path, "C:\Trabajos Activos\SPC-Core", vbTextCompare) <> 0 Then Exit Function
+    CanSimulateInvoices = True
+Unavailable:
+End Function
+
+Public Function IsInvoiceSimulationEnabled() As Boolean
+    IsInvoiceSimulationEnabled = invoiceSimulationEnabled
+End Function
+
+Public Function EnableInvoiceSimulation() As Boolean
+    If Not CanSimulateInvoices() Then Exit Function
+    invoiceSimulationEnabled = True
+    EnableInvoiceSimulation = True
+End Function
+
+Private Function SimulateInvoiceAuthorization(ByVal documentType As Long, ByVal documentNumber As Double) As Boolean
+    Dim testDatabase As DAO.Database
+    Dim document As DAO.Recordset
+    Dim documentTable As String
+    Dim documentTypeCode As String
+    On Error GoTo Failed
+    If Not CanSimulateInvoices() Then Err.Raise vbObjectError + 2100, , "Entorno de prueba no disponible."
+    Select Case documentType
+        Case 1, 6
+            documentTable = "FacturaC"
+        Case 3, 8
+            documentTable = "NotaCreditoC"
+        Case Else
+            Err.Raise vbObjectError + 2101, , "El modo de prueba solo permite facturas y notas de credito A y B."
+    End Select
+    Select Case documentType
+        Case 1, 3: documentTypeCode = "A"
+        Case 6, 8: documentTypeCode = "B"
+    End Select
+    Set testDatabase = DBEngine.OpenDatabase(App.Path & "\DB_SPC_SI.mdb")
+    Set document = testDatabase.OpenRecordset(documentTable, dbOpenTable)
+    document.Index = "PrimaryKey"
+    document.Seek "=", documentTypeCode, documentNumber
+    If document.NoMatch Then Err.Raise vbObjectError + 2102, , "No se encontro el comprobante para asignar el CAE de prueba."
+    document.Edit
+    document!CAE = InvoiceSimulationCae
+    document!FechaVC = DateAdd("d", 10, Date)
+    document.Update
+    SimulateInvoiceAuthorization = True
+CleanUp:
+    On Error Resume Next
+    If Not document Is Nothing Then document.Close
+    If Not testDatabase Is Nothing Then testDatabase.Close
+    Exit Function
+Failed:
+    MsgBox "No se pudo simular la autorizacion: " & Err.Description, vbExclamation, "FACTURACION DE PRUEBA"
+    Resume CleanUp
+End Function
 
 Public Function BuscoSucursal(Sucursal As Long) As String
     
@@ -495,6 +562,11 @@ End Sub
 
 Public Function FacturaElectronicaSPC(PtoVta As Long, DocTipo As Long, DocNro As Double, TipoComp As Long, CbteDesde As Double, CbteHasta As Double, CbteFch As String, ImpTotal As Double, ImpNeto As Double, MonId As String, MonCotiz As Double, AlicIVA As Long, BaseImpIVA As Double, ImpIva As Double, IdTributo As Long, DescTributo As String, BaseImpTributo As Double, Alicuota As Double, ImpAlicuota As Double, ImporteExento As Double, Optional TipoCbteAsoc As Long, Optional NroCbteAsoc As Double, Optional FechaCbteAsoc As String) As Boolean
 
+    If invoiceSimulationEnabled Then
+        FacturaElectronicaSPC = SimulateInvoiceAuthorization(TipoComp, CbteDesde)
+        Exit Function
+    End If
+
 'DISTRUIBUIDORA
 
         ' Los nombres de los parametros de las funciones se obtienen en FEAFIP.pdf
@@ -556,11 +628,11 @@ Public Function FacturaElectronicaSPC(PtoVta As Long, DocTipo As Long, DocNro As
                 Case 2
                     wsfev1.AgregaCompAsoc TipoCbteAsoc, PtoVta, NroCbteAsoc, 30708432543#, FechaCbteAsoc
                 Case 3
-                    wsfev1.AgregaCompAsoc TipoCbteAsoc, PtoVta, NroCbteAsoc, 30708432543#, FechaCbteAsoc
+                    If NroCbteAsoc > 0 Then wsfev1.AgregaCompAsoc TipoCbteAsoc, PtoVta, NroCbteAsoc, 30708432543#, FechaCbteAsoc
                 Case 7
                     wsfev1.AgregaCompAsoc TipoCbteAsoc, PtoVta, NroCbteAsoc, 30708432543#, FechaCbteAsoc
                 Case 8
-                    wsfev1.AgregaCompAsoc TipoCbteAsoc, PtoVta, NroCbteAsoc, 30708432543#, FechaCbteAsoc
+                    If NroCbteAsoc > 0 Then wsfev1.AgregaCompAsoc TipoCbteAsoc, PtoVta, NroCbteAsoc, 30708432543#, FechaCbteAsoc
             End Select
            
            'Acá agregar la percepción de IIBB
