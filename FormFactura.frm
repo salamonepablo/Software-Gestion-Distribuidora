@@ -1390,6 +1390,7 @@ Private Sub BotonGrabar_Click()
         Dim existeTipo As String
 
 '///Declaraciones para FE SPC
+        Dim recipientError As String
         Dim DocNro As Double
         Dim CbteDesde As Double
         Dim CbteHasta As Double
@@ -1412,11 +1413,22 @@ Private Sub BotonGrabar_Click()
         Dim ImporteExento As Double
 '///Declaraciones para FE SPC
         
+        If Not ResolveInvoiceRecipient(TextTipoFactura.text, condicionIva, TextApellidoNombre.text, TextCuit.text, CCur(TextTotalFactura.text), DocTipo, DocNro, recipientError) Then
+            MsgBox recipientError, vbExclamation, "Datos del consumidor final"
+            TextCuit.SetFocus
+            Exit Sub
+        End If
+
         Textfac.text = 1
         
         ruta = App.Path & "\DB_SPC_SI.mdb"
     
         Set db = DBEngine.OpenDatabase(ruta)
+        If Not EnsureInvoiceRecipientFields(db, recipientError) Then
+            MsgBox "No se pudo preparar la base para guardar el documento del receptor: " & recipientError, vbCritical
+            db.Close
+            Exit Sub
+        End If
         Set rstFacturaC = db.OpenRecordset("FacturaC", dbOpenDynaset)
     
         Set db = DBEngine.OpenDatabase(ruta)
@@ -1503,6 +1515,8 @@ Private Sub BotonGrabar_Click()
                 rstFacturaC.Fields!ImportePercepIIBB = TextPercepcionIIBB.text
             End If
             rstFacturaC.Fields!CodCliente = TextCodigoCliente.text
+            rstFacturaC.Fields!RecipientDocType = DocTipo
+            rstFacturaC.Fields!RecipientDocNumber = DocNro
             rstFacturaC.Fields!PorcentajeDesc = TextDescuentoCliente.text
             rstFacturaC.Fields!ImporteDesc = TextDescuentos.text
             rstFacturaC.Fields!codVendedor = LegajoEmpleado
@@ -1635,13 +1649,7 @@ Private Sub BotonGrabar_Click()
                     End If
                 End If
                 
-                If TextCuit.text <> "" Then
-                    DocTipo = 80
-                    DocNro = CDbl(TextCuit.text)
-                 Else
-                    DocTipo = 96
-                    DocNro = 11111111
-                End If
+                'Recipient document was resolved and saved before the invoice write.
                 
                 CbteDesde = CDbl(TextNumeroFactura.text)
                 CbteHasta = CDbl(TextNumeroFactura.text)
@@ -3015,6 +3023,9 @@ Private Sub MSFlexGrid1_Click()
     'descuentos = MSFlexGrid1.Text
     
     Call buscocuilyvendedor
+    If IsConsumerFinalCustomer(condicionIva, TextApellidoNombre.text) Then
+        If TextCuit.text = "11111111111" Or TextCuit.text = "22222222222" Then TextCuit.text = ""
+    End If
     
     MSFlexGrid1.Visible = False
     
@@ -3216,10 +3227,13 @@ Private Sub TextCodigoCliente_KeyPress(KeyAscii As Integer)
                 MSFlexGrid1.Visible = False
                'If TextCuit.Text <> "" Then TextCuit.Text = rstCliente.Fields!CUIT
                 
-                If TextCuit.text = "" Then
-                    If rstCliente.Fields!CUIT <> "" Then TextCuit.text = rstCliente.Fields!CUIT
-                 Else
-                    TextCuit.text = 22222222222#
+                If IsNull(rstCliente.Fields!CUIT) Then
+                    TextCuit.text = ""
+                Else
+                    TextCuit.text = Trim$(CStr(rstCliente.Fields!CUIT))
+                End If
+                If IsConsumerFinalCustomer(rstCliente.Fields!condicionIva, rstCliente.Fields!RazonSocial) Then
+                    If TextCuit.text = "11111111111" Or TextCuit.text = "22222222222" Then TextCuit.text = ""
                 End If
                 
                 TextDireccion.text = rstCliente.Fields!Domicilio

@@ -212,6 +212,8 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Dim cl As New arisBarcode
+Dim printedDocType As Long
+Dim printedDocNumber As Double
 Private Declare Function GetProfileString Lib "kernel32" Alias "GetProfileStringA" _
     (ByVal lpAppName As String, ByVal lpKeyName As String, _
      ByVal lpDefault As String, ByVal lpReturnedString As String, _
@@ -484,18 +486,30 @@ Private Sub GenerarFEB()
                             .FontBold = False
                             Printer.Print tClientes!RazonSocial
                             
+                            PrintedInvoiceRecipient tFacturaC, CLng(tFacturaC!CodCliente), printedDocType, printedDocNumber
+                            If printedDocType <> 99 Then
                             .CurrentX = 130
                             .CurrentY = 48
                             .FontBold = True
-                            Printer.Print "C.U.I.T Nº:"
+                            If printedDocType = 96 Then
+                                Printer.Print "D.N.I Nº:"
+                            Else
+                                Printer.Print "C.U.I.T Nº:"
+                            End If
                             .CurrentX = 150
                             .CurrentY = 48
                             .FontBold = False
-                            CUIT = Left(tClientes!CUIT, 2) & "-" & Mid(tClientes!CUIT, 3, 8) & "-" & Right(tClientes!CUIT, 1)
+                            If printedDocType = 96 Then
+                                CUIT = Format$(printedDocNumber, "0")
+                            Else
+                                CUIT = Format$(printedDocNumber, "00-00000000-0")
+                            End If
                             Printer.Print CUIT
+                            End If
                              
                             tDomiciliosClientes.Seek "=", tClientes!IdCliente
                                 If Not tDomiciliosClientes.NoMatch Then
+                                  If Not IsConsumerFinalCustomer(tClientes!condicionIva, tClientes!RazonSocial) Then
                                   'Domicilio
                                     .CurrentX = 15
                                     .CurrentY = 55
@@ -517,6 +531,7 @@ Private Sub GenerarFEB()
                                     .CurrentY = 62
                                     .FontBold = False
                                      Printer.Print tDomiciliosClientes!localidad
+                                  End If
                                      
                                     'Telefono
                                       .CurrentX = 130
@@ -865,7 +880,8 @@ Private Sub GenerarFEB()
                                 tCmp = 6
                         End Select
                         
-                        Call CrearQR(CStr(tFacturaC!FechaFactura), 30708432543#, 4, tCmp, CDbl(tFacturaC!NroFactura), CDbl(tFacturaC!TotalFactura), "PES", 1, 80, CUITCliente(tFacturaC!CodCliente), "E", CDbl(tFacturaC!CAE))
+                        PrintedInvoiceRecipient tFacturaC, CLng(tFacturaC!CodCliente), printedDocType, printedDocNumber
+                        Call CrearQR(CStr(tFacturaC!FechaFactura), 30708432543#, 4, tCmp, CDbl(tFacturaC!NroFactura), CDbl(tFacturaC!TotalFactura), "PES", 1, printedDocType, printedDocNumber, "E", CDbl(tFacturaC!CAE))
                         
                         PicQR.ScaleMode = 6
                         'imgQR.Stretch = True
@@ -1013,18 +1029,30 @@ Private Sub GenerarFEB()
                             .FontBold = False
                             Printer.Print tClientes!RazonSocial
                             
+                            PrintedInvoiceRecipient tFacturaC, CLng(tFacturaC!CodCliente), printedDocType, printedDocNumber
+                            If printedDocType <> 99 Then
                             .CurrentX = 130
                             .CurrentY = 48
                             .FontBold = True
-                            Printer.Print "C.U.I.T Nº:"
+                            If printedDocType = 96 Then
+                                Printer.Print "D.N.I Nº:"
+                            Else
+                                Printer.Print "C.U.I.T Nº:"
+                            End If
                             .CurrentX = 150
                             .CurrentY = 48
                             .FontBold = False
-                            CUIT = Left(tClientes!CUIT, 2) & "-" & Mid(tClientes!CUIT, 3, 8) & "-" & Right(tClientes!CUIT, 1)
+                            If printedDocType = 96 Then
+                                CUIT = Format$(printedDocNumber, "0")
+                            Else
+                                CUIT = Format$(printedDocNumber, "00-00000000-0")
+                            End If
                             Printer.Print CUIT
+                            End If
                              
                             tDomiciliosClientes.Seek "=", tClientes!IdCliente
                                 If Not tDomiciliosClientes.NoMatch Then
+                                  If Not IsConsumerFinalCustomer(tClientes!condicionIva, tClientes!RazonSocial) Then
                                   'Domicilio
                                     .CurrentX = 15
                                     .CurrentY = 55
@@ -1046,6 +1074,7 @@ Private Sub GenerarFEB()
                                     .CurrentY = 62
                                     .FontBold = False
                                      Printer.Print tDomiciliosClientes!localidad
+                                  End If
                                      
                                     'Telefono
                                       .CurrentX = 130
@@ -1393,7 +1422,8 @@ Private Sub GenerarFEB()
                                 tCmp = 6
                         End Select
                         
-                        Call CrearQR(CStr(tFacturaC!FechaFactura), 30708432543#, 4, tCmp, CDbl(tFacturaC!NroFactura), CDbl(tFacturaC!TotalFactura), "PES", 1, 80, CUITCliente(tFacturaC!CodCliente), "E", CDbl(tFacturaC!CAE))
+                        PrintedInvoiceRecipient tFacturaC, CLng(tFacturaC!CodCliente), printedDocType, printedDocNumber
+                        Call CrearQR(CStr(tFacturaC!FechaFactura), 30708432543#, 4, tCmp, CDbl(tFacturaC!NroFactura), CDbl(tFacturaC!TotalFactura), "PES", 1, printedDocType, printedDocNumber, "E", CDbl(tFacturaC!CAE))
                         
                         PicQR.ScaleMode = 6
                         'imgQR.Stretch = True
@@ -1597,18 +1627,30 @@ Private Sub ImprimirFE()
                             .FontBold = False
                             Printer.Print tClientes!RazonSocial
                             
+                            PrintedInvoiceRecipient tFacturaC, CLng(tFacturaC!CodCliente), printedDocType, printedDocNumber
+                            If printedDocType <> 99 Then
                             .CurrentX = 130
                             .CurrentY = 48
                             .FontBold = True
-                            Printer.Print "C.U.I.T Nº:"
+                            If printedDocType = 96 Then
+                                Printer.Print "D.N.I Nº:"
+                            Else
+                                Printer.Print "C.U.I.T Nº:"
+                            End If
                             .CurrentX = 150
                             .CurrentY = 48
                             .FontBold = False
-                            CUIT = Left(tClientes!CUIT, 2) & "-" & Mid(tClientes!CUIT, 3, 8) & "-" & Right(tClientes!CUIT, 1)
+                            If printedDocType = 96 Then
+                                CUIT = Format$(printedDocNumber, "0")
+                            Else
+                                CUIT = Format$(printedDocNumber, "00-00000000-0")
+                            End If
                             Printer.Print CUIT
+                            End If
                              
                             tDomiciliosClientes.Seek "=", tClientes!IdCliente
                                 If Not tDomiciliosClientes.NoMatch Then
+                                  If Not IsConsumerFinalCustomer(tClientes!condicionIva, tClientes!RazonSocial) Then
                                   'Domicilio
                                     .CurrentX = 15
                                     .CurrentY = 55
@@ -1630,6 +1672,7 @@ Private Sub ImprimirFE()
                                     .CurrentY = 62
                                     .FontBold = False
                                      Printer.Print tDomiciliosClientes!localidad
+                                  End If
                                      
                                     'Telefono
                                       .CurrentX = 130
@@ -1957,7 +2000,8 @@ Private Sub ImprimirFE()
                                 tCmp = 6
                         End Select
                         
-                        Call CrearQR(CStr(tFacturaC!FechaFactura), 30708432543#, 4, tCmp, CDbl(tFacturaC!NroFactura), CDbl(tFacturaC!TotalFactura), "PES", 1, 80, CUITCliente(tFacturaC!CodCliente), "E", CDbl(tFacturaC!CAE))
+                        PrintedInvoiceRecipient tFacturaC, CLng(tFacturaC!CodCliente), printedDocType, printedDocNumber
+                        Call CrearQR(CStr(tFacturaC!FechaFactura), 30708432543#, 4, tCmp, CDbl(tFacturaC!NroFactura), CDbl(tFacturaC!TotalFactura), "PES", 1, printedDocType, printedDocNumber, "E", CDbl(tFacturaC!CAE))
                         
                         PicQR.ScaleMode = 6
                         'imgQR.Stretch = True
@@ -2631,18 +2675,30 @@ Private Sub ImprimirFEB()
                             .FontBold = False
                             Printer.Print tClientes!RazonSocial
                             
+                            PrintedInvoiceRecipient tFacturaC, CLng(tFacturaC!CodCliente), printedDocType, printedDocNumber
+                            If printedDocType <> 99 Then
                             .CurrentX = 130
                             .CurrentY = 48
                             .FontBold = True
-                            Printer.Print "C.U.I.T Nº:"
+                            If printedDocType = 96 Then
+                                Printer.Print "D.N.I Nº:"
+                            Else
+                                Printer.Print "C.U.I.T Nº:"
+                            End If
                             .CurrentX = 150
                             .CurrentY = 48
                             .FontBold = False
-                            CUIT = Left(tClientes!CUIT, 2) & "-" & Mid(tClientes!CUIT, 3, 8) & "-" & Right(tClientes!CUIT, 1)
+                            If printedDocType = 96 Then
+                                CUIT = Format$(printedDocNumber, "0")
+                            Else
+                                CUIT = Format$(printedDocNumber, "00-00000000-0")
+                            End If
                             Printer.Print CUIT
+                            End If
                              
                             tDomiciliosClientes.Seek "=", tClientes!IdCliente
                                 If Not tDomiciliosClientes.NoMatch Then
+                                  If Not IsConsumerFinalCustomer(tClientes!condicionIva, tClientes!RazonSocial) Then
                                   'Domicilio
                                     .CurrentX = 15
                                     .CurrentY = 55
@@ -2664,6 +2720,7 @@ Private Sub ImprimirFEB()
                                     .CurrentY = 62
                                     .FontBold = False
                                      Printer.Print tDomiciliosClientes!localidad
+                                  End If
                                      
                                     'Telefono
                                       .CurrentX = 130
@@ -3011,7 +3068,8 @@ Private Sub ImprimirFEB()
                                 tCmp = 6
                         End Select
                         
-                        Call CrearQR(CStr(tFacturaC!FechaFactura), 30708432543#, 4, tCmp, CDbl(tFacturaC!NroFactura), CDbl(tFacturaC!TotalFactura), "PES", 1, 80, CUITCliente(tFacturaC!CodCliente), "E", CDbl(tFacturaC!CAE))
+                        PrintedInvoiceRecipient tFacturaC, CLng(tFacturaC!CodCliente), printedDocType, printedDocNumber
+                        Call CrearQR(CStr(tFacturaC!FechaFactura), 30708432543#, 4, tCmp, CDbl(tFacturaC!NroFactura), CDbl(tFacturaC!TotalFactura), "PES", 1, printedDocType, printedDocNumber, "E", CDbl(tFacturaC!CAE))
                         
                         PicQR.ScaleMode = 6
                         'imgQR.Stretch = True
@@ -3159,18 +3217,30 @@ Private Sub ImprimirFEB()
                             .FontBold = False
                             Printer.Print tClientes!RazonSocial
                             
+                            PrintedInvoiceRecipient tFacturaC, CLng(tFacturaC!CodCliente), printedDocType, printedDocNumber
+                            If printedDocType <> 99 Then
                             .CurrentX = 130
                             .CurrentY = 48
                             .FontBold = True
-                            Printer.Print "C.U.I.T Nº:"
+                            If printedDocType = 96 Then
+                                Printer.Print "D.N.I Nº:"
+                            Else
+                                Printer.Print "C.U.I.T Nº:"
+                            End If
                             .CurrentX = 150
                             .CurrentY = 48
                             .FontBold = False
-                            CUIT = Left(tClientes!CUIT, 2) & "-" & Mid(tClientes!CUIT, 3, 8) & "-" & Right(tClientes!CUIT, 1)
+                            If printedDocType = 96 Then
+                                CUIT = Format$(printedDocNumber, "0")
+                            Else
+                                CUIT = Format$(printedDocNumber, "00-00000000-0")
+                            End If
                             Printer.Print CUIT
+                            End If
                              
                             tDomiciliosClientes.Seek "=", tClientes!IdCliente
                                 If Not tDomiciliosClientes.NoMatch Then
+                                  If Not IsConsumerFinalCustomer(tClientes!condicionIva, tClientes!RazonSocial) Then
                                   'Domicilio
                                     .CurrentX = 15
                                     .CurrentY = 55
@@ -3192,6 +3262,7 @@ Private Sub ImprimirFEB()
                                     .CurrentY = 62
                                     .FontBold = False
                                      Printer.Print tDomiciliosClientes!localidad
+                                  End If
                                      
                                     'Telefono
                                       .CurrentX = 130
@@ -3539,7 +3610,8 @@ Private Sub ImprimirFEB()
                                 tCmp = 6
                         End Select
                         
-                        Call CrearQR(CStr(tFacturaC!FechaFactura), 30708432543#, 4, tCmp, CDbl(tFacturaC!NroFactura), CDbl(tFacturaC!TotalFactura), "PES", 1, 80, CUITCliente(tFacturaC!CodCliente), "E", CDbl(tFacturaC!CAE))
+                        PrintedInvoiceRecipient tFacturaC, CLng(tFacturaC!CodCliente), printedDocType, printedDocNumber
+                        Call CrearQR(CStr(tFacturaC!FechaFactura), 30708432543#, 4, tCmp, CDbl(tFacturaC!NroFactura), CDbl(tFacturaC!TotalFactura), "PES", 1, printedDocType, printedDocNumber, "E", CDbl(tFacturaC!CAE))
                         
                         PicQR.ScaleMode = 6
                         'imgQR.Stretch = True
@@ -4270,18 +4342,30 @@ Private Sub GenerarFE()
                             .FontBold = False
                             Printer.Print tClientes!RazonSocial
                             
+                            PrintedInvoiceRecipient tFacturaC, CLng(tFacturaC!CodCliente), printedDocType, printedDocNumber
+                            If printedDocType <> 99 Then
                             .CurrentX = 130
                             .CurrentY = 48
                             .FontBold = True
-                            Printer.Print "C.U.I.T Nº:"
+                            If printedDocType = 96 Then
+                                Printer.Print "D.N.I Nº:"
+                            Else
+                                Printer.Print "C.U.I.T Nº:"
+                            End If
                             .CurrentX = 150
                             .CurrentY = 48
                             .FontBold = False
-                            CUIT = Left(tClientes!CUIT, 2) & "-" & Mid(tClientes!CUIT, 3, 8) & "-" & Right(tClientes!CUIT, 1)
+                            If printedDocType = 96 Then
+                                CUIT = Format$(printedDocNumber, "0")
+                            Else
+                                CUIT = Format$(printedDocNumber, "00-00000000-0")
+                            End If
                             Printer.Print CUIT
+                            End If
                              
                             tDomiciliosClientes.Seek "=", tClientes!IdCliente
                                 If Not tDomiciliosClientes.NoMatch Then
+                                  If Not IsConsumerFinalCustomer(tClientes!condicionIva, tClientes!RazonSocial) Then
                                   'Domicilio
                                     .CurrentX = 15
                                     .CurrentY = 55
@@ -4303,6 +4387,7 @@ Private Sub GenerarFE()
                                     .CurrentY = 62
                                     .FontBold = False
                                      Printer.Print tDomiciliosClientes!localidad
+                                  End If
                                      
                                     'Telefono
                                       .CurrentX = 130
@@ -4633,7 +4718,8 @@ Private Sub GenerarFE()
                                 tCmp = 6
                         End Select
                         
-                        Call CrearQR(CStr(tFacturaC!FechaFactura), 30708432543#, 4, tCmp, CDbl(tFacturaC!NroFactura), CDbl(tFacturaC!TotalFactura), "PES", 1, 80, CUITCliente(tFacturaC!CodCliente), "E", CDbl(tFacturaC!CAE))
+                        PrintedInvoiceRecipient tFacturaC, CLng(tFacturaC!CodCliente), printedDocType, printedDocNumber
+                        Call CrearQR(CStr(tFacturaC!FechaFactura), 30708432543#, 4, tCmp, CDbl(tFacturaC!NroFactura), CDbl(tFacturaC!TotalFactura), "PES", 1, printedDocType, printedDocNumber, "E", CDbl(tFacturaC!CAE))
                         
                         PicQR.ScaleMode = 6
                         'imgQR.Stretch = True
@@ -4778,18 +4864,30 @@ Private Sub GenerarFE()
                             .FontBold = False
                             Printer.Print tClientes!RazonSocial
                             
+                            PrintedInvoiceRecipient tFacturaC, CLng(tFacturaC!CodCliente), printedDocType, printedDocNumber
+                            If printedDocType <> 99 Then
                             .CurrentX = 130
                             .CurrentY = 48
                             .FontBold = True
-                            Printer.Print "C.U.I.T Nº:"
+                            If printedDocType = 96 Then
+                                Printer.Print "D.N.I Nº:"
+                            Else
+                                Printer.Print "C.U.I.T Nº:"
+                            End If
                             .CurrentX = 150
                             .CurrentY = 48
                             .FontBold = False
-                            CUIT = Left(tClientes!CUIT, 2) & "-" & Mid(tClientes!CUIT, 3, 8) & "-" & Right(tClientes!CUIT, 1)
+                            If printedDocType = 96 Then
+                                CUIT = Format$(printedDocNumber, "0")
+                            Else
+                                CUIT = Format$(printedDocNumber, "00-00000000-0")
+                            End If
                             Printer.Print CUIT
+                            End If
                              
                             tDomiciliosClientes.Seek "=", tClientes!IdCliente
                                 If Not tDomiciliosClientes.NoMatch Then
+                                  If Not IsConsumerFinalCustomer(tClientes!condicionIva, tClientes!RazonSocial) Then
                                   'Domicilio
                                     .CurrentX = 15
                                     .CurrentY = 55
@@ -4811,6 +4909,7 @@ Private Sub GenerarFE()
                                     .CurrentY = 62
                                     .FontBold = False
                                      Printer.Print tDomiciliosClientes!localidad
+                                  End If
                                      
                                     'Telefono
                                       .CurrentX = 130
@@ -5138,7 +5237,8 @@ Private Sub GenerarFE()
                                 tCmp = 6
                         End Select
                         
-                        Call CrearQR(CStr(tFacturaC!FechaFactura), 30708432543#, 4, tCmp, CDbl(tFacturaC!NroFactura), CDbl(tFacturaC!TotalFactura), "PES", 1, 80, CUITCliente(tFacturaC!CodCliente), "E", CDbl(tFacturaC!CAE))
+                        PrintedInvoiceRecipient tFacturaC, CLng(tFacturaC!CodCliente), printedDocType, printedDocNumber
+                        Call CrearQR(CStr(tFacturaC!FechaFactura), 30708432543#, 4, tCmp, CDbl(tFacturaC!NroFactura), CDbl(tFacturaC!TotalFactura), "PES", 1, printedDocType, printedDocNumber, "E", CDbl(tFacturaC!CAE))
                         
                         PicQR.ScaleMode = 6
                         'imgQR.Stretch = True

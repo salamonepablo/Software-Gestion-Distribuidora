@@ -28,6 +28,7 @@ Object={5C9EA131-127A-11D1-BFB4-00A0C936E6F9}#1.0#0; cselexpt.ocx
 Form=Clientes.frm
 Module=Vars; VariablesPublicas.bas
 Module=DeliveryReassignment; DeliveryReassignment.bas
+Module=ConsumerFinalInvoice; ConsumerFinalInvoice.bas
 Module=CreditAssociation; CreditAssociation.bas
 Form=FormFactura.frm
 Form=frmPanelControl.frm
