@@ -1531,6 +1531,7 @@ End Sub
 Private Sub BotonGrabar_Click()
 
         Dim descuentoCantidad As Long
+        Dim authorizedNote As DAO.Recordset
         Dim ultimo As Long
         Dim existeNumeroBD As Integer
         Dim existeTipoBD As String
@@ -1624,6 +1625,20 @@ Private Sub BotonGrabar_Click()
         
         
      
+            If Len(Trim$(cmbFacturaReferencia.text)) = 0 Then
+                MsgBox "Elegí la factura asociada a la nota de débito.", vbExclamation, "Comprobante asociado"
+                cmbFacturaReferencia.SetFocus
+                Exit Sub
+            End If
+            TipoCbteAsoc = 0
+            NroCbteAsoc = 0
+            FechaCbteAsoc = vbNullString
+            Call BuscaCbteAsociado(CLng(cmbFacturaReferencia.text), CStr(txtTipoFacturaReferencia.text))
+            If NroCbteAsoc = 0 Then
+                MsgBox "No se encontró la factura asociada. No se guardó la nota de débito.", vbExclamation, "Comprobante asociado"
+                Exit Sub
+            End If
+
             rstNotaDebitoC.AddNew
             rstNotaDebitoC.Fields!NroDebito = TextNumeroFactura.text
             rstNotaDebitoC.Fields!TipoDebito = UCase(TextTipoFactura.text)
@@ -1669,51 +1684,19 @@ Private Sub BotonGrabar_Click()
             If opCtaCte.Value = True Then rstNotaDebitoC.Fields!CondicionVenta = "Cuenta Corriente"
             
             rstNotaDebitoC.Update
-            
-            FG1.Col = 0
-            FG1.Row = 1
-            Filas = FG1.Rows
-            linea = 1
-            Do While linea < Filas
-                  
-                  FG1.Row = linea
-                  FG1.Col = 0
-                  If FG1.text <> "" Then
-                        rstNotaDebitoD.AddNew
-                    
-                        rstNotaDebitoD.Fields!NroDebito = TextNumeroFactura.text
-                        rstNotaDebitoD.Fields!TipoDebito = TextTipoFactura.text
-                    
-                        FG1.Col = 0
-                        rstNotaDebitoD.Fields!IdCodProd = FG1.text
-                    
-                        FG1.Col = 2
-                        rstNotaDebitoD.Fields!UnidadMedida = FG1.text
-                        
-                        FG1.Col = 3
-                        rstNotaDebitoD.Fields!precioUnitario = Format(FG1.text, "#,###,###,#0.00")
-                        
-                        FG1.Col = 4
-                        des = FG1.text
-                        If des <> "" Then
-                           rstNotaDebitoD.Fields!PorcentajeDescuento = Val(des)
-                        Else
-                           rstNotaDebitoD.Fields!PorcentajeDescuento = Val(TextDescuentoCliente.text)
-                        End If
-                        FG1.Col = 5
-                        rstNotaDebitoD.Fields!cantidad = Val(FG1.text)
-                        descuentoCantidad = Val(FG1.text)
-                        
-                        '*** Modifico Stock Producto
-                       
+
+            ImporteExento = 0
+            For linea = 1 To FG1.Rows - 1
+                FG1.Row = linea
+                FG1.Col = 0
+                If FG1.text = "CHE" Then
+                    FG1.Col = 3
+                    ImporteExento = ImporteExento + CDbl(FG1.text) * CDbl(FG1.TextMatrix(linea, 5))
+                End If
+            Next linea
 
      '/////////  GENERAMOS LA FACTURA ELECTRONICA DESDE SPC /////////////////////////////
                 
-                If rstNotaDebitoD.Fields!IdCodProd = "CHE" Then
-                    ImporteExento = rstNotaDebitoD.Fields!precioUnitario * rstNotaDebitoD.Fields!cantidad
-                Else
-                    ImporteExento = 0
-                End If
                 
                 PtoVta = 4
                 If TextTipoFactura.text = "A" Then
@@ -1780,15 +1763,61 @@ Private Sub BotonGrabar_Click()
                     ImpAlicuota = 0
                 End If
                 
-                If cmbFacturaReferencia.text = "" Then
-                    z = MsgBox("Debe Elegir un Comprobante Asociado a la Nota de Crédito", vbOKOnly, "ERROR !!!")
-                    cmbFacturaReferencia.SetFocus
+                If Not FacturaElectronicaSPC(PtoVta, DocTipo, DocNro, TipoComp, CbteDesde, CbteHasta, CbteFch, ImpTotal, ImpNeto, MonId, MonCotiz, AlicIVA, BaseImpIVA, ImpIva, IdTributo, DescTributo, BaseImpTributo, Alicuota, ImpAlicuota, ImporteExento, TipoCbteAsoc, NroCbteAsoc, FechaCbteAsoc) Then
+                    MsgBox "No se pudo confirmar el CAE. La nota quedó pendiente y no se modificó la cuenta corriente. Verificá el comprobante en ARCA antes de volver a emitirlo.", vbCritical, "Nota de débito sin CAE"
+                    Exit Sub
                 End If
-              
-                Call BuscaCbteAsociado(CLng(cmbFacturaReferencia.text), CStr(txtTipoFacturaReferencia.text))
-                
-                Call FacturaElectronicaSPC(PtoVta, DocTipo, DocNro, TipoComp, CbteDesde, CbteHasta, CbteFch, ImpTotal, ImpNeto, MonId, MonCotiz, AlicIVA, BaseImpIVA, ImpIva, IdTributo, DescTributo, BaseImpTributo, Alicuota, ImpAlicuota, ImporteExento, TipoCbteAsoc, NroCbteAsoc, FechaCbteAsoc)
      '//////////////////////////////////////////////////////////////////////////////////
+                Set authorizedNote = db.OpenRecordset("SELECT CAE FROM NotaDebitoC WHERE TipoDebito='" & TextTipoFactura.text & "' AND NroDebito=" & CLng(TextNumeroFactura.text), dbOpenSnapshot)
+                If authorizedNote.EOF Then
+                    MsgBox "No se encontró la nota de débito después de consultar ARCA. No se modificó la cuenta corriente.", vbCritical, "Nota de débito"
+                    authorizedNote.Close
+                    Exit Sub
+                End If
+                If Len(Trim$(authorizedNote!CAE & vbNullString)) = 0 Then
+                    MsgBox "El CAE no quedó guardado. No se modificó la cuenta corriente. Verificá el comprobante en ARCA.", vbCritical, "Nota de débito sin CAE"
+                    authorizedNote.Close
+                    Exit Sub
+                End If
+                authorizedNote.Close
+
+            FG1.Col = 0
+            FG1.Row = 1
+            Filas = FG1.Rows
+            linea = 1
+            Do While linea < Filas
+
+                  FG1.Row = linea
+                  FG1.Col = 0
+                  If FG1.text <> "" Then
+                        rstNotaDebitoD.AddNew
+
+                        rstNotaDebitoD.Fields!NroDebito = TextNumeroFactura.text
+                        rstNotaDebitoD.Fields!TipoDebito = TextTipoFactura.text
+
+                        FG1.Col = 0
+                        rstNotaDebitoD.Fields!IdCodProd = FG1.text
+
+                        FG1.Col = 2
+                        rstNotaDebitoD.Fields!UnidadMedida = FG1.text
+
+                        FG1.Col = 3
+                        rstNotaDebitoD.Fields!precioUnitario = Format(FG1.text, "#,###,###,#0.00")
+
+                        FG1.Col = 4
+                        des = FG1.text
+                        If des <> "" Then
+                           rstNotaDebitoD.Fields!PorcentajeDescuento = Val(des)
+                        Else
+                           rstNotaDebitoD.Fields!PorcentajeDescuento = Val(TextDescuentoCliente.text)
+                        End If
+                        FG1.Col = 5
+                        rstNotaDebitoD.Fields!cantidad = Val(FG1.text)
+                        descuentoCantidad = Val(FG1.text)
+
+                        '*** Modifico Stock Producto
+
+
 
 
                        'Call DesHagoStock(CodProd, descuentoCantidad)
