@@ -1371,99 +1371,49 @@ Private Sub calculototalfactura()
 End Sub
 
 Private Sub CalculoTotalFactura2()
-    
-    Dim total
-    Dim subtotalFacturaForm
-    Dim porcentajePrecioUnitario As Double
-    Dim descuentoFactura As Double
-    Dim totalFacturaForm As Double
-    Dim iva As Double
-    Dim impuesto As Double
-    Dim percepcion As Double
-    Dim preuni As Double
-    Dim modifico As Integer
-    Dim nnmodifico As Integer
+    Dim taxableAmount As Currency
+    Dim exemptAmount As Currency
+    Dim taxAmount As Currency
+    Dim perceptionAmount As Currency
+    Dim totalAmount As Currency
+    Dim taxRate As Double
+    Dim lineNumber As Long
+    Dim lineAmount As Currency
 
     ruta = App.Path & "\DB_SPC_SI.mdb"
-    
     Set db = DBEngine.OpenDatabase(ruta)
     Set rstIva = db.OpenRecordset("Iva", dbOpenDynaset)
+    taxRate = rstIva.Fields!iva
+    rstIva.Close
 
-    iva = rstIva.Fields!iva
-    
+    For lineNumber = 1 To FG1.Rows - 1
+        If Len(Trim$(FG1.TextMatrix(lineNumber, 0))) > 0 Then
+            If IsNumeric(FG1.TextMatrix(lineNumber, 6)) Then
+                lineAmount = CCur(FG1.TextMatrix(lineNumber, 6))
+                If FG1.TextMatrix(lineNumber, 0) = "CHE" Then
+                    exemptAmount = exemptAmount + lineAmount
+                Else
+                    taxableAmount = taxableAmount + lineAmount
+                End If
+            End If
+        End If
+    Next lineNumber
+
+    TextSubtotalFactura.text = Format(taxableAmount, "#,###,###,#0.00")
     If TextTipoFactura.text = "A" Then
-        Textiva.text = Format(iva, "#,###,###,#0.00")
-    End If
-
-    '**** suma total linea
-             
-    
-    
-        'total = Val(TextTotalLineaProd.Text) + Val(TextSubtotalFactura.Text)
-        If (TextSubtotalFactura.text = "") Then TextSubtotalFactura.text = 0
-        'total = CDbl(TextTotalLineaProd.Text) + CDbl(TextSubtotalFactura.Text)
-        total = CDbl(TextTotalLineaProd.text)
-        subtotalFacturaForm = total
-                                
-        TextSubtotalFactura.text = Format(total, "#,###,###,#0.00")
-        
-    If ComboArticulo.text = "GTO" Then
-  
+        Textiva.text = Format(taxRate, "#,###,###,#0.00")
         TextAlicuota.text = Format(Alicuota, "#,###,###,#0.00")
-                        
-        If TextTipoFactura.text = "A" Then
-            percepcion = subtotalFacturaForm * Alicuota / 100
-            TextPercepcionIIBB.text = Format(percepcion, "#,###,###,#0.00")
-            
-        End If
-    
-       If TextTipoFactura.text = "A" Then
-           impuesto = subtotalFacturaForm * iva / 100
-           TextImpuesto.text = Format(impuesto, "#,###,###,#0.00")
-        End If
-    
-        '**** calculo total factura
-        
-        If TextTotalFactura.text = "" Then TextTotalFactura.text = 0
-        totalFacturaForm = (subtotalFacturaForm + percepcion + impuesto) + CDbl(TextTotalFactura.text)
-    
+        taxAmount = CCur(Format(taxableAmount * taxRate / 100, "#,###,###,#0.00"))
+        perceptionAmount = CCur(Format(taxableAmount * Alicuota / 100, "#,###,###,#0.00"))
+    Else
+        Textiva.text = Format(0, "#,###,###,#0.00")
+        TextAlicuota.text = Format(0, "#,###,###,#0.00")
     End If
-    
-    If ComboArticulo.text = "CHE" Then
-    '    Label10.Visible = False
-    '    TextPercepcionIIBB.Visible = False
-    '    TextPercepcionIIBB.Text = 0
-        
-    '    Label19.Visible = False
-    '    TextAlicuota.Visible = False
-    '    TextAlicuota.Text = 0
-        
-    '    Label12.Visible = False
-    '    TextImpuesto.Visible = False
-    '    TextImpuesto.Text = 0
-        
-    '    Label13.Visible = False
-    '    Textiva.Visible = False
-    '    Textiva.Text = 0
-        'totalFacturaForm = subtotalFacturaForm
-        'totalFacturaForm = (subtotalFacturaForm + percepcion + impuesto)
-        'total = CDbl(TextTotalLineaProd.Text) + CDbl(TextSubtotalFactura.Text)
-        If TextTotalFactura.text = "" Then TextTotalFactura.text = 0
-        totalFacturaForm = CDbl(TextTotalFactura.text) + CDbl(TextTotalLineaProd.text)
-        
-        subtotalFacturaForm = total
-        
-    End If
-    
-    TextTotalFactura.text = Format(totalFacturaForm, "#,###,###,#0.00")
-'    TextTotalFactura.Text = Format(total, "#,###,###,#0.00")
-    
-    If CDec(totalFacturaForm) <> 0 Then
-         BotonGrabar.Enabled = True
-         'BotonImprimir.Enabled = True
-         'BotonPago.Enabled = True
-    End If
-
+    TextImpuesto.text = Format(taxAmount, "#,###,###,#0.00")
+    TextPercepcionIIBB.text = Format(perceptionAmount, "#,###,###,#0.00")
+    totalAmount = taxableAmount + exemptAmount + taxAmount + perceptionAmount
+    TextTotalFactura.text = Format(totalAmount, "#,###,###,#0.00")
+    BotonGrabar.Enabled = (totalAmount > 0)
 End Sub
 
 Private Sub BotonBuscarProducto_Click()
@@ -1639,42 +1589,22 @@ Private Sub BotonGrabar_Click()
                 Exit Sub
             End If
 
+            Call CalculoTotalFactura2
+            If CDbl(TextTotalFactura.text) <= 0 Then
+                MsgBox "Agregá al menos un concepto con importe antes de guardar.", vbExclamation, "Nota de débito"
+                Exit Sub
+            End If
+
             rstNotaDebitoC.AddNew
             rstNotaDebitoC.Fields!NroDebito = TextNumeroFactura.text
             rstNotaDebitoC.Fields!TipoDebito = UCase(TextTipoFactura.text)
             rstNotaDebitoC.Fields!FechaDebito = TextFechaFactura.text
             rstNotaDebitoC.Fields!TotalDebito = TextTotalFactura.text
-            If Textiva.text <> "" Then
-                rstNotaDebitoC.Fields!PorcentajeIVA = Textiva.text
-            Else
-                rstNotaDebitoC.Fields!PorcentajeIVA = "0,00"
-            End If
-            
-            If ComboArticulo.text = "GTO" Then
-                If TextSubtotalFactura.text = TextTotalFactura.text Then TextSubtotalFactura.text = (TextTotalFactura.text / 1.21)
-                rstNotaDebitoC.Fields!SubTotalDebito = Format(TextSubtotalFactura.text, "#,###,###,#0.00")
-                'If TextSubtotalFactura.Text = "" Then rstNotaDebitoC.Fields!SubTotalDebito = (rstNotaDebitoC.Fields!TotalDebito / 1.21)
-                If TextImpuesto.text <> "" Then
-                    rstNotaDebitoC.Fields!totalIva = Format(TextImpuesto.text, "#,###,###,#0.00")
-                Else
-                    rstNotaDebitoC.Fields!totalIva = Format((TextSubtotalFactura.text * 21) / 100, "#,###,###,#0.00")
-                    '"0,00"
-                    'rstNotaDebitoC.Fields!TotalIVA = ((rstNotaDebitoC.Fields!SubTotalDebito) * 21) / 100
-                End If
-                If TextAlicuota.text = "" Then TextAlicuota.text = 0
-                rstNotaDebitoC.Fields!AlicuotaIIBB = TextAlicuota.text
-                If TextPercepcionIIBB.text <> "" Then
-                    rstNotaDebitoC.Fields!ImportePercepIIBB = TextPercepcionIIBB.text
-                End If
-                
-                Else
-                    If ComboArticulo.text = "CHE" Then
-                        rstNotaDebitoC.Fields!totalIva = Format(0, "#,###,###,#0.00")
-                        rstNotaDebitoC.Fields!PorcentajeIVA = "0,00"
-                        rstNotaDebitoC.Fields!SubTotalDebito = Format(0, "#,###,###,#0.00")
-                        rstNotaDebitoC.Fields!AlicuotaIIBB = Format(0, "#,###,###,#0.00")
-                    End If
-            End If
+            rstNotaDebitoC.Fields!PorcentajeIVA = Textiva.text
+            rstNotaDebitoC.Fields!SubTotalDebito = TextSubtotalFactura.text
+            rstNotaDebitoC.Fields!totalIva = TextImpuesto.text
+            rstNotaDebitoC.Fields!AlicuotaIIBB = TextAlicuota.text
+            rstNotaDebitoC.Fields!ImportePercepIIBB = TextPercepcionIIBB.text
             rstNotaDebitoC.Fields!CodCliente = TextCodigoCliente.text
 '            rstNotaDebitoC.Fields!PorcentajeDesc = TextDescuentoCliente.Text
 '            rstNotaDebitoC.Fields!ImporteDesc = TextDescuentos.Text
@@ -1690,8 +1620,8 @@ Private Sub BotonGrabar_Click()
                 FG1.Row = linea
                 FG1.Col = 0
                 If FG1.text = "CHE" Then
-                    FG1.Col = 3
-                    ImporteExento = ImporteExento + CDbl(FG1.text) * CDbl(FG1.TextMatrix(linea, 5))
+                    FG1.Col = 6
+                    ImporteExento = ImporteExento + CDbl(FG1.TextMatrix(linea, 6))
                 End If
             Next linea
 
