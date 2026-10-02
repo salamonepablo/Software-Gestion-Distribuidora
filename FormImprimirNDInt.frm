@@ -740,10 +740,10 @@ Private Sub GenerarFEB()
                         .FontSize = 10
                         .CurrentX = 15
                         .CurrentY = 245
-                        Printer.Print "C.A.E: " & tNotaDebitoIC!CAE
+                        Printer.Print "DOCUMENTO INTERNO - SIN CAE"
                         .CurrentX = 15
                         .CurrentY = 252
-                        Printer.Print "Fecha Vencimiento C.A.E: " & Format(tNotaDebitoIC!FechaVC, "DD/MM/YYYY")
+                        ' No fiscal CAE expiration for an internal note.
                         
                         'Call CrearBarCode(CalcularBarCode)
                         
@@ -754,7 +754,7 @@ Private Sub GenerarFEB()
                         
                         .FontName = "Interleaved 2of5"
                         .FontSize = 20
-                        Printer.Print BarCodeIL2of5(CalcularBarCode)
+                        ' No fiscal barcode for an internal note.
                         
                     .EndDoc
                 End With
@@ -1235,10 +1235,10 @@ Private Sub GenerarFEBD()
                         .FontSize = 10
                         .CurrentX = 15
                         .CurrentY = 245
-                        Printer.Print "C.A.E: " & tNotaDebitoIC!CAE
+                        Printer.Print "DOCUMENTO INTERNO - SIN CAE"
                         .CurrentX = 15
                         .CurrentY = 252
-                        Printer.Print "Fecha Vencimiento C.A.E: " & Format(tNotaDebitoIC!FechaVC, "DD/MM/YYYY")
+                        ' No fiscal CAE expiration for an internal note.
                         
                         'Call CrearBarCode(CalcularBarCode)
                         
@@ -1249,7 +1249,7 @@ Private Sub GenerarFEBD()
                         
                         .FontName = "Interleaved 2of5"
                         .FontSize = 20
-                        Printer.Print BarCodeIL2of5(CalcularBarCode)
+                        ' No fiscal barcode for an internal note.
                         
                     .EndDoc
                 End With
@@ -1730,10 +1730,10 @@ Private Sub GenerarFED()
                         .FontSize = 10
                         .CurrentX = 15
                         .CurrentY = 245
-                        Printer.Print "C.A.E: " & tNotaDebitoIC!CAE
+                        Printer.Print "DOCUMENTO INTERNO - SIN CAE"
                         .CurrentX = 15
                         .CurrentY = 252
-                        Printer.Print "Fecha Vencimiento C.A.E: " & Format(tNotaDebitoIC!FechaVC, "DD/MM/YYYY")
+                        ' No fiscal CAE expiration for an internal note.
                         
                         'Call CrearBarCode(CalcularBarCode)
                         
@@ -1744,7 +1744,7 @@ Private Sub GenerarFED()
                         
                         .FontName = "Interleaved 2of5"
                         .FontSize = 20
-                        Printer.Print BarCodeIL2of5(CalcularBarCode)
+                        ' No fiscal barcode for an internal note.
                         
                     .EndDoc
                 End With
@@ -2716,10 +2716,10 @@ Private Sub ImprimirFE()
                         .FontSize = 10
                         .CurrentX = 15
                         .CurrentY = 245
-                        Printer.Print "C.A.E: " & tNotaDebitoIC!CAE
+                        Printer.Print "DOCUMENTO INTERNO - SIN CAE"
                         .CurrentX = 15
                         .CurrentY = 252
-                        Printer.Print "Fecha Vencimiento C.A.E: " & Format(tNotaDebitoIC!FechaVC, "DD/MM/YYYY")
+                        ' No fiscal CAE expiration for an internal note.
                         
                         'Call CrearBarCode(CalcularBarCode)
                         
@@ -2730,7 +2730,7 @@ Private Sub ImprimirFE()
                         
                         .FontName = "Interleaved 2of5"
                         .FontSize = 20
-                        Printer.Print BarCodeIL2of5(CalcularBarCode)
+                        ' No fiscal barcode for an internal note.
                         
                     .EndDoc
                 End With
@@ -3207,10 +3207,10 @@ Private Sub ImprimirFEB()
                         .FontSize = 10
                         .CurrentX = 15
                         .CurrentY = 245
-                        Printer.Print "C.A.E: " & tNotaDebitoIC!CAE
+                        Printer.Print "DOCUMENTO INTERNO - SIN CAE"
                         .CurrentX = 15
                         .CurrentY = 252
-                        Printer.Print "Fecha Vencimiento C.A.E: " & Format(tNotaDebitoIC!FechaVC, "DD/MM/YYYY")
+                        ' No fiscal CAE expiration for an internal note.
                         
                         'Call CrearBarCode(CalcularBarCode)
                         
@@ -3221,7 +3221,7 @@ Private Sub ImprimirFEB()
                         
                         .FontName = "Interleaved 2of5"
                         .FontSize = 20
-                        Printer.Print BarCodeIL2of5(CalcularBarCode)
+                        ' No fiscal barcode for an internal note.
                         
                     .EndDoc
                 End With
@@ -3698,10 +3698,10 @@ Private Sub ImprimirFEBD()
                         .FontSize = 10
                         .CurrentX = 15
                         .CurrentY = 245
-                        Printer.Print "C.A.E: " & tNotaDebitoIC!CAE
+                        Printer.Print "DOCUMENTO INTERNO - SIN CAE"
                         .CurrentX = 15
                         .CurrentY = 252
-                        Printer.Print "Fecha Vencimiento C.A.E: " & Format(tNotaDebitoIC!FechaVC, "DD/MM/YYYY")
+                        ' No fiscal CAE expiration for an internal note.
                         
                         'Call CrearBarCode(CalcularBarCode)
                         
@@ -3712,7 +3712,7 @@ Private Sub ImprimirFEBD()
                         
                         .FontName = "Interleaved 2of5"
                         .FontSize = 20
-                        Printer.Print BarCodeIL2of5(CalcularBarCode)
+                        ' No fiscal barcode for an internal note.
                         
                     .EndDoc
                 End With
@@ -4190,10 +4190,10 @@ Private Sub ImprimirFED()
                         .FontSize = 10
                         .CurrentX = 15
                         .CurrentY = 245
-                        Printer.Print "C.A.E: " & tNotaDebitoIC!CAE
+                        Printer.Print "DOCUMENTO INTERNO - SIN CAE"
                         .CurrentX = 15
                         .CurrentY = 252
-                        Printer.Print "Fecha Vencimiento C.A.E: " & Format(tNotaDebitoIC!FechaVC, "DD/MM/YYYY")
+                        ' No fiscal CAE expiration for an internal note.
                         
                         'Call CrearBarCode(CalcularBarCode)
                         
@@ -4204,7 +4204,7 @@ Private Sub ImprimirFED()
                         
                         .FontName = "Interleaved 2of5"
                         .FontSize = 20
-                        Printer.Print BarCodeIL2of5(CalcularBarCode)
+                        ' No fiscal barcode for an internal note.
                         
                     .EndDoc
                 End With
@@ -4943,10 +4943,10 @@ Private Sub GenerarFE()
                         .FontSize = 10
                         .CurrentX = 15
                         .CurrentY = 245
-                        Printer.Print "C.A.E: " & tNotaDebitoIC!CAE
+                        Printer.Print "DOCUMENTO INTERNO - SIN CAE"
                         .CurrentX = 15
                         .CurrentY = 252
-                        Printer.Print "Fecha Vencimiento C.A.E: " & Format(tNotaDebitoIC!FechaVC, "DD/MM/YYYY")
+                        ' No fiscal CAE expiration for an internal note.
                         
                         'Call CrearBarCode(CalcularBarCode)
                         
@@ -4957,7 +4957,7 @@ Private Sub GenerarFE()
                         
                         .FontName = "Interleaved 2of5"
                         .FontSize = 20
-                        Printer.Print BarCodeIL2of5(CalcularBarCode)
+                        ' No fiscal barcode for an internal note.
                         
                     .EndDoc
                 End With

@@ -1470,9 +1470,45 @@ Private Sub BotonGrabar_Click()
         Dim existeTipoBD As String
         Dim existeNumero As Integer
         Dim existeTipo As String
+        Dim transactionWorkspace As DAO.Workspace
+        Dim transactionStarted As Boolean
+        Dim saveCommitted As Boolean
+        Dim saveError As String
+        Dim rollbackError As String
+        Dim gridRow As Long
+        Dim lineCount As Long
+        Dim noteTotal As Currency
        
        
         
+        On Error GoTo SaveFailed
+
+        If Not IsDate(TextFechaFactura.text) Then
+            MsgBox "La fecha de la nota no es válida.", vbExclamation, "Nota de débito interna"
+            Exit Sub
+        End If
+        For gridRow = 1 To FG1.Rows - 1
+            If Len(Trim$(FG1.TextMatrix(gridRow, 0))) > 0 Then
+                If Not IsNumeric(FG1.TextMatrix(gridRow, 6)) Then
+                    MsgBox "Hay un renglón sin importe válido.", vbExclamation, "Nota de débito interna"
+                    Exit Sub
+                End If
+                noteTotal = noteTotal + CCur(FG1.TextMatrix(gridRow, 6))
+                lineCount = lineCount + 1
+            End If
+        Next gridRow
+        If lineCount = 0 Or noteTotal <= 0 Then
+            MsgBox "Agregá al menos un renglón con importe positivo.", vbExclamation, "Nota de débito interna"
+            Exit Sub
+        End If
+        TextSubtotalFactura.text = Format$(noteTotal, "#,###,###,#0.00")
+        TextTotalFactura.text = TextSubtotalFactura.text
+        If CheckModificaStock.Value = vbChecked Then
+            modificaStock = 1
+        Else
+            modificaStock = 0
+        End If
+
         Textfac.text = 1
         
         ruta = App.Path & "\DB_SPC_SI.mdb"
@@ -1489,25 +1525,20 @@ Private Sub BotonGrabar_Click()
         Set db = DBEngine.OpenDatabase(ruta)
         Set rstMovimientosCtaCte = db.OpenRecordset("MovimientosCtaCte", dbOpenDynaset)
         
-    'buscamos el deposito para descontar el stock
-        
-        Set tDepositos = db.OpenRecordset("Depositos", dbOpenTable)
-          ' On Error GoTo CapturaErrores
-   
-           tDepositos.Index = "IndXVendedor"
-           
-           tDepositos.MoveFirst
-           tDepositos.Seek "=", LegajoEmpleado
-           
-           If Not tDepositos.NoMatch Then
+    ' Only require a seller deposit when this note changes stock.
+        If modificaStock = 1 Then
+            Set tDepositos = db.OpenRecordset("Depositos", dbOpenTable)
+            tDepositos.Index = "IndXVendedor"
+            tDepositos.Seek "=", LegajoEmpleado
+            If tDepositos.NoMatch Then
+                tDepositos.Close
+                MsgBox "El vendedor no tiene un depósito asociado. Desmarcá Modifica Stock si esta nota no afecta existencias.", vbExclamation, "Nota de débito interna"
+                Exit Sub
+            End If
             DepoOrigen = tDepositos!IDDEPOSITO
-            'MsgBox (DepoOrigen)
-           Else
-            A = MsgBox("ERROR !!", vbCritical, "Vendedor sin Depósito Asociado")
-           End If
-              
-           tDepositos.Close
-        
+            tDepositos.Close
+        End If
+
     '**************************************************
         
         
@@ -1537,6 +1568,9 @@ Private Sub BotonGrabar_Click()
         
         
      
+            Set transactionWorkspace = DBEngine.Workspaces(0)
+            transactionWorkspace.BeginTrans
+            transactionStarted = True
             rstNDIC.AddNew
             rstNDIC.Fields!NroDebitoI = TextNumeroFactura.text
             rstNDIC.Fields!TipoDebitoI = UCase(TextTipoFactura.text)
@@ -1668,11 +1702,11 @@ Private Sub BotonGrabar_Click()
             CodigoClie = Val(TextCodigoCliente.text)
       
             rstCliente.FindFirst "IDCliente= " + Str(CodigoClie)
+            If rstCliente.NoMatch Then Err.Raise vbObjectError + 1701, "FormNDInterna", "Cliente inexistente."
+            rstCtaCte.FindFirst "IDCliente= " + Str(CodigoClie)
+            If rstCtaCte.NoMatch Then Err.Raise vbObjectError + 1702, "FormNDInterna", "El cliente no tiene cuenta corriente."
             If rstCliente.Fields!IdCliente <> Val(TextCodigoCliente.text) Then
-                mensaje = MsgBox("Cliente Inexistente", vbCritical, "Final de la busqueda")
-                'TextCodigoCliente.Text = ""
-                'Call blanqueototal
-                'TextCodigoCliente.SetFocus
+                Err.Raise vbObjectError + 1703, "FormNDInterna", "El cliente seleccionado no coincide."
             Else
                 rstCtaCte.Edit
                 saldo1 = Format(rstCtaCte.Fields!SaldoL1, "#,###,###,#0.00")
@@ -1684,13 +1718,6 @@ Private Sub BotonGrabar_Click()
                 rstCtaCte.Fields!FechaActSaldo = Format(Date, "dd/mm/yyyy")
                 rstCtaCte.Update
             End If
-            
-            'Muestro mensaje de saldo para Pato
-                Titulo = "CLIENTE: " & TextApellidoNombre.text
-                mensaje = "SALDO L1: " & Format(rstCtaCte.Fields!SaldoL1, "Currency") & Chr(13) & "SALDO L2: " & Format(rstCtaCte.Fields!SaldoL2, "Currency") & Chr(13) & "SALDO TOTAL: " & Format(rstCtaCte.Fields!SaldoTotal, "Currency")
-            
-                A = MsgBox(mensaje, vbOKOnly, Titulo)
-            
             
             '*** Grabo Movimientos Cuente corriente
         
@@ -1736,7 +1763,19 @@ Private Sub BotonGrabar_Click()
                 'End If
                 rstUltimosNumeros.Update
             'End If
-            
+            transactionWorkspace.CommitTrans
+            transactionStarted = False
+            saveCommitted = True
+
+            'Muestro mensaje de saldo para Pato
+                Titulo = "CLIENTE: " & TextApellidoNombre.text
+                mensaje = "SALDO L1: " & Format(rstCtaCte.Fields!SaldoL1, "Currency") & Chr(13) & "SALDO L2: " & Format(rstCtaCte.Fields!SaldoL2, "Currency") & Chr(13) & "SALDO TOTAL: " & Format(rstCtaCte.Fields!SaldoTotal, "Currency")
+
+                A = MsgBox(mensaje, vbOKOnly, Titulo)
+
+
+
+
             BotonGrabar.Enabled = False
             BotonNueva.Enabled = False
         
@@ -1775,14 +1814,23 @@ Private Sub BotonGrabar_Click()
         fila2 = 0
         Fila = 1
          
-CapturaErrores:
-        
-        Select Case Err
-            Case 3021
-                Resume Next
-        End Select
-'        fila2 = 0
-'        Fila = 0
+        Exit Sub
+SaveFailed:
+        saveError = Err.Description
+        If transactionStarted Then
+            On Error Resume Next
+            transactionWorkspace.Rollback
+            If Err.Number <> 0 Then rollbackError = Err.Description
+            transactionStarted = False
+            On Error GoTo 0
+        End If
+        If saveCommitted Then
+            MsgBox "La nota quedó guardada, pero falló la impresión: " & saveError, vbExclamation, "Nota de débito interna"
+        ElseIf Len(rollbackError) > 0 Then
+            MsgBox "Falló el guardado y no se pudo confirmar la reversión. Revisá la base antes de reintentar: " & saveError & " / " & rollbackError, vbCritical, "Nota de débito interna"
+        Else
+            MsgBox "No se guardó la nota. Se revirtieron los cambios: " & saveError, vbCritical, "Nota de débito interna"
+        End If
 End Sub
 Private Sub DesHagoStock(CodProd, descuentoCantidad)
 'Private Sub DesHagoStock(CodProd, IdDepoOrigen, IdDepoDestino, Cant)
@@ -1923,7 +1971,9 @@ End Sub
 
 Private Sub CheckModificaStock_Click()
 
-    If CheckModificaStock.Value = Unchecked Then
+    If CheckModificaStock.Value = vbChecked Then
+        modificaStock = 1
+    Else
         modificaStock = 0
     End If
     
