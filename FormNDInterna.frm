@@ -998,21 +998,13 @@ Begin VB.Form FormNDInterna
          Visible         =   0   'False
          Width           =   495
       End
-      Begin VB.OptionButton opContado 
-         Caption         =   "Contado"
+      Begin VB.CheckBox CheckAfectarCtaCte
+         Caption         =   "Afectar Cta Cte"
          Height          =   255
          Left            =   9600
-         TabIndex        =   3
-         Top             =   240
-         Width           =   975
-      End
-      Begin VB.OptionButton opCtaCte 
-         Caption         =   "Cta Cte"
-         Height          =   255
-         Left            =   10560
          TabIndex        =   2
          Top             =   240
-         Width           =   855
+         Width           =   1935
       End
       Begin VB.Label Label20 
          AutoSize        =   -1  'True
@@ -1440,6 +1432,7 @@ Public Sub blanqueototal()
     TextUnidadMedida.text = ""
     TextPrecioUnitario.text = ""
     'CheckModificaStock.Value = Unchecked
+    CheckAfectarCtaCte.Value = vbUnchecked
     FG1.Clear
     FG1.Enabled = False
    
@@ -1632,8 +1625,11 @@ Private Sub BotonGrabar_Click()
 '            rstNDIC.Fields!ImporteDesc = TextDescuentos.Text
             rstNDIC.Fields!codVendedor = LegajoEmpleado
             
-            If opContado.Value = True Then rstNDIC.Fields!CondicionVenta = "Contado"
-            If opCtaCte.Value = True Then rstNDIC.Fields!CondicionVenta = "Cuenta Corriente"
+            If CheckAfectarCtaCte.Value = vbChecked Then
+                rstNDIC.Fields!CondicionVenta = "Cuenta Corriente"
+            Else
+                rstNDIC.Fields!CondicionVenta = "Contado"
+            End If
             
             rstNDIC.Update
             
@@ -1714,11 +1710,11 @@ Private Sub BotonGrabar_Click()
                 vTipoNDImp = TextTipoFactura.text
             '*****************
             
-            If opCtaCte.Value = True Then
+            If CheckAfectarCtaCte.Value = vbChecked Then
             saveStage = "cuenta corriente"
             Set saveCustomer = saveDatabase.OpenRecordset("Clientes", dbOpenDynaset)
             Set saveAccount = saveDatabase.OpenRecordset("CtaCte", dbOpenDynaset)
-            '*** Grabo Linea 1 en Cuenta Corriente
+            '*** Grabo Linea 2 en Cuenta Corriente
             
             CodigoClie = Val(TextCodigoCliente.text)
       
@@ -1730,12 +1726,8 @@ Private Sub BotonGrabar_Click()
                 Err.Raise vbObjectError + 1703, "FormNDInterna", "El cliente seleccionado no coincide."
             Else
                 saveAccount.Edit
-                saldo1 = Format(saveAccount.Fields!SaldoL1, "#,###,###,#0.00")
-                saldo2 = Format(saveAccount.Fields!SaldoL2, "#,###,###,#0.00")
-                saldoLi1 = Format(TextTotalFactura.text, "#,###,###,#0.00")
-                saveAccount.Fields!SaldoL1 = saldoLi1 + saldo1
-                saldo1 = Format(saveAccount.Fields!SaldoL1, "#,###,###,#0.00")
-                saveAccount.Fields!SaldoTotal = saldo1 + saldo2
+                saveAccount.Fields!SaldoL2 = CCur(saveAccount.Fields!SaldoL2) + noteTotal
+                saveAccount.Fields!SaldoTotal = CCur(saveAccount.Fields!SaldoL1) + CCur(saveAccount.Fields!SaldoL2)
                 saveAccount.Fields!FechaActSaldo = Format(Date, "dd/mm/yyyy")
                 saveAccount.Update
             End If
@@ -1753,8 +1745,8 @@ Private Sub BotonGrabar_Click()
                 rstMovimientosCtaCte.Fields!tipoDoc = "Debito Int. B"
             End If
             rstMovimientosCtaCte.Fields!NroDoc = TextNumeroFactura.text
-            rstMovimientosCtaCte.Fields!ImporteLinea1 = TextTotalFactura.text
-            rstMovimientosCtaCte.Fields!ImporteLinea2 = 0
+            rstMovimientosCtaCte.Fields!ImporteLinea1 = 0
+            rstMovimientosCtaCte.Fields!ImporteLinea2 = noteTotal
             rstMovimientosCtaCte.Update
             
             End If
@@ -1792,7 +1784,7 @@ Private Sub BotonGrabar_Click()
             transactionStarted = False
             saveCommitted = True
 
-            If opCtaCte.Value = True Then
+            If CheckAfectarCtaCte.Value = vbChecked Then
                 Titulo = "CLIENTE: " & TextApellidoNombre.text
                 mensaje = "SALDO L1: " & Format(saveAccount.Fields!SaldoL1, "Currency") & Chr(13) & "SALDO L2: " & Format(saveAccount.Fields!SaldoL2, "Currency") & Chr(13) & "SALDO TOTAL: " & Format(saveAccount.Fields!SaldoTotal, "Currency")
                 A = MsgBox(mensaje, vbOKOnly, Titulo)
@@ -2676,8 +2668,7 @@ Private Sub Form_Load()
     renglon = 16
     Call SeteoGrilla
       
-    opContado.Value = True
-    opCtaCte.Value = False
+    CheckAfectarCtaCte.Value = vbUnchecked
       
     Call Cargo
     Call buscoarticulo
