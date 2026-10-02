@@ -1697,6 +1697,7 @@ Private Sub BotonGrabar_Click()
                 vTipoNDImp = TextTipoFactura.text
             '*****************
             
+            If opCtaCte.Value = True Then
             '*** Grabo Linea 1 en Cuenta Corriente
             
             CodigoClie = Val(TextCodigoCliente.text)
@@ -1736,6 +1737,8 @@ Private Sub BotonGrabar_Click()
             rstMovimientosCtaCte.Fields!ImporteLinea2 = 0
             rstMovimientosCtaCte.Update
             
+            End If
+
             '*** Actualizo Ultimo Numero Factura
             
             Set db = DBEngine.OpenDatabase(ruta)
@@ -1767,11 +1770,11 @@ Private Sub BotonGrabar_Click()
             transactionStarted = False
             saveCommitted = True
 
-            'Muestro mensaje de saldo para Pato
+            If opCtaCte.Value = True Then
                 Titulo = "CLIENTE: " & TextApellidoNombre.text
                 mensaje = "SALDO L1: " & Format(rstCtaCte.Fields!SaldoL1, "Currency") & Chr(13) & "SALDO L2: " & Format(rstCtaCte.Fields!SaldoL2, "Currency") & Chr(13) & "SALDO TOTAL: " & Format(rstCtaCte.Fields!SaldoTotal, "Currency")
-
                 A = MsgBox(mensaje, vbOKOnly, Titulo)
+            End If
 
 
 
