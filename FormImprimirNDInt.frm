@@ -4416,6 +4416,37 @@ Private Sub Command1_Click()
 End Sub
 
 
+Public Sub PrintInternalNote(ByVal noteNumber As String, ByVal noteType As String, ByVal exportPdf As Boolean)
+    Dim previousNumber As String
+    Dim previousType As String
+    Dim errorNumber As Long
+    Dim errorDescription As String
+
+    previousNumber = TextNumeroFactura.Text
+    previousType = TextTipoFactura.Text
+    On Error GoTo PrintFailed
+    TextNumeroFactura.Text = noteNumber
+    TextTipoFactura.Text = noteType
+
+    If exportPdf Then
+        If noteType = "A" Then Call GenerarFE
+        If noteType = "B" Then Call GenerarFEB
+    Else
+        If noteType = "A" Then Call ImprimirFE
+        If noteType = "B" Then Call ImprimirFEB
+    End If
+
+    TextNumeroFactura.Text = previousNumber
+    TextTipoFactura.Text = previousType
+    Exit Sub
+PrintFailed:
+    errorNumber = Err.Number
+    errorDescription = Err.Description
+    TextNumeroFactura.Text = previousNumber
+    TextTipoFactura.Text = previousType
+    Err.Raise errorNumber, "PrintInternalNote", errorDescription
+End Sub
+
 Private Sub cmdGenerarPDF_Click()
 
     If TextTipoFactura.Text = "A" Then

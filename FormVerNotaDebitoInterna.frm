@@ -4191,19 +4191,11 @@ CapturaErrores:
 End Sub
 
 Private Sub cmdGenerarFE_Click()
-    
-    If TextTipoFactura.text = "A" Then
-        Call GenerarFE
-        'MsgBox ("Genera Duplicado")
-        'Call GenerarFED
-    End If
-
-    If TextTipoFactura.text = "B" Then
-        Call GenerarFEB
-        'MsgBox ("Genera Duplicado")
-        'Call GenerarFEBD
-    End If
-    
+    On Error GoTo PrintFailed
+    Call FormImprimirNDInt.PrintInternalNote(TextNumeroFactura.Text, TextTipoFactura.Text, True)
+    Exit Sub
+PrintFailed:
+    MsgBox "No se pudo imprimir la nota interna: " & Err.Description, vbExclamation, "Nota de debito interna"
 End Sub
 
 Private Sub GenerarFED()
@@ -5231,17 +5223,11 @@ CapturaErrores:
 End Sub
 
 Private Sub cmdImprimirFE_Click()
-
-    If TextTipoFactura.text = "A" Then
-        Call ImprimirFE
-        Call ImprimirFED
-    End If
-    
-    If TextTipoFactura.text = "B" Then
-        Call ImprimirFEB
-        Call ImprimirFEBD
-    End If
-
+    On Error GoTo PrintFailed
+    Call FormImprimirNDInt.PrintInternalNote(TextNumeroFactura.Text, TextTipoFactura.Text, False)
+    Exit Sub
+PrintFailed:
+    MsgBox "No se pudo imprimir la nota interna: " & Err.Description, vbExclamation, "Nota de debito interna"
 End Sub
 
 Private Sub ComboVendedor_Click()
