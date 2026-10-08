@@ -416,6 +416,30 @@ Private Sub cmdImprimir_Click()
 
 End Sub
 
+Private Function SQLComisionesConRezago(ByVal Desde As String, ByVal Hasta As String, ByVal Vendedor As String) As String
+    Dim Pagos As String
+    Dim Notas As String
+    Dim Filtro As String
+    Dim Detalles As String
+    Dim Importe As String
+
+    Vendedor = Replace(Vendedor, "'", "''")
+    Filtro = " AND Empleados.Legajo='" & Vendedor & "'"
+    'Stable projection of the existing query: preserve all its payment joins.
+    Pagos = "SELECT CStr([PagoC.NroPago]) AS Documento, FechaPago, ImportePago, FormaPago, RazonSocial, [qLiqComisiones.Comision] AS TasaComision FROM qLiqComisiones"
+    Pagos = Pagos & " WHERE FechaPago>=#" & Desde & "# AND FechaPago<=#" & Hasta & "# AND Legajo='" & Vendedor & "'"
+
+    'One aggregate per composite NC; only exact REZAGO contributes signed lines.
+    Detalles = "SELECT D.TipoNotaCredito, D.NroNotaCredito, Count(*) AS Lineas, Sum(IIF(StrComp(D.IDCodProd,'REZAGO',0)=0,1,0)) AS Rezagos, Sum(IIF(StrComp(D.IDCodProd,'REZAGO',0)=0,D.TotalLinea,0)) AS NetoRezago FROM NotaCreditoD AS D GROUP BY D.TipoNotaCredito, D.NroNotaCredito"
+    'TotalLinea already includes discounts. Only A stores net lines and adds taxes.
+    'Non-A lines are gross: fallback header IVA is not an additional line tax.
+    Importe = "IIF(R.Lineas=R.Rezagos,NC.TotalNotaCredito,R.NetoRezago*IIF(NC.TipoNotaCredito='A',1+IIF(NC.PorcentajeIVA Is Null,0,NC.PorcentajeIVA)/100+IIF(NC.AlicuotaIIBB Is Null,0,NC.AlicuotaIIBB)/100,1))"
+    Notas = "SELECT 'NC ' & NC.TipoNotaCredito & '-' & CStr(NC.NroNotaCredito) AS Documento, NC.FechaNotaCredito AS FechaPago, " & Importe & " AS ImportePago, 'Rezago' AS FormaPago, Clientes.RazonSocial, IIF(Clientes.PorcentajeComision Is Null,Empleados.Comision,Clientes.PorcentajeComision) AS TasaComision"
+    Notas = Notas & " FROM Empleados INNER JOIN (Clientes INNER JOIN (NotaCreditoC AS NC INNER JOIN (" & Detalles & ") AS R ON NC.TipoNotaCredito=R.TipoNotaCredito AND NC.NroNotaCredito=R.NroNotaCredito) ON Clientes.IDCliente=NC.CodCliente) ON Empleados.Legajo=Clientes.Vendedor"
+    Notas = Notas & " WHERE R.Rezagos>0 AND NC.FechaNotaCredito>=#" & Desde & "# AND NC.FechaNotaCredito<=#" & Hasta & "#" & Filtro
+    SQLComisionesConRezago = Pagos & " UNION ALL " & Notas & " ORDER BY FormaPago, FechaPago"
+End Function
+
 Private Sub cmdLiquidar_Click()
 
   'Timer1.Enabled = True
@@ -438,19 +462,25 @@ Private Sub cmdLiquidar_Click()
     TotalFormaPago = 0
     
         
-    FG1.Rows = 2
+    FG1.Clear
+    SeteoGrilla
+    txtImporteTotal.text = FormatCurrency(0, 2)
     
     On Error GoTo CapturaErrores
     
     FechaDesde = Format(TxtFechaDesde.text, "m/d/yyyy")
     FechaHasta = Format(TxtFechaHasta.text, "m/d/yyyy")
     
-    vSQL = "SELECT * FROM qLiqComisiones WHERE FechaPago>=#" & FechaDesde & "# AND FechaPago <=#" & FechaHasta & "# AND Legajo='" & cmbVendedores(0).text & "' ORDER BY FormaPago, FechaPago"
+    vSQL = SQLComisionesConRezago(FechaDesde, FechaHasta, cmbVendedores(0).text)
     'MsgBox (vSQL)
     
-    Set qComisiones = BaseSPC.OpenRecordset(vSQL, dbOpenDynaset)
-    
-    qComisiones.MoveFirst
+    Set qComisiones = BaseSPC.OpenRecordset(vSQL, dbOpenSnapshot)
+
+    If qComisiones.EOF Then
+        qComisiones.Close
+        MsgBox "No hay cobros para liquidar con el criterio seleccionado.", vbInformation
+        Exit Sub
+    End If
     
     FormaPago = qComisiones!FormaPago
     
@@ -460,7 +490,7 @@ Private Sub cmdLiquidar_Click()
       FG1.CellFontBold = False
       If FormaPago = qComisiones!FormaPago Then
         FG1.col = 0
-        FG1.text = Format(qComisiones.[PagoC.NroPago], "General Number")
+        FG1.text = qComisiones!Documento
         FG1.col = 1
         FG1.text = Format(qComisiones!FechaPago, "DD-MMM-YY")
         FG1.col = 2
@@ -475,12 +505,10 @@ Private Sub cmdLiquidar_Click()
         FG1.text = qComisiones!RazonSocial
         FG1.col = 5
         FG1.CellAlignment = 7
-        FG1.text = Format$(qComisiones![qLiqComisiones.Comision], "Standard")
+        FG1.text = Format$(qComisiones!TasaComision, "Standard")
         FG1.col = 6
-        'LiqLinea = (qComisiones!TotalAbonado * qComisiones![qLiqComisiones.Comision]) / 100
         FG1.CellAlignment = 7
-        'LiqLinea = (qComisiones!TotalAbonado * qComisiones![qLiqComisiones.Comision]) / 100
-        LiqLinea = (qComisiones!ImportePago * qComisiones![qLiqComisiones.Comision]) / 100
+        LiqLinea = (qComisiones!ImportePago * qComisiones!TasaComision) / 100
         
         'FG1.Text = Format$(LiqLinea, "Standard")
         FG1.text = FormatCurrency(LiqLinea, 2)
@@ -524,13 +552,11 @@ Private Sub cmdLiquidar_Click()
             txtImporteTotal.FontSize = 10
             'txtImporteTotal.Text = Format$(LiqTotal, "Standard")
             txtImporteTotal.text = FormatCurrency(LiqTotal, 2)
-    
+            qComisiones.Close
+    Exit Sub
+
 CapturaErrores:
-    Select Case Err
-        Case 3021
-          MsgBox "No hay Pagos Para Liquidar con el Criterio Seleccionado...", vbCritical + vbDefaultButton1, "INFO DEL SISTEMA"
-          Resume Next
-    End Select
+    MsgBox Err.Description, vbCritical, "INFO DEL SISTEMA"
 
 End Sub
 
