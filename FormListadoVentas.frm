@@ -658,6 +658,26 @@ Private Sub cmdImprimir_Click()
 
 End Sub
 
+Private Function SQLVentasConNC(ByVal sqlFacturas As String) As String
+    Dim filtro As String, filtroNC As String
+    Dim inicioFiltro As Long, inicioOrden As Long
+
+    'Reverse recorded NC units and signed net amounts; IVA comes from the NC header.
+    inicioFiltro = InStr(sqlFacturas, " WHERE ")
+    inicioOrden = InStr(sqlFacturas, " ORDER BY ")
+    filtro = Mid$(sqlFacturas, inicioFiltro, inicioOrden - inicioFiltro)
+    filtroNC = Replace(filtro, "FechaFactura", "NC.FechaNotaCredito")
+    filtroNC = Replace(filtroNC, "CodVendedor", "NC.CodVendedor")
+    filtroNC = Replace(filtroNC, "IDCodProd", "ND.IDCodProd")
+    filtroNC = Replace(filtroNC, "CodCliente", "NC.CodCliente")
+
+    SQLVentasConNC = "SELECT FechaFactura, IDCodProd, cantidad, totalLinea, PorcentajeIVA FROM qListadoVentasFac" & filtro & _
+        " UNION ALL SELECT NC.FechaNotaCredito, ND.IDCodProd, -CDbl(ND.Cantidad), -ND.TotalLinea, NC.PorcentajeIVA" & _
+        " FROM NotaCreditoC AS NC INNER JOIN NotaCreditoD AS ND" & _
+        " ON NC.TipoNotaCredito = ND.TipoNotaCredito AND NC.NroNotaCredito = ND.NroNotaCredito" & filtroNC & _
+        " ORDER BY IDCodProd, FechaFactura"
+End Function
+
 Private Sub cmdLiquidar_Click()
 
     Dim cantidad, totalProductos As Double
@@ -690,7 +710,7 @@ Private Sub cmdLiquidar_Click()
     
 '         MsgBox (vSQL1)
         
-        Set qventasL1 = BaseSPC.OpenRecordset(vSQL1, dbOpenDynaset)
+        Set qventasL1 = BaseSPC.OpenRecordset(SQLVentasConNC(vSQL1), dbOpenSnapshot)
         
         totalProductos = 0
         qventasL1.MoveFirst
@@ -725,36 +745,37 @@ Private Sub cmdLiquidar_Click()
     If OptionL2.Value = True Then
         
         If cmbCliente.text = "Todos" Then
-            vsql2 = "SELECT * FROM qListadoVentasPres WHERE FechaPresu>=#" & FechaDesde & "# AND FechaPresu <=#" & FechaHasta & "# AND CodVendedor Like '" & cmbVendedores(0).text & "' AND CodProd Like'" & cmbProductos(1).text & "' ORDER BY CodProd, FechaPresu"
+            vsql2 = "SELECT * FROM qListadoVentasPres WHERE (Anulado IS NULL OR Anulado <> 'si') AND FechaPresu>=#" & FechaDesde & "# AND FechaPresu <=#" & FechaHasta & "# AND CodVendedor Like '" & cmbVendedores(0).text & "' AND CodProd Like'" & cmbProductos(1).text & "' ORDER BY CodProd, FechaPresu"
          Else
-            vsql2 = "SELECT * FROM qListadoVentasPres WHERE FechaPresu>=#" & FechaDesde & "# AND FechaPresu <=#" & FechaHasta & "# AND CodVendedor Like '" & cmbVendedores(0).text & "' AND CodProd Like'" & cmbProductos(1).text & "' AND CodCliente =" & Val(cmbCliente.text) & " ORDER BY CodProd, FechaPresu"
+            vsql2 = "SELECT * FROM qListadoVentasPres WHERE (Anulado IS NULL OR Anulado <> 'si') AND FechaPresu>=#" & FechaDesde & "# AND FechaPresu <=#" & FechaHasta & "# AND CodVendedor Like '" & cmbVendedores(0).text & "' AND CodProd Like'" & cmbProductos(1).text & "' AND CodCliente =" & Val(cmbCliente.text) & " ORDER BY CodProd, FechaPresu"
         End If
         
         'MsgBox (vsql2)
         
         Set qVentasL2 = BaseSPC.OpenRecordset(vsql2, dbOpenDynaset)
         
-        qVentasL2.MoveFirst
-        
-        IdCodProd = qVentasL2!CodProd
         totalProductos = 0
-        While Not qVentasL2.EOF
-            If qVentasL2!CodProd = IdCodProd Then
-                Cant = Cant + qVentasL2!cantidad
-                totalProductos = totalProductos + Cant
-                total = total + qVentasL2!totalLinea
-                qVentasL2.MoveNext
-             Else
-                Call LlenarGrilla(IdCodProd, Cant, total)
-                GrandTotal = GrandTotal + total
-                IdCodProd = qVentasL2!CodProd
-                Cant = 0
-                total = 0
-            End If
-        Wend
+        If Not qVentasL2.EOF Then
+            qVentasL2.MoveFirst
+            IdCodProd = qVentasL2!CodProd
+            While Not qVentasL2.EOF
+                If qVentasL2!CodProd = IdCodProd Then
+                    Cant = Cant + qVentasL2!cantidad
+                    totalProductos = totalProductos + qVentasL2!cantidad
+                    total = total + qVentasL2!totalLinea
+                    qVentasL2.MoveNext
+                 Else
+                    Call LlenarGrilla(IdCodProd, Cant, total)
+                    GrandTotal = GrandTotal + total
+                    IdCodProd = qVentasL2!CodProd
+                    Cant = 0
+                    total = 0
+                End If
+            Wend
         
-        Call LlenarGrilla(IdCodProd, Cant, total)
-        GrandTotal = GrandTotal + total
+            Call LlenarGrilla(IdCodProd, Cant, total)
+            GrandTotal = GrandTotal + total
+        End If
         
         lblTotal.Visible = True
         lblTotal.Caption = "Total de Productos Vendidos por: " & cmbVendedores(1).text & " y del cliente -> " & cmbCliente.text & " en L2 = " & Format(totalProductos, "Standard")
@@ -765,16 +786,16 @@ Private Sub cmdLiquidar_Click()
     If OptionAll.Value = True Then
         If cmbCliente.text = "Todos" Then
             vSQL1 = "SELECT * FROM qListadoVentasFac WHERE FechaFactura>=#" & FechaDesde & "# AND FechaFactura <=#" & FechaHasta & "# AND CodVendedor Like'" & cmbVendedores(0).text & "' AND IDCodProd Like'" & cmbProductos(1).text & "' ORDER BY IDCodProd, FechaFactura"
-            vsql2 = "SELECT * FROM qListadoVentasPres WHERE FechaPresu>=#" & FechaDesde & "# AND FechaPresu <=#" & FechaHasta & "# AND CodVendedor Like'" & cmbVendedores(0).text & "' AND CodProd Like'" & cmbProductos(1).text & "' ORDER BY CodProd, FechaPresu"
+            vsql2 = "SELECT * FROM qListadoVentasPres WHERE (Anulado IS NULL OR Anulado <> 'si') AND FechaPresu>=#" & FechaDesde & "# AND FechaPresu <=#" & FechaHasta & "# AND CodVendedor Like'" & cmbVendedores(0).text & "' AND CodProd Like'" & cmbProductos(1).text & "' ORDER BY CodProd, FechaPresu"
          Else
             vSQL1 = "SELECT * FROM qListadoVentasFac WHERE FechaFactura>=#" & FechaDesde & "# AND FechaFactura <=#" & FechaHasta & "# AND CodVendedor Like '" & cmbVendedores(0).text & "' AND IDCodProd Like'" & cmbProductos(1).text & "' AND CodCliente =" & Val(cmbCliente.text) & " ORDER BY IDCodProd, FechaFactura"
-            vsql2 = "SELECT * FROM qListadoVentasPres WHERE FechaPresu>=#" & FechaDesde & "# AND FechaPresu <=#" & FechaHasta & "# AND CodVendedor Like '" & cmbVendedores(0).text & "' AND CodProd Like'" & cmbProductos(1).text & "' AND CodCliente =" & Val(cmbCliente.text) & " ORDER BY CodProd, FechaPresu"
+            vsql2 = "SELECT * FROM qListadoVentasPres WHERE (Anulado IS NULL OR Anulado <> 'si') AND FechaPresu>=#" & FechaDesde & "# AND FechaPresu <=#" & FechaHasta & "# AND CodVendedor Like '" & cmbVendedores(0).text & "' AND CodProd Like'" & cmbProductos(1).text & "' AND CodCliente =" & Val(cmbCliente.text) & " ORDER BY CodProd, FechaPresu"
         End If
         
         'MsgBox (vSQL1)
         'MsgBox (vSQL2)
         
-        Set qventasL1 = BaseSPC.OpenRecordset(vSQL1, dbOpenDynaset)
+        Set qventasL1 = BaseSPC.OpenRecordset(SQLVentasConNC(vSQL1), dbOpenSnapshot)
         Set qVentasL2 = BaseSPC.OpenRecordset(vsql2, dbOpenDynaset)
         
        'Tabla auxiliar de ventas
@@ -792,10 +813,13 @@ Private Sub cmdLiquidar_Click()
                 
       'Preparo las consultas de L1 y L2
         qventasL1.MoveFirst
-        qVentasL2.MoveFirst
         
         IdCodProd = qventasL1!IdCodProd
-        IdCodProd2 = qVentasL2!CodProd
+        IdCodProd2 = ""
+        If Not qVentasL2.EOF Then
+            qVentasL2.MoveFirst
+            IdCodProd2 = qVentasL2!CodProd
+        End If
         
       'Cargo las ventas L1 en la Tabla Auxiliar
         While Not qventasL1.EOF
@@ -832,55 +856,58 @@ Private Sub cmdLiquidar_Click()
         Cant = 0
         total = 0
         
-        While Not qVentasL2.EOF
-            If qVentasL2!CodProd = IdCodProd2 Then
-                Cant = Cant + qVentasL2!cantidad
-                total = total + qVentasL2!totalLinea
-                qVentasL2.MoveNext
-            Else
-                tVA.Seek "=", IdCodProd2
-                If Not tVA.NoMatch Then
-                    tVA.Edit
-                        tVA!cantidad = tVA!cantidad + Cant
-                        tVA!Importe = tVA!Importe + total
-                    tVA.Update
-                    GrandTotal = GrandTotal + total
-                 Else
-                    If Not IdCodProd2 = "" Then
-                        tVA.AddNew
-                            tVA!IdProducto = IdCodProd2
-                            tVA!Descripcion = BuscarDescProd(IdCodProd2)
-                            tVA!cantidad = Cant
-                            tVA!Importe = total
+        If Not qVentasL2.EOF Then
+            While Not qVentasL2.EOF
+                If qVentasL2!CodProd = IdCodProd2 Then
+                    Cant = Cant + qVentasL2!cantidad
+                    total = total + qVentasL2!totalLinea
+                    qVentasL2.MoveNext
+                Else
+                    tVA.Seek "=", IdCodProd2
+                    If Not tVA.NoMatch Then
+                        tVA.Edit
+                            tVA!cantidad = tVA!cantidad + Cant
+                            tVA!Importe = tVA!Importe + total
                         tVA.Update
+                        GrandTotal = GrandTotal + total
+                     Else
+                        If Not IdCodProd2 = "" Then
+                            tVA.AddNew
+                                tVA!IdProducto = IdCodProd2
+                                tVA!Descripcion = BuscarDescProd(IdCodProd2)
+                                tVA!cantidad = Cant
+                                tVA!Importe = total
+                            tVA.Update
+                        End If
+                        GrandTotal = GrandTotal + total
                     End If
-                    GrandTotal = GrandTotal + total
+                    IdCodProd2 = qVentasL2!CodProd
+                    Cant = 0
+                    total = 0
                 End If
-                IdCodProd2 = qVentasL2!CodProd
-                Cant = 0
-                total = 0
+            Wend
+
+            tVA.Seek "=", IdCodProd2
+            If Not tVA.NoMatch Then
+                tVA.Edit
+                    tVA!cantidad = tVA!cantidad + Cant
+                    tVA!Importe = tVA!Importe + total
+                tVA.Update
+                GrandTotal = GrandTotal + total
+             Else
+               If Not IdCodProd2 = "" Then
+                tVA.AddNew
+                    tVA!IdProducto = IdCodProd2
+                    tVA!Descripcion = BuscarDescProd(IdCodProd2)
+                    tVA!cantidad = Cant
+                    tVA!Importe = total
+                tVA.Update
+               End If
+                GrandTotal = GrandTotal + total
             End If
-        Wend
         
-        tVA.Seek "=", IdCodProd2
-        If Not tVA.NoMatch Then
-            tVA.Edit
-                tVA!cantidad = tVA!cantidad + Cant
-                tVA!Importe = tVA!Importe + total
-            tVA.Update
-            GrandTotal = GrandTotal + total
-         Else
-           If Not IdCodProd2 = "" Then
-            tVA.AddNew
-                tVA!IdProducto = IdCodProd2
-                tVA!Descripcion = BuscarDescProd(IdCodProd2)
-                tVA!cantidad = Cant
-                tVA!Importe = total
-            tVA.Update
-           End If
-            GrandTotal = GrandTotal + total
         End If
-        
+
         totalProductos = 0
         tVA.MoveFirst
         
