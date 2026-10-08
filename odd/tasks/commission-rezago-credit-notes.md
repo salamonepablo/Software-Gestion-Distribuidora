@@ -16,3 +16,7 @@ User authorized final Git delivery. One focused commission commit includes FormL
 
 ## Remaining checks
 User builds new EXE from main; print/export and broader UI edge cases not independently exercised by agents. Local IDE fiscal simulation exists in FormFactura.frm and warns of stock/account modifications; never used by agents.
+
+
+## Final Git delivery evidence
+User authorized commit/push/main integration/repair deletion. Work-unit commit: d8b745c. All three final regressions and independent verification passed. Native review unavailable due retained selection mismatch; no lineage created. Independent verification satisfied fallback. User manual examples accepted; standalone EXE compile and print/export remain pending. Preexisting dirty MDB/account-form and user spreadsheet/context excluded and preserved.

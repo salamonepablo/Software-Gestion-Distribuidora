@@ -19,3 +19,7 @@ Actual source SQL and aggregation assertions using32bitDAO/ScriptControl disposa
 
 ## Verification and next step
 Worker observed RED cancellation units expected5actual6 and caption2actual3, then GREEN. Independent verifier reran cancelledbudget, salesNC and commission suites: PASS; gitdiffcheck clean, ANSI CRLF passed. User IDE cancelled budget212944 acceptance pending; no standalone compile observed. Working .ldb appeared during verification, likely active user IDE but origin unverified; retained untouched (64bytes), no deletion. No agents opened working DB during tests; disposable fixtures only. No commit/stage/push. Next userSeptember product65 seller screenshot L2 verifies exclusiondelta1unit106400, alsoTodos. Mixed commission extension separately authorized next.
+
+
+## Final Git delivery evidence
+User authorized commit/push/main integration/repair deletion. Work-unit commit: d213902. All three final regressions and independent verification passed. Native review unavailable due retained selection mismatch; no lineage created. Independent verification satisfied fallback. User manual examples accepted; standalone EXE compile and print/export remain pending. Preexisting dirty MDB/account-form and user spreadsheet/context excluded and preserved.

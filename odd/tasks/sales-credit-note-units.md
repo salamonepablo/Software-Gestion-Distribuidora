@@ -32,3 +32,7 @@ User confirmed report screenshot after running in IDE: 45FKA quantity1 amount931
 
 ## Monetary extension verification
 Worker observed monetary RED (expected0 actual121) then GREEN. Production helper uses -ND.TotalLinea and NC.PorcentajeIVA, without Abs or repricing. Read-only real case net576399.9802 rounds576399.98. Independent verifier reran 32bit PowerShell regression and git diff --check: PASS; ANSI/CRLF and unchanged account-movement form versus backup confirmed. Synthetic fixture also rounds576399.98. Native ASSESS unassessable due intended-untracked declaration, so independent verification performed; no native review closure claimed. VB6 compilation/UI acceptance pending. No commits/staging/push. Form diff +22/-2; tests added. Task work-unit commit closure remains deferred until explicit authorization.
+
+
+## Final Git delivery evidence
+User authorized commit/push/main integration/repair deletion. Work-unit commit: d213902. All three final regressions and independent verification passed. Native review unavailable due retained selection mismatch; no lineage created. Independent verification satisfied fallback. User manual examples accepted; standalone EXE compile and print/export remain pending. Preexisting dirty MDB/account-form and user spreadsheet/context excluded and preserved.
