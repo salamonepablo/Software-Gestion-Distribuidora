@@ -1493,6 +1493,7 @@ Private Sub GenerarFEB()
                         'Printer.PaintPicture imgQR.Picture
                         
                         Printer.PaintPicture PicQR.Picture, 15, 245, 23, 23
+                        If Not tClientes.NoMatch Then Call ImprimirLeyendaConsumidorFinal(tFacturaC!tipofactura, tClientes!condicionIva, tClientes!RazonSocial)
                         '.FontName = "Interleaved 2of5"
                         '.FontSize = 20
                         'Printer.Print BarCodeIL2of5(CalcularBarCode)
@@ -2012,6 +2013,7 @@ Private Sub GenerarFEB()
                         'Printer.PaintPicture imgQR.Picture
                         
                         Printer.PaintPicture PicQR.Picture, 15, 245, 23, 23
+                        If Not tClientes.NoMatch Then Call ImprimirLeyendaConsumidorFinal(tFacturaC!tipofactura, tClientes!condicionIva, tClientes!RazonSocial)
                         '.FontName = "Interleaved 2of5"
                         '.FontSize = 20
                         'Printer.Print BarCodeIL2of5(CalcularBarCode)
@@ -3898,6 +3900,7 @@ Private Sub ImprimirFEB()
                         'Printer.PaintPicture imgQR.Picture
                         
                         Printer.PaintPicture PicQR.Picture, 15, 245, 23, 23
+                        If Not tClientes.NoMatch Then Call ImprimirLeyendaConsumidorFinal(tFacturaC!tipofactura, tClientes!condicionIva, tClientes!RazonSocial)
                         '.FontName = "Interleaved 2of5"
                         '.FontSize = 20
                         'Printer.Print BarCodeIL2of5(CalcularBarCode)
@@ -4417,6 +4420,7 @@ Private Sub ImprimirFEB()
                         'Printer.PaintPicture imgQR.Picture
                         
                         Printer.PaintPicture PicQR.Picture, 15, 245, 23, 23
+                        If Not tClientes.NoMatch Then Call ImprimirLeyendaConsumidorFinal(tFacturaC!tipofactura, tClientes!condicionIva, tClientes!RazonSocial)
                         '.FontName = "Interleaved 2of5"
                         '.FontSize = 20
                         'Printer.Print BarCodeIL2of5(CalcularBarCode)
@@ -5787,6 +5791,49 @@ Private Sub buscofactura()
     
     
     
+End Sub
+
+Private Function IsConsumerFinalCustomer(ByVal CondicionCliente As Variant, ByVal RazonSocial As Variant) As Boolean
+
+    IsConsumerFinalCustomer = (UCase(Trim("" & CondicionCliente)) = "CF") Or (UCase(Trim("" & RazonSocial)) = "CONSUMIDOR FINAL")
+
+End Function
+
+Private Sub ImprimirLeyendaConsumidorFinal(ByVal TipoFactura As Variant, ByVal CondicionCliente As Variant, ByVal RazonSocial As Variant)
+
+    Dim FuenteAnterior As String
+    Dim TamanioAnterior As Single
+    Dim NegritaAnterior As Boolean
+    Dim CursivaAnterior As Boolean
+    Dim ColorAnterior As Long
+
+    'Leyenda solo para Facturas B a Consumidor Final
+    If UCase(Trim("" & TipoFactura)) <> "B" Then Exit Sub
+    If Not IsConsumerFinalCustomer(CondicionCliente, RazonSocial) Then Exit Sub
+
+    With Printer
+        FuenteAnterior = .FontName
+        TamanioAnterior = .FontSize
+        NegritaAnterior = .FontBold
+        CursivaAnterior = .FontItalic
+        ColorAnterior = .ForeColor
+
+        .FontName = "Arial"
+        .FontSize = 8
+        .FontBold = False
+        .FontItalic = False
+        .ForeColor = vbBlack
+        .CurrentX = 15
+        .CurrentY = 274
+        Printer.Print "«Orientación al Consumidor Provincia de Buenos Aires 148»"
+
+        .FontName = FuenteAnterior
+        .FontSize = TamanioAnterior
+        .FontBold = NegritaAnterior
+        .FontItalic = CursivaAnterior
+        .ForeColor = ColorAnterior
+    End With
+
 End Sub
 
 Private Function BuscarCondicionIva(CI As String) As String
