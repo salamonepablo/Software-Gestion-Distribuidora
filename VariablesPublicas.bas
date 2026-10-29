@@ -1,4 +1,6 @@
 Attribute VB_Name = "Vars"
+Private invoiceSimulationEnabled As Boolean
+Public Const InvoiceSimulationCae As Double = 99999999999999#
 Public ModifIntereses
 Public BaseSPC As Database
 Public tClientes
@@ -55,6 +57,72 @@ Public vCUIT As String
  Public TipoCbteAsoc As Long
  Public NroCbteAsoc As Double
  Public FechaCbteAsoc As String
+
+Private Function DetectInvoiceIde(ByRef detected As Boolean) As Boolean
+    detected = True
+    DetectInvoiceIde = True
+End Function
+
+Public Function CanSimulateInvoices() As Boolean
+    Dim runningInIde As Boolean
+    On Error GoTo Unavailable
+    Debug.Assert DetectInvoiceIde(runningInIde)
+    If Not runningInIde Then Exit Function
+    If StrComp(App.Path, "C:\Trabajos Activos\SPC-Retail", vbTextCompare) <> 0 Then Exit Function
+    CanSimulateInvoices = True
+Unavailable:
+End Function
+
+Public Function IsInvoiceSimulationEnabled() As Boolean
+    IsInvoiceSimulationEnabled = invoiceSimulationEnabled
+End Function
+
+Public Function EnableInvoiceSimulation() As Boolean
+    If Not CanSimulateInvoices() Then Exit Function
+    invoiceSimulationEnabled = True
+    EnableInvoiceSimulation = True
+End Function
+
+Public Function IsInvoiceSimulationCae(ByVal caeValue As Variant) As Boolean
+    If IsNumeric(caeValue) Then IsInvoiceSimulationCae = (CDbl(caeValue) = InvoiceSimulationCae)
+End Function
+
+Private Function SimulateInvoiceAuthorization(ByVal documentType As Long, ByVal documentNumber As Double) As Boolean
+    Dim document As DAO.Recordset
+    Dim documentTable As String
+    Dim documentTypeCode As String
+    Dim documentFound As Boolean
+    On Error GoTo Failed
+    If Not CanSimulateInvoices() Then Err.Raise vbObjectError + 2100, , "Entorno de prueba no disponible."
+    Select Case documentType
+        Case 1, 6
+            documentTable = "FacturaC"
+        Case 3, 8
+            documentTable = "NotaCreditoC"
+        Case Else
+            Err.Raise vbObjectError + 2101, , "El modo de prueba no autoriza notas de debito: solo facturas y notas de credito A y B. El comprobante local puede haber quedado grabado sin CAE."
+    End Select
+    Select Case documentType
+        Case 1, 3: documentTypeCode = "A"
+        Case 6, 8: documentTypeCode = "B"
+    End Select
+    Set document = BaseSPC.OpenRecordset(documentTable, dbOpenTable)
+    document.Index = "PrimaryKey"
+    document.Seek "=", documentTypeCode, documentNumber
+    documentFound = Not document.NoMatch
+    document.Close
+    Set document = Nothing
+    If Not documentFound Then Err.Raise vbObjectError + 2102, , "No se encontro el comprobante para asignar el CAE de prueba."
+    Call ActualizarCAE(documentTable, documentTypeCode, documentNumber, InvoiceSimulationCae, Format(DateAdd("d", 10, Date), "yyyymmdd"))
+    SimulateInvoiceAuthorization = True
+CleanUp:
+    On Error Resume Next
+    If Not document Is Nothing Then document.Close
+    Exit Function
+Failed:
+    MsgBox "No se pudo simular la autorizacion: " & Err.Description, vbExclamation, "FACTURACION DE PRUEBA"
+    Resume CleanUp
+End Function
 
 Public Function ePadron(FDesde As String, FHasta As String, CUIT) As Double
     
@@ -283,6 +351,11 @@ Public Sub FacturaElectronicaSPC_OLD(PtoVta As Long, DocTipo As Long, DocNro As 
 End Sub
 
 Public Function FacturaElectronicaSPC(PtoVta As Long, DocTipo As Long, DocNro As Double, TipoComp As Long, CbteDesde As Double, CbteHasta As Double, CbteFch As String, ImpTotal As Double, ImpNeto As Double, MonId As String, MonCotiz As Double, AlicIVA As Long, BaseImpIVA As Double, ImpIva As Double, IdTributo As Long, DescTributo As String, BaseImpTributo As Double, Alicuota As Double, ImpAlicuota As Double, ImporteExento As Double, Optional TipoCbteAsoc As Long, Optional NroCbteAsoc As Double, Optional FechaCbteAsoc As String) As Boolean
+
+    If invoiceSimulationEnabled Then
+        FacturaElectronicaSPC = SimulateInvoiceAuthorization(TipoComp, CbteDesde)
+        Exit Function
+    End If
 
 'LOCAL
 On Error GoTo CapErr

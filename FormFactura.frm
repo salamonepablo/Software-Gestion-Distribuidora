@@ -6,6 +6,7 @@ Begin VB.Form FormFactura
    ClientLeft      =   120
    ClientTop       =   450
    ClientWidth     =   12135
+   KeyPreview      =   -1  'True
    LinkTopic       =   "Form1"
    MaxButton       =   0   'False
    ScaleHeight     =   9540
@@ -578,6 +579,16 @@ Begin VB.Form FormFactura
       TabIndex        =   49
       Top             =   8400
       Width           =   11655
+      Begin VB.CommandButton cmdInvoiceSimulation
+         Caption         =   "Activar facturacion de prueba"
+         Height          =   375
+         Left            =   7560
+         TabIndex        =   82
+         TabStop         =   0   'False
+         Top             =   360
+         Visible         =   0   'False
+         Width           =   3495
+      End
       Begin VB.CommandButton BotonGrabar 
          Caption         =   "&Guardar"
          Enabled         =   0   'False
@@ -2648,7 +2659,40 @@ Private Sub ComboVendedor_KeyPress(KeyAscii As Integer)
 
 End Sub
 
+Private Sub Form_KeyDown(KeyCode As Integer, Shift As Integer)
+    If KeyCode = vbKeyF12 And Shift = (vbCtrlMask Or vbShiftMask) Then
+        KeyCode = 0
+        If CanSimulateInvoices() Then
+            cmdInvoiceSimulation.Visible = True
+            cmdInvoiceSimulation.ZOrder 0
+        Else
+            MsgBox "El modo de prueba requiere ejecutar este proyecto desde el IDE en C:\Trabajos Activos\SPC-Retail.", vbExclamation, "Modo de prueba no disponible"
+        End If
+    End If
+End Sub
+
+Private Sub cmdInvoiceSimulation_Click()
+    If IsInvoiceSimulationEnabled() Then Exit Sub
+    If Not CanSimulateInvoices() Then Exit Sub
+    If MsgBox("Activar facturacion SIN ARCA sobre la copia local? Se modificaran stock y cuenta corriente. Para salir del modo de prueba debe detener y reiniciar el proyecto.", vbYesNo Or vbExclamation Or vbDefaultButton2, "FACTURACION DE PRUEBA") <> vbYes Then Exit Sub
+    If EnableInvoiceSimulation() Then UpdateInvoiceSimulationNotice
+End Sub
+
+Private Sub UpdateInvoiceSimulationNotice()
+    If IsInvoiceSimulationEnabled() Then
+        Me.Caption = "FACTURAS - PRUEBA - SIN VALIDEZ FISCAL"
+        cmdInvoiceSimulation.Visible = True
+        cmdInvoiceSimulation.Caption = "PRUEBA - SIN VALIDEZ FISCAL"
+        cmdInvoiceSimulation.Enabled = False
+    End If
+End Sub
+
 Private Sub Form_Load()
+    If CanSimulateInvoices() Then
+        cmdInvoiceSimulation.Visible = True
+        cmdInvoiceSimulation.ZOrder 0
+    End If
+    UpdateInvoiceSimulationNotice
 
     FormFactura.Height = 10200
     FormFactura.Width = 12135
