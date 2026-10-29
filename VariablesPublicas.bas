@@ -195,7 +195,7 @@ Public Sub CrearQR(Fecha As String, CUIT As Double, PtoVta As Long, TipoComp As 
   End Select
     
   carpetaQR = "\QRs\" + "qr" + "_" & tipoDoc & "_" & PtoVta & "_" & nroCmp & ".jpg"
-  Qr.ArchivoQR = Qr.RutaLibreria & carpetaQR ' Admite formatos BMP, PNG y JPG con solo cambiar la extension
+  Qr.ArchivoQR = App.Path & carpetaQR ' Admite formatos BMP, PNG y JPG con solo cambiar la extension
 
   'Long
   Ver = 1
